@@ -1,0 +1,361 @@
+/* ========================================================================
+   COMPONENTS
+   ======================================================================== */
+
+/* --- Buttons --- */
+.btn-primary {
+    background-color: var(--primary-green);
+    color: white;
+    padding: var(--space-3) var(--space-6);
+    border-radius: 8px;
+    border: none;
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-arabic-body);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-green-light);
+    transform: translateY(-1px);
+}
+
+.btn-gold {
+    background-color: var(--primary-gold);
+    color: var(--primary-green);
+    padding: var(--space-3) var(--space-6);
+    border-radius: 8px;
+    border: none;
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-arabic-body);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.btn-gold:hover {
+    background-color: var(--primary-gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+    padding: var(--space-3) var(--space-6);
+    border-radius: 8px;
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-arabic-body);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(27, 94, 32, 0.05);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-medium);
+    padding: var(--space-3) var(--space-6);
+    border-radius: 8px;
+    font-family: var(--font-arabic-body);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-outline:hover {
+    border-color: var(--text-primary);
+}
+
+.btn-icon {
+    background-color: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: var(--space-2);
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-fast);
+}
+
+.btn-icon:hover {
+    background-color: var(--bg-secondary);
+    color: var(--primary-green);
+}
+
+/* --- Inputs --- */
+.input-field {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--border-medium);
+    border-radius: 6px;
+    font-family: var(--font-arabic-body);
+    font-size: var(--text-base);
+    transition: border-color var(--transition-fast);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.1);
+}
+
+.input-label {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--text-sm);
+    font-family: var(--font-arabic-body);
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+/* Left Icon */
+.input-with-icon-left .input-icon {
+    left: var(--space-3);
+}
+
+.input-with-icon-left .input-field {
+    padding-left: var(--space-10);
+}
+
+/* Right Icon (RTL support needs consideration, assuming LTR or handling separately) */
+/* Since this is mostly Arabic, we might need to flip these logic if dir=rtl */
+
+.input-error {
+    border-color: var(--secondary-red);
+}
+
+.input-error:focus {
+    border-color: var(--secondary-red);
+    box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
+}
+
+.error-message {
+    color: var(--secondary-red);
+    font-size: var(--text-xs);
+    margin-top: var(--space-2);
+}
+
+.sidebar {
+    background-color: var(--bg-primary);
+    border-left: 1px solid var(--border-light);
+    /* Removed fixed positioning overrides to allow Tailwind classes (top-20, h-[calc...]) to work */
+    overflow-y: auto;
+}
+
+.sidebar-logo {
+    padding: var(--space-6);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.sidebar-menu {
+    padding: var(--space-4);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin-bottom: var(--space-2);
+    transition: all var(--transition-fast);
+}
+
+.menu-item:hover {
+    background-color: var(--bg-secondary);
+    color: var(--primary-green);
+}
+
+.menu-item.active {
+    background-color: rgba(27, 94, 32, 0.1);
+    color: var(--primary-green);
+    font-weight: var(--font-weight-medium);
+}
+
+.topbar {
+    height: 64px;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-light);
+    padding: 0 var(--space-6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+.topbar-search {
+    width: 400px;
+    max-width: 100%;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.notification-badge {
+    position: relative;
+}
+
+/* --- Cards --- */
+.card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: var(--space-6);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: box-shadow var(--transition-medium);
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.card-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin: 0;
+    font-family: var(--font-arabic-heading);
+}
+
+.card-body {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-family: var(--font-arabic-body);
+}
+
+/* --- Badges --- */
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+/* --- Avatars --- */
+.avatar {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+}
+
+.avatar-md {
+    width: 48px;
+    height: 48px;
+}
+
+.avatar-lg {
+    width: 64px;
+    height: 64px;
+}
+
+.avatar-xl {
+    width: 96px;
+    height: 96px;
+}
+
+/* ========================================================================
+   LANDING PAGE STYLES
+   ======================================================================== */
+
+.landing-hero {
+    background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+    color: white;
+    padding: var(--space-32) 0;
+    text-align: center;
+    position: relative;
+}
+
+.landing-hero h1 {
+    font-size: var(--text-4xl);
+}
+
+@media (min-width: 768px) {
+    .landing-hero h1 {
+        font-size: 3.5rem;
+        /* Larger on desktop */
+    }
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-16);
+}
+
+@media (min-width: 992px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-8);
+    }
+}
+
+.stat-item {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    padding: var(--space-4);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-gold);
+    margin-bottom: var(--space-2);
+    font-family: var(--font-latin-heading);
+    /* Numbers look better in Latin font usually */
+}
+
+.stat-label {
+    font-size: var(--text-lg);
+    opacity: 0.9;
+    font-family: var(--font-arabic-body);
+}

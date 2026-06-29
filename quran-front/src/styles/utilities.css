@@ -1,0 +1,180 @@
+/* ========================================================================
+   UTILITIES
+   ======================================================================== */
+
+.text-primary-green {
+    color: var(--primary-green);
+}
+
+.text-gold {
+    color: var(--primary-gold);
+}
+
+.text-danger {
+    color: var(--secondary-red);
+}
+
+.text-success {
+    color: var(--success-text);
+}
+
+.bg-primary-green {
+    background-color: var(--primary-green);
+}
+
+.bg-light {
+    background-color: var(--bg-secondary);
+}
+
+.text-purple {
+    color: var(--secondary-purple);
+}
+
+.bg-purple-100 {
+    background-color: rgba(156, 39, 176, 0.1);
+}
+
+.font-heading {
+    font-family: var(--font-arabic-heading);
+}
+
+.font-body {
+    font-family: var(--font-arabic-body);
+}
+
+/* Spacing Helpers (Subset) */
+.m-0 {
+    margin: 0;
+}
+
+.mt-2 {
+    margin-top: var(--space-2);
+}
+
+.mt-4 {
+    margin-top: var(--space-4);
+}
+
+.mb-2 {
+    margin-bottom: var(--space-2);
+}
+
+.mb-4 {
+    margin-bottom: var(--space-4);
+}
+
+.mb-6 {
+    margin-bottom: var(--space-6);
+}
+
+.p-4 {
+    padding: var(--space-4);
+}
+
+.p-6 {
+    padding: var(--space-6);
+}
+
+/* Flex Helpers */
+.d-flex {
+    display: flex;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.gap-2 {
+    gap: var(--space-2);
+}
+
+.gap-4 {
+    gap: var(--space-4);
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn var(--transition-medium);
+}
+
+.slide-in-up {
+    animation: slideInUp var(--transition-medium);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ========================================================================
+   GRID SYSTEM
+   ======================================================================== */
+.container {
+    width: 100%;
+    padding-right: var(--space-4);
+    padding-left: var(--space-4);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: calc(var(--space-4) * -1);
+    margin-left: calc(var(--space-4) * -1);
+}
+
+.col {
+    flex: 1 0 0%;
+    padding-right: var(--space-4);
+    padding-left: var(--space-4);
+}

@@ -1,0 +1,120 @@
+:root {
+   /* ========================================================================
+     1. COLOR PALETTE
+     ======================================================================== */
+
+   /* Primary Colors */
+   --primary-green: #1B5E20;
+   /* Primary Action / Brand */
+   --primary-green-light: #2E7D32;
+   --primary-green-lighter: #4CAF50;
+
+   --primary-gold: #D4AF37;
+   /* Highlights / Premium (Metallic Gold) */
+   --primary-gold-light: #C49F30;
+   /* Slightly darker/richer for hover (was Bright Yellow #FFD700) */
+   --primary-gold-lighter: #FFE57F;
+   /* Lighter shade */
+
+   /* Secondary Colors */
+   --secondary-blue: #2196F3;
+   --secondary-teal: #009688;
+   --secondary-orange: #FF9800;
+   --secondary-red: #F44336;
+   --secondary-purple: #9C27B0;
+
+   /* Neutral Colors */
+   --bg-primary: #FFFFFF;
+   --bg-secondary: #F8F9FA;
+   --bg-tertiary: #E9ECEF;
+
+   --text-primary: #212529;
+   --text-secondary: #6C757D;
+   --text-tertiary: #ADB5BD;
+   --text-light: #FFFFFF;
+
+   --border-light: #DEE2E6;
+   --border-medium: #CED4DA;
+   --border-dark: #ADB5BD;
+
+   /* Status Colors */
+   --success-bg: #D4EDDA;
+   --success-text: #155724;
+   --warning-bg: #FFF3CD;
+   --warning-text: #856404;
+   --error-bg: #F8D7DA;
+   --error-text: #721C24;
+   --info-bg: #D1ECF1;
+   --info-text: #0C5460;
+
+   /* ========================================================================
+     2. TYPOGRAPHY
+     ======================================================================== */
+
+   /* Fonts */
+   --font-arabic-heading: 'Reem Kufi', sans-serif;
+   --font-arabic-body: 'Amiri', serif;
+   /* Reverted to Amiri */
+   --font-latin-heading: 'Poppins', sans-serif;
+   --font-latin-body: 'Roboto', sans-serif;
+
+   /* Font Weights - Bumped up for bolder look */
+   --font-weight-light: 400;
+   --font-weight-regular: 500;
+   --font-weight-medium: 600;
+   --font-weight-semibold: 700;
+   --font-weight-bold: 700;
+
+   /* Type Scale (Arabic) - Increased sizes */
+   --text-xs: 0.85rem;
+   /* Was 0.75rem */
+   --text-sm: 0.95rem;
+   /* Was 0.875rem */
+   --text-base: 1.1rem;
+   /* Was 1rem */
+   --text-lg: 1.25rem;
+   /* Was 1.125rem */
+   --text-xl: 1.4rem;
+   /* Was 1.25rem */
+   --text-2xl: 1.7rem;
+   /* Was 1.5rem */
+   --text-3xl: 2.1rem;
+   /* Was 1.875rem */
+   --text-4xl: 2.5rem;
+   /* Was 2.25rem */
+
+   /* ========================================================================
+     3. SPACING
+     ======================================================================== */
+   --space-1: 0.25rem;
+   /* 4px */
+   --space-2: 0.5rem;
+   /* 8px */
+   --space-3: 0.75rem;
+   /* 12px */
+   --space-4: 1rem;
+   /* 16px */
+   --space-5: 1.25rem;
+   /* 20px */
+   --space-6: 1.5rem;
+   /* 24px */
+   --space-8: 2rem;
+   /* 32px */
+   --space-10: 2.5rem;
+   /* 40px */
+   --space-12: 3rem;
+   /* 48px */
+   --space-16: 4rem;
+   /* 64px */
+   --space-20: 5rem;
+   /* 80px */
+   --space-32: 8rem;
+   /* 128px */
+
+   /* ========================================================================
+     4. ANIMATIONS & TRANSITIONS
+     ======================================================================== */
+   --transition-fast: 150ms ease;
+   --transition-medium: 300ms ease;
+   --transition-slow: 500ms ease;
+}

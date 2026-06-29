@@ -1,0 +1,53 @@
+# fly.toml app configuration file for bdaey
+
+app = "bdaey-lms-api"
+primary_region = "fra"
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+
+  # Auto start/stop based on usage
+  auto_stop_machines = true
+  auto_start_machines = true
+
+  # Keep at least 1 machine running to avoid cold starts
+  min_machines_running = 1
+
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 20
+    hard_limit = 25
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory = "1gb"
+
+# Expected environment variables (uncomment and set in fly secrets):
+# [env]
+#   ConnectionStrings__DefaultConnection = ""
+#   Jwt__Key = ""
+#   Jwt__Issuer = "BdaeyEducat"
+#   Jwt__Audience = "BdaeyEducat"
+#   Jwt__ExpireDays = "7"
+#   Stripe__SecretKey = ""
+#   Stripe__PublishableKey = ""
+#   Daily__ApiKey = ""
+#   SendGrid__ApiKey = ""
+#   SendGrid__FromEmail = ""
+#   SendGrid__FromName = "Bdaey"
+#   CORS__AllowedOrigins = "http://localhost:3000"
+
+# Health check (uncomment if needed):
+# [[checks]]
+#   type = "http"
+#   path = "/health"
+#   method = "GET"
+#   interval = "30s"
+#   timeout = "5s"
+#   grace_period = "10s"
