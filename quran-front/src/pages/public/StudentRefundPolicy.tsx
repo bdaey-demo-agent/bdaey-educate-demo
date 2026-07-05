@@ -1,4 +1,5 @@
 import React from 'react';
+import Seo from '../../components/common/Seo';
 import {
     CurrencyDollarIcon,
     ClockIcon,
@@ -8,7 +9,13 @@ import {
 
 const StudentRefundPolicy: React.FC = () => {
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+        <>
+            <Seo
+                title="سياسة الاسترجاع"
+                description="سياسة استرجاع الرسوم والاستبدال في منصة بدائي: شرح كامل لآلية استرجاع الجلسات والاشتراكات."
+                canonical="https://bdaey.com/refund-policy"
+            />
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
@@ -90,6 +97,7 @@ const StudentRefundPolicy: React.FC = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

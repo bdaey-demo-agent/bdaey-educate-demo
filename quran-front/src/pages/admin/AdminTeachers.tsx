@@ -198,20 +198,6 @@ const AdminTeachers: React.FC = () => {
                     onChange={(e) => setSearch(e.target.value)}
                     className="w-full md:w-1/3 p-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
-                <button 
-                    onClick={async () => {
-                        try {
-                            const res = await adminService.fixSubmissionStatuses();
-                            toast.success(`تم تحديث ${res.count} معلم`);
-                            loadTeachers();
-                        } catch (e) {
-                            toast.error('فشل تحديث البيانات');
-                        }
-                    }}
-                    className="mt-2 md:mt-0 md:mr-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                >
-                    تحديث حالة إرسال البيانات للمعلمين القدامى
-                </button>
             </div>
 
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700">

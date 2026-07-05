@@ -1,6 +1,20 @@
 import React from 'react';
+import Seo from '../../components/common/Seo';
 
 const BlogPage: React.FC = () => {
+    return (
+        <>
+            <Seo
+                title="المدونة"
+                description="مدونة بدائي: مقالات ونصائح عن تحفيظ القرآن الكريم، التجويد، القراءات العشر، وأفضل ممارسات التعليم عن بُعد."
+                canonical="https://bdaey.com/blog"
+            />
+            <BlogContent />
+        </>
+    )
+}
+
+function BlogContent() {
     const posts = [
         {
             id: 1,

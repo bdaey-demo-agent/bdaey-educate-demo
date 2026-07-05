@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 import { HomeIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import Seo from '../../components/common/Seo';
 
 const NotFound = () => {
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <>
+            <Seo title="الصفحة غير موجودة" description="عذراً، الصفحة التي تبحث عنها غير موجودة." noIndex />
+            <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center space-y-6">
                 <div className="flex justify-center">
                     <div className="bg-primary/10 p-4 rounded-full">
@@ -25,11 +28,12 @@ const NotFound = () => {
                     >
                         <HomeIcon className="h-5 w-5" />
                         العودة للصفحة الرئيسية
-                    </Link>
+                        </Link>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-};
+            </>
+        );
+    };
 
 export default NotFound;

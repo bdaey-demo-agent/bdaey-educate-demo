@@ -16,73 +16,19 @@ using Microsoft.AspNetCore.RateLimiting;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<HostOptions>(options => 
+{ 
+    options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore; 
+});
 
-// 1. Configure EF Core with PostgreSQL (Dynamic Multi-Tenant Router)
-builder.Services.AddHttpContextAccessor();
+// 1. Configure EF Core with PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
 {
-    var httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
-    var httpContext = httpContextAccessor.HttpContext;
-    
-    string? subdomain = null;
-    if (httpContext != null)
-    {
-        // Priority 1: Host header (most trustworthy, set by the browser/network layer)
-        var host = httpContext.Request.Host.Host;
-        if (!string.IsNullOrEmpty(host))
-        {
-            var parts = host.Split('.');
-            if (parts.Length > 2 && host != "vercel.app" && host != "netlify.app" && !host.Contains("fly.dev"))
-            {
-                subdomain = parts[0];
-            }
-            else if (parts.Length == 2 && host.Contains("localhost"))
-            {
-                subdomain = parts[0];
-            }
-        }
-
-        // Priority 2: X-Tenant-Subdomain header (only if Host didn't resolve to a subdomain)
-        if (string.IsNullOrEmpty(subdomain) && httpContext.Request.Headers.TryGetValue("X-Tenant-Subdomain", out var headerVal))
-        {
-            subdomain = headerVal.ToString();
-        }
-    }
-    
-    string? connectionString = null;
     var config = serviceProvider.GetRequiredService<IConfiguration>();
-    if (!string.IsNullOrEmpty(subdomain) && subdomain != "www" && subdomain != "admin" && subdomain != "api" && subdomain != "quran" && subdomain != "bdaey-lms-api" && subdomain != "localhost")
+    var cs = config.GetConnectionString("DefaultConnection");
+    if (!string.IsNullOrEmpty(cs))
     {
-        subdomain = subdomain.ToLower().Trim();
-        var centralCs = config.GetConnectionString("CentralConnection");
-            
-        try
-        {
-            using var conn = new Npgsql.NpgsqlConnection(centralCs);
-            conn.Open();
-            using var cmd = new Npgsql.NpgsqlCommand("SELECT COALESCE(NULLIF(s.\"DbConnectionString\", ''), NULLIF(t.\"ConnectionString\", '')) FROM \"Tenants\" t LEFT JOIN \"AppSubscriptions\" s ON t.\"Id\" = s.\"TenantId\" WHERE (LOWER(s.\"Subdomain\") = @sub OR LOWER(t.\"Subdomain\") = @sub) AND t.\"IsAdminSuspended\" IS NOT TRUE AND s.\"IsAdminSuspended\" IS NOT TRUE AND s.\"IsSubscriptionExpired\" IS NOT TRUE AND s.\"IsArchived\" IS NOT TRUE LIMIT 1;", conn);
-            cmd.Parameters.AddWithValue("@sub", subdomain);
-            var res = cmd.ExecuteScalar();
-            if (res != null && res != DBNull.Value && !string.IsNullOrEmpty(res.ToString()))
-            {
-                connectionString = res.ToString();
-            }
-            else if (httpContext != null)
-            {
-                // httpContext.Items["TenantNotFound"] = true;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[LMS Multi-Tenancy Router] Central DB lookup failed for subdomain '{subdomain}': {ex.Message}");
-        }
-    }
-    
-    var defaultCs = config.GetConnectionString("DefaultConnection");
-    var resolvedCs = !string.IsNullOrEmpty(connectionString) ? connectionString : defaultCs;
-    if (!string.IsNullOrEmpty(resolvedCs))
-    {
-        var connBuilder = new Npgsql.NpgsqlConnectionStringBuilder(resolvedCs);
+        var connBuilder = new Npgsql.NpgsqlConnectionStringBuilder(cs);
         connBuilder.SearchPath = "quran";
         options.UseNpgsql(connBuilder.ConnectionString, o => o.CommandTimeout(300));
         options.AddInterceptors(new SchemaConnectionInterceptor("quran"));

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Seo, { OrganizationSchema } from '../../components/common/Seo';
 import {
     CalendarDaysIcon,
     CheckBadgeIcon,
@@ -29,7 +30,14 @@ const LandingPage: React.FC = () => {
     }
 
     return (
-        <div className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
+        <>
+            <Seo
+                title="بدائي - منصة تحفيظ القرآن الكريم أونلاين"
+                description="منصة بدائي: تعلم القرآن الكريم والتجويد والقراءات العشر مع نخبة من المعلمين المعتمدين والمجازين. جلسات فردية مباشرة، جدول مرن، وأسعار تنافسية."
+                canonical="https://bdaey.com"
+            />
+            <OrganizationSchema />
+            <div className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
             {/* HERO */}
             <section className="relative overflow-hidden">
                 <div className="absolute inset-0">
@@ -252,6 +260,7 @@ const LandingPage: React.FC = () => {
             </section>
 
         </div>
+        </>
     );
 };
 

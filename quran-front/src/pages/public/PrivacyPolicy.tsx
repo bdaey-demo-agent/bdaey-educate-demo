@@ -1,10 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Seo from '../../components/common/Seo';
 
 const PrivacyPolicy: React.FC = () => {
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 font-body transition-colors duration-300">
-            <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden p-8 sm:p-12">
+        <>
+            <Seo
+                title="سياسة الخصوصية"
+                description="سياسة الخصوصية لمنصة بدائي: كيف نحمي بياناتك ومعلوماتك الشخصية عند استخدام خدمات تحفيظ القرآن الكريم."
+                canonical="https://bdaey.com/privacy"
+            />
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 font-body transition-colors duration-300">
+                <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden p-8 sm:p-12">
                 <div className="text-center mb-12">
                     <h1 className="text-3xl font-bold text-primary-green dark:text-white font-heading mb-4">سياسة الخصوصية</h1>
                     <p className="text-gray-500 dark:text-gray-400">آخر تحديث: ٢٦/١/٢٠٢٦</p>
@@ -91,6 +98,7 @@ const PrivacyPolicy: React.FC = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

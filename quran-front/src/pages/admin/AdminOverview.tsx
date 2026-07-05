@@ -12,7 +12,13 @@ import {
     BanknotesIcon,
     XCircleIcon,
     PlayCircleIcon,
-    ArrowTrendingUpIcon
+    ArrowTrendingUpIcon,
+    CalendarDaysIcon,
+    StarIcon,
+    WalletIcon,
+    Squares2X2Icon,
+    UserPlusIcon,
+    ClockIcon
 } from '@heroicons/react/24/outline';
 
 const AdminOverview = () => {
@@ -159,9 +165,75 @@ const AdminOverview = () => {
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Can add Charts here later */}
+                {/* --- 6 New Cards --- */}
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 rounded-full">
+                            <CalendarDaysIcon className="h-8 w-8" />
+                        </div>
+                        <div>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">إجمالي الجلسات</p>
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalSessions}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-full">
+                            <ClockIcon className="h-8 w-8" />
+                        </div>
+                        <div>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">الجلسات القادمة</p>
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.upcomingSessions}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 rounded-full">
+                            <StarIcon className="h-8 w-8" />
+                        </div>
+                        <div>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">متوسط التقييم</p>
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.averageRating.toFixed(1)} <span className="text-sm font-normal text-gray-400">/ 5</span></h3>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 rounded-full">
+                            <WalletIcon className="h-8 w-8" />
+                        </div>
+                        <div>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">إجمالي أرصدة المحافظ</p>
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalWalletBalance.toLocaleString()} EGP</h3>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-lime-100 dark:bg-lime-900/30 text-lime-600 dark:text-lime-400 rounded-full">
+                            <Squares2X2Icon className="h-8 w-8" />
+                        </div>
+                        <div>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">الباقات النشطة</p>
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.activePackages}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-full">
+                            <UserPlusIcon className="h-8 w-8" />
+                        </div>
+                        <div>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">مستخدمين جدد اليوم</p>
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.newUsersToday}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

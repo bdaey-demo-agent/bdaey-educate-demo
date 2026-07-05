@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import toast from 'react-hot-toast';
+import Seo from '../../components/common/Seo';
 
 const GoogleSSOCallback: React.FC = () => {
     // Get target origin from URL query params
@@ -45,7 +46,9 @@ const GoogleSSOCallback: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6" dir="rtl">
+        <>
+            <Seo title="تسجيل الدخول عبر Google" description="صفحة تسجيل الدخول الآمن عبر Google لمنصة بدائي." noIndex />
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6" dir="rtl">
             <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 text-center">
                 {/* Logo or Premium Icon */}
                 <div className="w-16 h-16 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -87,6 +90,7 @@ const GoogleSSOCallback: React.FC = () => {
                 </p>
             </div>
         </div>
+        </>
     );
 };
 

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Seo from '../../components/common/Seo';
 
 const SuspendedPage: React.FC = () => {
     const navigate = useNavigate();
@@ -11,7 +12,9 @@ const SuspendedPage: React.FC = () => {
         }
     }, [navigate]);
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+        <>
+            <Seo title="حساب معلق" description="حسابك معلق مؤقتاً. يرجى التواصل مع الدعم الفني." noIndex />
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
             <div className="max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8 text-center">
                 <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
                     <svg className="h-8 w-8 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -38,6 +41,7 @@ const SuspendedPage: React.FC = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Seo from "../../components/common/Seo";
 
 type Step = {
     title: string;
@@ -205,7 +206,13 @@ const HowToUsePlatform: React.FC = () => {
     );
 
     return (
-        <div className="font-body bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <>
+            <Seo
+                title="دليل استخدام منصة بدائي"
+                description="دليل شامل لاستخدام منصة بدائي: شرح وافي للطلاب والمعلمين حول كيفية تصفح المعلمين، حجز الجلسات، وإدارة الباقات."
+                canonical="https://bdaey.com/how-to-use"
+            />
+            <div className="font-body bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
             {/* HERO */}
             <section className="py-14">
                 <div className="max-w-6xl mx-auto px-4">
@@ -369,6 +376,7 @@ const HowToUsePlatform: React.FC = () => {
                 </div>
             </section>
         </div>
+        </>
     );
 };
 

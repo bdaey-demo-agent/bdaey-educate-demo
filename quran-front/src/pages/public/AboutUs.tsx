@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Seo from '../../components/common/Seo';
 import {
     HeartIcon,
     SparklesIcon,
@@ -12,7 +13,13 @@ import {
 
 const AboutUs: React.FC = () => {
     return (
-        <div className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+        <>
+            <Seo
+                title="عن بدائي"
+                description="منصة بدائي: منصة رائدة لتعليم القرآن الكريم أونلاين. تعرف على قصتنا، رسالتنا، وفريق المعلمين المجازين لدينا."
+                canonical="https://bdaey.com/about"
+            />
+            <div className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
             {/* Hero Section */}
             <section className="relative py-20 bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 text-white overflow-hidden">
                 {/* Decorative Elements */}
@@ -137,6 +144,7 @@ const AboutUs: React.FC = () => {
                 </div>
             </section>
         </div>
+        </>
     );
 };
 

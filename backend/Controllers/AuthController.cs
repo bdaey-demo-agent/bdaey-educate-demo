@@ -59,7 +59,7 @@ public class AuthController : ControllerBase
             FullName = model.FullName,
             PhoneNumber = model.PhoneNumber,
             DateOfBirth = model.DateOfBirth.ToUniversalTime(), // Ensure UTC for Npgsql
-            NationalId = model.NationalId ?? string.Empty,
+            NationalId = model.NationalId,
             Gender = model.Gender
         };
 

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using BdaeyEducat.API.Data;
 using BdaeyEducat.API.Data.Entities;
 
+
 namespace BdaeyEducat.API.Controllers;
 
 [Route("api/[controller]")]
@@ -59,6 +60,22 @@ public class AdminController : ControllerBase
 
             var completedSessions = await _context.Sessions
                 .CountAsync(s => s.Status == SessionStatus.Completed);
+            var totalSessions = await _context.Sessions.CountAsync();
+            var upcomingSessions = await _context.Sessions
+                .CountAsync(s => s.Status == SessionStatus.Scheduled);
+
+            var averageRating = await _context.Reviews
+                .AverageAsync(r => (double?)r.Rating) ?? 0;
+
+            var totalWalletBalance = await _context.Wallets
+                .SumAsync(w => (decimal?)w.Balance) ?? 0;
+
+            var activePackages = await _context.Packages
+                .CountAsync(p => p.Status == BdaeyEducat.API.Data.Enums.PackageStatus.Active);
+
+            var todayStart = DateTime.UtcNow.Date;
+            var newUsersToday = await _userManager.Users
+                .CountAsync(u => u.CreatedAt >= todayStart);
 
             return Ok(new 
             {
@@ -74,7 +91,13 @@ public class AdminController : ControllerBase
                 NewUsersLast7Days = newUsersLast7Days,
                 PendingWithdrawals = pendingWithdrawals,
                 PendingWithdrawalsAmount = pendingWithdrawalsAmount,
-                CompletedSessions = completedSessions
+                CompletedSessions = completedSessions,
+                TotalSessions = totalSessions,
+                UpcomingSessions = upcomingSessions,
+                AverageRating = averageRating,
+                TotalWalletBalance = totalWalletBalance,
+                ActivePackages = activePackages,
+                NewUsersToday = newUsersToday
             });
         }
         catch (Exception ex)

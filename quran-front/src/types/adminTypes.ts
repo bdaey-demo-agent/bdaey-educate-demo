@@ -21,6 +21,12 @@ export interface AdminStats {
     pendingWithdrawals: number;
     pendingWithdrawalsAmount: number;
     completedSessions: number;
+    totalSessions: number;
+    upcomingSessions: number;
+    averageRating: number;
+    totalWalletBalance: number;
+    activePackages: number;
+    newUsersToday: number;
 }
 
 // Teacher Types

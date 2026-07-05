@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
+import Seo from '../../components/common/Seo';
 import messageService from '../../services/messageService';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 
 const ContactPage: React.FC = () => {
+    return (
+        <>
+            <Seo
+                title="اتصل بنا"
+                description="تواصل مع فريق منصة بدائي. استفسارات، اقتراحات، أو دعم فني — نحن هنا لمساعدتك."
+                canonical="https://bdaey.com/contact"
+            />
+            <ContactForm />
+        </>
+    )
+}
+
+function ContactForm() {
     const { user } = useAuth();
     const [submitted, setSubmitted] = useState(false);
 

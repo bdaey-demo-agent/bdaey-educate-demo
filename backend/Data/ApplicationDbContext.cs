@@ -61,7 +61,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<ApplicationUser>(entity => {
             entity.ToTable("Users");
             entity.Property(e => e.FullName).HasMaxLength(100).IsRequired();
-            entity.HasIndex(e => e.NationalId).IsUnique();
+            // entity.HasIndex(e => e.NationalId).IsUnique();
         });
 
         builder.Entity<TeacherProfile>(entity => {

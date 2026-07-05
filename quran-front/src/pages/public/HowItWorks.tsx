@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Seo from '../../components/common/Seo';
 import {
     UserIcon,
     AcademicCapIcon,
@@ -15,7 +16,13 @@ const HowItWorks: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'student' | 'teacher'>('student');
 
     return (
-        <div className="bg-gray-50 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-white transition-colors duration-300 font-body" dir="rtl">
+        <>
+            <Seo
+                title="كيف تعمل منصة بدائي"
+                description="تعرف على كيفية عمل منصة بدائي: ابحث عن معلم، اختر باقة، احجز جلسات، وابدأ رحلتك في تعلم القرآن الكريم."
+                canonical="https://bdaey.com/how-it-works"
+            />
+            <div className="bg-gray-50 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-white transition-colors duration-300 font-body" dir="rtl">
 
             {/* Header / Hero */}
             <div className="bg-primary-green dark:bg-slate-900 text-white py-16 text-center">
@@ -185,6 +192,7 @@ const HowItWorks: React.FC = () => {
                 )}
             </div>
         </div>
+        </>
     );
 };
 
