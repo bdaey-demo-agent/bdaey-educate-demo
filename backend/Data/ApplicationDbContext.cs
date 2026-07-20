@@ -25,18 +25,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<WithdrawalMethod> WithdrawalMethods { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
 
-    // Promo Codes
     public DbSet<PromoCode> PromoCodes { get; set; }
     public DbSet<PromoCodeUsage> PromoCodeUsages { get; set; }
-
-    // Progress Tracking
     public DbSet<SessionEvaluation> SessionEvaluations { get; set; }
-
-    // Gamification
     public DbSet<Badge> Badges { get; set; }
     public DbSet<StudentBadge> StudentBadges { get; set; }
-
-    // Favorites
     public DbSet<FavoriteTeacher> FavoriteTeachers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -44,8 +37,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(builder);
         builder.HasDefaultSchema("quran");
 
-        // Configure entities here if needed
-        // Configure ChatMessage relationships
         builder.Entity<ChatMessage>()
             .HasOne(m => m.Sender)
             .WithMany()
@@ -58,149 +49,163 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(m => m.ReceiverId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Entity<ApplicationUser>(entity => {
+        builder.Entity<ApplicationUser>(entity =>
+        {
             entity.ToTable("Users");
             entity.Property(e => e.FullName).HasMaxLength(100).IsRequired();
-            // entity.HasIndex(e => e.NationalId).IsUnique();
         });
 
-        builder.Entity<TeacherProfile>(entity => {
+        builder.Entity<TeacherProfile>(entity =>
+        {
             entity.HasOne(t => t.User)
-                  .WithOne()
-                  .HasForeignKey<TeacherProfile>(t => t.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithOne()
+                .HasForeignKey<TeacherProfile>(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
             entity.Property(e => e.Subjects).HasColumnType("text[]");
         });
 
-        builder.Entity<Package>(entity => {
+        builder.Entity<Package>(entity =>
+        {
             entity.HasOne(p => p.TeacherProfile)
-                  .WithMany(t => t.Packages)
-                  .HasForeignKey(p => p.TeacherProfileId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(t => t.Packages)
+                .HasForeignKey(p => p.TeacherProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
-        builder.Entity<Booking>(entity => {
+        builder.Entity<Booking>(entity =>
+        {
             entity.HasOne(b => b.Student)
-                  .WithMany()
-                  .HasForeignKey(b => b.StudentId)
-                  .OnDelete(DeleteBehavior.Restrict);
+                .WithMany()
+                .HasForeignKey(b => b.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(b => b.TeacherProfile)
-                  .WithMany()
-                  .HasForeignKey(b => b.TeacherProfileId)
-                  .OnDelete(DeleteBehavior.Restrict);
+                .WithMany()
+                .HasForeignKey(b => b.TeacherProfileId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(b => b.Package)
-                  .WithMany()
-                  .HasForeignKey(b => b.PackageId)
-                  .OnDelete(DeleteBehavior.SetNull);
+                .WithMany()
+                .HasForeignKey(b => b.PackageId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
-        builder.Entity<Session>(entity => {
+        builder.Entity<Session>(entity =>
+        {
             entity.HasOne(s => s.Booking)
-                  .WithMany(b => b.Sessions)
-                  .HasForeignKey(s => s.BookingId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(b => b.Sessions)
+                .HasForeignKey(s => s.BookingId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(s => s.Student)
-                  .WithMany()
-                  .HasForeignKey(s => s.StudentId)
-                  .OnDelete(DeleteBehavior.Restrict);
+                .WithMany()
+                .HasForeignKey(s => s.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(s => s.TeacherProfile)
-                  .WithMany()
-                  .HasForeignKey(s => s.TeacherProfileId)
-                  .OnDelete(DeleteBehavior.Restrict);
+                .WithMany()
+                .HasForeignKey(s => s.TeacherProfileId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // Financial System Configuration
-        builder.Entity<WalletTransaction>(entity => {
-            // Partial Unique Index to enforce Idempotency on External Provider Transactions
+        builder.Entity<Wallet>(entity =>
+        {
+            entity.HasIndex(w => w.UserId).IsUnique();
+            entity.Property(w => w.Version).IsRowVersion();
+        });
+
+        builder.Entity<WalletTransaction>(entity =>
+        {
             entity.HasIndex(e => new { e.Provider, e.ProviderTransactionId })
-                  .IsUnique()
-                  .HasFilter("\"Provider\" IS NOT NULL AND \"ProviderTransactionId\" IS NOT NULL");
+                .IsUnique()
+                .HasFilter("\"Provider\" IS NOT NULL AND \"ProviderTransactionId\" IS NOT NULL");
+
+            entity.HasIndex(e => e.ReferenceId);
         });
 
-        // Promo Codes Configuration
-        builder.Entity<PromoCode>(entity => {
+        builder.Entity<PromoCode>(entity =>
+        {
             entity.HasIndex(p => p.Code).IsUnique();
         });
 
-        builder.Entity<PromoCodeUsage>(entity => {
+        builder.Entity<PromoCodeUsage>(entity =>
+        {
             entity.HasOne(u => u.PromoCode)
-                  .WithMany(p => p.Usages)
-                  .HasForeignKey(u => u.PromoCodeId)
-                  .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(p => p.Usages)
+                .HasForeignKey(u => u.PromoCodeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(u => u.User)
-                  .WithMany()
-                  .HasForeignKey(u => u.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(e => new { e.PromoCodeId, e.UserId }).IsUnique();
         });
 
-        // Progress Tracking Configuration
-        builder.Entity<SessionEvaluation>(entity => {
+        builder.Entity<SessionEvaluation>(entity =>
+        {
             entity.HasOne(e => e.Session)
-                  .WithMany()
-                  .HasForeignKey(e => e.SessionId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .HasForeignKey(e => e.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(e => e.Student)
-                  .WithMany()
-                  .HasForeignKey(e => e.StudentId)
-                  .OnDelete(DeleteBehavior.Restrict);
+                .WithMany()
+                .HasForeignKey(e => e.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(e => e.TeacherProfile)
-                  .WithMany()
-                  .HasForeignKey(e => e.TeacherProfileId)
-                  .OnDelete(DeleteBehavior.Restrict);
+                .WithMany()
+                .HasForeignKey(e => e.TeacherProfileId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasIndex(e => e.SessionId).IsUnique();
         });
 
-        // Favorites Configuration
-        builder.Entity<FavoriteTeacher>(entity => {
+        builder.Entity<FavoriteTeacher>(entity =>
+        {
             entity.HasKey(f => new { f.UserId, f.TeacherProfileId });
 
             entity.HasOne(f => f.User)
-                  .WithMany()
-                  .HasForeignKey(f => f.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(f => f.TeacherProfile)
-                  .WithMany()
-                  .HasForeignKey(f => f.TeacherProfileId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .HasForeignKey(f => f.TeacherProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
-        builder.Entity<ChatMessage>(entity => {
+        builder.Entity<ChatMessage>(entity =>
+        {
             entity.HasIndex(e => new { e.SenderId, e.ReceiverId });
         });
 
-        builder.Entity<Notification>(entity => {
+        builder.Entity<Notification>(entity =>
+        {
             entity.HasIndex(e => new { e.UserId, e.IsRead, e.CreatedAt });
         });
 
-        builder.Entity<AuditLog>(entity => {
+        builder.Entity<AuditLog>(entity =>
+        {
             entity.HasIndex(e => new { e.TargetEntity, e.CreatedAt });
         });
 
-        // ContactMessage: index on (IsRead, CreatedAt)
-        builder.Entity<ContactMessage>(entity => {
+        builder.Entity<ContactMessage>(entity =>
+        {
             entity.HasIndex(e => new { e.IsRead, e.CreatedAt });
         });
 
-        // Review: unique index on (BookingId, StudentId)
-        builder.Entity<Review>(entity => {
+        builder.Entity<Review>(entity =>
+        {
             entity.HasIndex(e => new { e.BookingId, e.StudentId }).IsUnique();
         });
 
-        // StudentBadge: unique index on (StudentId, BadgeId)
-        builder.Entity<StudentBadge>(entity => {
+        builder.Entity<StudentBadge>(entity =>
+        {
             entity.HasIndex(e => new { e.StudentId, e.BadgeId }).IsUnique();
         });
-
     }
 }

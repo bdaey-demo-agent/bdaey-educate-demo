@@ -1,6 +1,5 @@
 using BdaeyEducat.API.Data;
 using Microsoft.EntityFrameworkCore;
-
 using BdaeyEducat.API.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
@@ -15,9 +14,9 @@ public class VideoService
     private readonly IHubContext<NotificationHub> _hubContext;
 
     public VideoService(
-        IEnumerable<IVideoProvider> providers, 
-        IConfiguration configuration, 
-        ApplicationDbContext context, 
+        IEnumerable<IVideoProvider> providers,
+        IConfiguration configuration,
+        ApplicationDbContext context,
         ILogger<VideoService> logger,
         IHubContext<NotificationHub> hubContext)
     {
@@ -31,24 +30,40 @@ public class VideoService
     private IVideoProvider GetActiveProvider()
     {
         var providerName = _configuration["Video:Provider"] ?? "daily";
-        var provider = _providers.FirstOrDefault(p => p.ProviderName.Equals(providerName, StringComparison.OrdinalIgnoreCase));
-        
+        var provider = _providers.FirstOrDefault(p =>
+            p.ProviderName.Equals(providerName, StringComparison.OrdinalIgnoreCase));
+
         if (provider == null)
-            throw new Exception($"Video provider '{providerName}' not found.");
-            
+            throw new InvalidOperationException($"Video provider '{providerName}' is not configured.");
+
         return provider;
     }
 
-    public async Task<VideoRoomInfo> PrepareSessionAsync(int sessionId)
+    public async Task<VideoRoomInfo> PrepareSessionAsync(int sessionId, string actorUserId, bool isAdmin = false)
     {
         var session = await _context.Sessions
             .Include(s => s.TeacherProfile)
                 .ThenInclude(t => t!.User)
             .FirstOrDefaultAsync(s => s.Id == sessionId);
 
-        if (session == null) throw new Exception("Session not found.");
+        if (session == null)
+            throw new KeyNotFoundException("Session not found.");
 
-        // If already prepared, return existing
+        var isAssignedTeacher = session.TeacherProfile?.UserId == actorUserId;
+        if (!isAdmin && !isAssignedTeacher)
+        {
+            _logger.LogWarning(
+                "Unauthorized room preparation attempt. User {UserId}, Session {SessionId}",
+                actorUserId,
+                sessionId);
+            throw new UnauthorizedAccessException("You are not allowed to prepare this session room.");
+        }
+
+        return await PrepareSessionCoreAsync(session);
+    }
+
+    private async Task<VideoRoomInfo> PrepareSessionCoreAsync(Data.Entities.Session session)
+    {
         if (!string.IsNullOrEmpty(session.RoomUrl) && !string.IsNullOrEmpty(session.DailyRoomName))
         {
             return new VideoRoomInfo
@@ -59,9 +74,12 @@ public class VideoService
         }
 
         var provider = GetActiveProvider();
-        var title = $"Session #{sessionId} - {session.TeacherProfile?.User?.FullName}";
-        
-        var roomInfo = await provider.PrepareRoomAsync(sessionId, title, session.DurationMinutes, session.ScheduledAt);
+        var title = $"Session #{session.Id} - {session.TeacherProfile?.User?.FullName}";
+        var roomInfo = await provider.PrepareRoomAsync(
+            session.Id,
+            title,
+            session.DurationMinutes,
+            session.ScheduledAt);
 
         session.VideoProvider = provider.ProviderName;
         session.DailyRoomName = roomInfo.RoomName;
@@ -69,11 +87,14 @@ public class VideoService
         session.VideoStatus = "ready";
 
         await _context.SaveChangesAsync();
-
         return roomInfo;
     }
 
-    public async Task<VideoJoinInfo> GetJoinInfoAsync(int sessionId, string userId, string? excludeConnectionId = null)
+    public async Task<VideoJoinInfo> GetJoinInfoAsync(
+        int sessionId,
+        string userId,
+        string? excludeConnectionId = null,
+        bool isAdmin = false)
     {
         var session = await _context.Sessions
             .Include(s => s.Student)
@@ -81,20 +102,50 @@ public class VideoService
                 .ThenInclude(t => t!.User)
             .FirstOrDefaultAsync(s => s.Id == sessionId);
 
-        if (session == null) throw new Exception("Session not found.");
-        if (string.IsNullOrEmpty(session.RoomUrl)) throw new Exception("Session room not prepared.");
+        if (session == null)
+            throw new KeyNotFoundException("Session not found.");
 
-        var user = await _context.Users.FindAsync(userId);
-        if (user == null) throw new Exception("User not found.");
+        if (string.IsNullOrEmpty(session.RoomUrl))
+            throw new InvalidOperationException("Session room is not prepared.");
 
         var isTeacher = session.TeacherProfile?.UserId == userId;
-        var displayName = user.FullName ?? user.UserName ?? "Guest";
+        var isStudent = session.StudentId == userId;
+        if (!isAdmin && !isTeacher && !isStudent)
+        {
+            _logger.LogWarning(
+                "Unauthorized room join attempt. User {UserId}, Session {SessionId}",
+                userId,
+                sessionId);
+            throw new UnauthorizedAccessException("You are not a participant in this session.");
+        }
 
-        // Force disconnect other devices for this user
-        // Force disconnect other devices for this user
+        if (!isAdmin && session.Status == Data.Entities.SessionStatus.Cancelled)
+            throw new InvalidOperationException("This session has been cancelled.");
+
+        var earlyJoinMinutes = int.TryParse(_configuration["Video:EarlyJoinMinutes"], out var configuredEarly)
+            ? Math.Clamp(configuredEarly, 0, 60)
+            : 15;
+        var lateJoinMinutes = int.TryParse(_configuration["Video:LateJoinMinutes"], out var configuredLate)
+            ? Math.Clamp(configuredLate, 0, 180)
+            : 30;
+
+        var now = DateTime.UtcNow;
+        var opensAt = session.ScheduledAt.AddMinutes(-earlyJoinMinutes);
+        var closesAt = session.ScheduledAt.AddMinutes(session.DurationMinutes + lateJoinMinutes);
+        if (!isAdmin && (now < opensAt || now > closesAt))
+            throw new InvalidOperationException("The session room is not available at this time.");
+
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null)
+            throw new KeyNotFoundException("User not found.");
+
+        var displayName = user.FullName ?? user.UserName ?? "User";
+
         if (!string.IsNullOrEmpty(excludeConnectionId))
         {
-            await _hubContext.Clients.GroupExcept(userId, new[] { excludeConnectionId }).SendAsync("ForceDisconnect", sessionId);
+            await _hubContext.Clients
+                .GroupExcept(userId, new[] { excludeConnectionId })
+                .SendAsync("ForceDisconnect", sessionId);
         }
         else
         {
@@ -102,36 +153,50 @@ public class VideoService
         }
 
         var provider = GetActiveProvider();
-        try 
+        try
         {
-            var joinInfo = await provider.GetJoinInfoAsync(sessionId, session.DailyRoomName ?? "", userId, displayName, isTeacher);
-            joinInfo.RoomUrl = session.RoomUrl;
-            joinInfo.ScheduledAt = session.ScheduledAt;
-            joinInfo.DurationMinutes = session.DurationMinutes;
-            joinInfo.StudentId = session.StudentId;
+            var joinInfo = await provider.GetJoinInfoAsync(
+                sessionId,
+                session.DailyRoomName ?? string.Empty,
+                userId,
+                displayName,
+                isTeacher || isAdmin);
+            PopulateJoinInfo(joinInfo, session);
             return joinInfo;
         }
-        catch (Exception)
+        catch (UnauthorizedAccessException)
         {
-            // Token generation failed, likely because room expired or invalid.
-            // Try to re-prepare the room properly.
-            _logger.LogWarning($"Token generation failed for session {sessionId}. Attempting to re-create room.");
-            
-            // Clear old room info
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(
+                ex,
+                "Token generation failed for session {SessionId}. Attempting to recreate the room.",
+                sessionId);
+
             session.RoomUrl = null;
             session.DailyRoomName = null;
             await _context.SaveChangesAsync();
 
-            // Re-prepare
-            var roomInfo = await PrepareSessionAsync(sessionId);
-            
-            // Retry token generation
-            var joinInfo = await provider.GetJoinInfoAsync(sessionId, roomInfo.RoomName, userId, displayName, isTeacher);
+            var roomInfo = await PrepareSessionCoreAsync(session);
+            var joinInfo = await provider.GetJoinInfoAsync(
+                sessionId,
+                roomInfo.RoomName,
+                userId,
+                displayName,
+                isTeacher || isAdmin);
+            PopulateJoinInfo(joinInfo, session);
             joinInfo.RoomUrl = roomInfo.RoomUrl;
-            joinInfo.ScheduledAt = session.ScheduledAt;
-            joinInfo.DurationMinutes = session.DurationMinutes;
-            joinInfo.StudentId = session.StudentId;
             return joinInfo;
         }
+    }
+
+    private static void PopulateJoinInfo(VideoJoinInfo joinInfo, Data.Entities.Session session)
+    {
+        joinInfo.RoomUrl = session.RoomUrl ?? string.Empty;
+        joinInfo.ScheduledAt = session.ScheduledAt;
+        joinInfo.DurationMinutes = session.DurationMinutes;
+        joinInfo.StudentId = session.StudentId;
     }
 }

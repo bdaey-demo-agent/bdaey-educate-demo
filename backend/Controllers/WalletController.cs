@@ -6,7 +6,6 @@ using BdaeyEducat.API.Data.Entities;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using BdaeyEducat.API.Dtos;
-
 using Microsoft.AspNetCore.Identity;
 
 namespace BdaeyEducat.API.Controllers;
@@ -21,9 +20,15 @@ public class WalletController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IKashierPaymentService _kashierService;
     private readonly IConfiguration _configuration;
-    private readonly Microsoft.Extensions.Logging.ILogger<WalletController> _logger;
+    private readonly ILogger<WalletController> _logger;
 
-    public WalletController(IWalletService walletService, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IKashierPaymentService kashierService, IConfiguration configuration, Microsoft.Extensions.Logging.ILogger<WalletController> logger)
+    public WalletController(
+        IWalletService walletService,
+        ApplicationDbContext context,
+        UserManager<ApplicationUser> userManager,
+        IKashierPaymentService kashierService,
+        IConfiguration configuration,
+        ILogger<WalletController> logger)
     {
         _walletService = walletService;
         _context = context;
@@ -40,12 +45,11 @@ public class WalletController : ControllerBase
         if (userId == null) return Unauthorized();
 
         var wallet = await _walletService.GetOrCreateWalletAsync(userId);
-        
         return Ok(new
         {
             Balance = wallet.Balance,
             Currency = wallet.Currency,
-            Transactions = wallet.Transactions.Select(t => new 
+            Transactions = wallet.Transactions.Select(t => new
             {
                 t.Id,
                 t.Amount,
@@ -63,70 +67,42 @@ public class WalletController : ControllerBase
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
+        if (dto.Amount < 10 || dto.Amount > 1_000_000)
+            return BadRequest("Deposit amount must be between 10 and 1,000,000 EGP.");
 
-        if (dto.Amount < 10) return BadRequest("Minimum deposit amount is 10 EGP.");
+        var frontendUrl = (_configuration["FrontendUrl"] ?? "https://bdaey.com").TrimEnd('/');
+        var returnUrl = string.IsNullOrWhiteSpace(dto.ReturnUrl)
+            ? $"{frontendUrl}/wallet"
+            : dto.ReturnUrl;
 
-        // Resolve Return URL
-        string returnUrl = dto.ReturnUrl ?? string.Empty;
-        if (string.IsNullOrEmpty(returnUrl))
-        {
-            if (Request.Headers.ContainsKey("Referer"))
-            {
-                returnUrl = Request.Headers["Referer"].ToString();
-                _logger.LogInformation("[Deposit Request] ReturnUrl missing in DTO, using Referer: {ReturnUrl}", returnUrl);
-            }
-            else
-            {
-                var frontendUrl = _configuration["FrontendUrl"] ?? "https://bdaey.com";
-                returnUrl = $"{frontendUrl}/wallet"; // Final fallback
-                _logger.LogInformation("[Deposit Request] ReturnUrl missing in DTO and Referer. Using default: {ReturnUrl}", returnUrl);
-            }
-        }
-        else
-        {
-            _logger.LogInformation("[Deposit Request] ReturnUrl received from DTO: {ReturnUrl}", returnUrl);
-        }
-        
-        _logger.LogInformation("[Deposit Request] User: {UserId}, Amount: {Amount}, Final ReturnUrl: {ReturnUrl}", userId, dto.Amount, returnUrl);
-
-        // Generate Unique Order ID (short to fit gateway length limits)
-        var orderId = $"DEP-{Guid.NewGuid().ToString("N")[..10].ToUpper()}";
-
-        // We need user name/email for Kashier (optional but good for dashboard)
+        var orderId = $"DEP-{Guid.NewGuid().ToString("N")[..10].ToUpperInvariant()}";
         var user = await _userManager.FindByIdAsync(userId);
         var customerName = user?.FullName ?? "User";
         var customerEmail = user?.Email ?? "user@bdaey.com";
 
-        // 2. Callback URL
-        var callbackUrl = $"{Request.Scheme}://{Request.Host}/api/payments/kashier/callback";
+        var publicApiUrl = _configuration["PublicApiUrl"]?.TrimEnd('/');
+        if (string.IsNullOrWhiteSpace(publicApiUrl))
+            publicApiUrl = $"{Request.Scheme}://{Request.Host}";
+        var callbackUrl = $"{publicApiUrl}/api/payments/kashier/callback";
 
-        // Store ReturnUrl in description for retrieval in callback
-        string description = "Pending Deposit via Kashier";
-
-        // 3. Save Pending Transaction 
         await _walletService.InitiateDepositAsync(
-            userId, 
-            dto.Amount, 
-            orderId, 
-            description,
-            returnUrl // Pass explicity to new column
-        );
+            userId,
+            dto.Amount,
+            orderId,
+            "Pending Deposit via Kashier",
+            returnUrl);
 
-        // 4. Generate URL
         var paymentUrl = _kashierService.GeneratePaymentUrl(
-            orderId, 
-            dto.Amount, 
-            "EGP", 
-            customerName, 
+            orderId,
+            dto.Amount,
+            "EGP",
+            customerName,
             customerEmail,
             callbackUrl,
-            returnUrl // Pass Resolved Return URL
-        );
+            returnUrl);
 
         return Ok(new { paymentUrl });
     }
-
-
 
     [HttpPost("redeem-promo")]
     [Authorize(Roles = "Student")]
@@ -134,79 +110,93 @@ public class WalletController : ControllerBase
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
+        if (string.IsNullOrWhiteSpace(dto.Code)) return BadRequest(new { message = "كود الخصم مطلوب." });
 
         var normalizedCode = dto.Code.Trim().ToUpperInvariant();
+        await using var dbTransaction = await _context.Database.BeginTransactionAsync();
 
-        var promoCode = await _context.PromoCodes
-            .FirstOrDefaultAsync(p => p.Code == normalizedCode && p.IsActive);
-
-        if (promoCode == null) return BadRequest(new { message = "هذا الكوبون غير موجود أو تم إيقافه." });
-
-        if (promoCode.ExpiryDate.HasValue && promoCode.ExpiryDate.Value < DateTime.UtcNow)
+        try
         {
-            return BadRequest(new { message = "لقد انتهت صلاحية هذا الكوبون." });
+            var promoCode = await _context.PromoCodes
+                .FirstOrDefaultAsync(p => p.Code == normalizedCode);
+
+            if (promoCode == null || !promoCode.IsActive)
+                return BadRequest(new { message = "هذا الكوبون غير موجود أو تم إيقافه." });
+
+            await _context.Database.ExecuteSqlInterpolatedAsync(
+                $"SELECT 1 FROM quran.\"PromoCodes\" WHERE \"Id\" = {promoCode.Id} FOR UPDATE;");
+            await _context.Entry(promoCode).ReloadAsync();
+
+            if (!promoCode.IsActive)
+                return BadRequest(new { message = "هذا الكوبون غير موجود أو تم إيقافه." });
+            if (promoCode.ExpiryDate.HasValue && promoCode.ExpiryDate.Value < DateTime.UtcNow)
+                return BadRequest(new { message = "لقد انتهت صلاحية هذا الكوبون." });
+            if (promoCode.MaxUses > 0 && promoCode.CurrentUses >= promoCode.MaxUses)
+                return BadRequest(new { message = "لقد تم استخدام هذا الكوبون للحد الأقصى المسموح به." });
+
+            var alreadyUsed = await _context.PromoCodeUsages.AnyAsync(u =>
+                u.PromoCodeId == promoCode.Id && u.UserId == userId);
+            if (alreadyUsed)
+                return BadRequest(new { message = "لقد قمت باستخدام هذا الكوبون مسبقاً." });
+
+            var startOfMonth = new DateTime(
+                DateTime.UtcNow.Year,
+                DateTime.UtcNow.Month,
+                1,
+                0,
+                0,
+                0,
+                DateTimeKind.Utc);
+            var totalRedeemedThisMonth = await _context.PromoCodeUsages
+                .Where(u => u.UserId == userId && u.UsedAt >= startOfMonth)
+                .SumAsync(u => u.AmountRedeemed);
+
+            const decimal monthlyLimit = 100m;
+            if (totalRedeemedThisMonth + promoCode.Amount > monthlyLimit)
+            {
+                return BadRequest(new
+                {
+                    message = $"لقد تجاوزت الحد الأقصى لشحن الكوبونات شهرياً. يمكنك استرداد ما يصل إلى {monthlyLimit} ج.م في الشهر. لقد استرددت بالفعل {totalRedeemedThisMonth} ج.م هذا الشهر."
+                });
+            }
+
+            var usage = new PromoCodeUsage
+            {
+                PromoCodeId = promoCode.Id,
+                UserId = userId,
+                AmountRedeemed = promoCode.Amount,
+                UsedAt = DateTime.UtcNow
+            };
+
+            _context.PromoCodeUsages.Add(usage);
+            promoCode.CurrentUses += 1;
+            await _context.SaveChangesAsync();
+
+            await _walletService.ProcessTransactionAsync(
+                userId,
+                promoCode.Amount,
+                TransactionType.Deposit,
+                $"Promo Code Redeemed: {promoCode.Code}",
+                referenceId: $"PROMO-{usage.Id}",
+                provider: "PromoCode",
+                providerTransactionId: $"promo:{promoCode.Id}:{userId}");
+
+            await dbTransaction.CommitAsync();
+            return Ok(new { message = "تم شحن المحفظة بالكوبون بنجاح.", amount = promoCode.Amount });
         }
-
-        if (promoCode.MaxUses > 0 && promoCode.CurrentUses >= promoCode.MaxUses)
+        catch (DbUpdateException ex)
         {
-            return BadRequest(new { message = "لقد تم استخدام هذا الكوبون للحد الأقصى المسموح به." });
+            await dbTransaction.RollbackAsync();
+            _logger.LogWarning(ex, "Duplicate or conflicting promo redemption for user {UserId}, code {Code}", userId, normalizedCode);
+            return Conflict(new { message = "تم استخدام هذا الكوبون بالفعل أو حدث تعارض، يرجى تحديث الصفحة." });
         }
-
-        // Check if student already used this exact code
-        bool alreadyUsed = await _context.PromoCodeUsages
-            .AnyAsync(u => u.PromoCodeId == promoCode.Id && u.UserId == userId);
-
-        if (alreadyUsed)
+        catch (Exception ex)
         {
-            return BadRequest(new { message = "لقد قمت باستخدام هذا الكوبون مسبقاً." });
+            await dbTransaction.RollbackAsync();
+            _logger.LogError(ex, "Promo redemption failed for user {UserId}, code {Code}", userId, normalizedCode);
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "تعذر استخدام الكوبون حالياً." });
         }
-
-        // Calculate total amount redeemed by this student THIS MONTH to enforce the 100 EGP limit
-        var startOfMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        
-        var totalRedeemedThisMonth = await _context.PromoCodeUsages
-            .Where(u => u.UserId == userId && u.UsedAt >= startOfMonth)
-            .SumAsync(u => u.AmountRedeemed);
-
-        var limit = 100m; // 100 EGP max per month
-        if (totalRedeemedThisMonth + promoCode.Amount > limit)
-        {
-            return BadRequest(new { message = $"لقد تجاوزت الحد الأقصى لشحن الكوبونات شهرياً. يمكنك استرداد ما يصل إلى {limit} ج.م في الشهر. لقد استرددت بالفعل {totalRedeemedThisMonth} ج.م هذا الشهر." });
-        }
-
-        // Create usage record
-        var usage = new PromoCodeUsage
-        {
-            PromoCodeId = promoCode.Id,
-            UserId = userId,
-            AmountRedeemed = promoCode.Amount,
-            UsedAt = DateTime.UtcNow
-        };
-
-        _context.PromoCodeUsages.Add(usage);
-        
-        promoCode.CurrentUses += 1;
-
-        await _context.SaveChangesAsync(); // Save before wallet processing to ensure usage is recorded
-
-        // Add funds to wallet
-        string description = $"Promo Code Redeemed: {promoCode.Code}";
-        await _walletService.ProcessTransactionAsync(
-            userId,
-            promoCode.Amount,
-            TransactionType.Deposit,
-            description,
-            referenceId: $"PROMO-{usage.Id}",
-            provider: "PromoCode",
-            providerTransactionId: Guid.NewGuid().ToString() // Unique idempotency key
-        );
-
-        return Ok(new { message = "تم شحن المحفظة بالكوبون بنجاح.", amount = promoCode.Amount });
     }
-
-    // ==========================================
-    // ADMIN ENDPOINTS
-    // ==========================================
 
     [HttpGet("admin/transactions")]
     [Authorize(Roles = "Admin")]
@@ -229,19 +219,18 @@ public class WalletController : ControllerBase
     public async Task<ActionResult> GetUserWallet(string userId)
     {
         var wallet = await _walletService.GetOrCreateWalletAsync(userId);
-        
         return Ok(new
         {
             Balance = wallet.Balance,
             Currency = wallet.Currency,
-            Transactions = wallet.Transactions.OrderByDescending(t => t.CreatedAt).Select(t => new 
+            Transactions = wallet.Transactions.OrderByDescending(t => t.CreatedAt).Select(t => new
             {
                 t.Id,
                 t.Amount,
                 Type = t.Type.ToString(),
                 Status = t.Status.ToString(),
-                Description = t.Description,
-                CreatedAt = t.CreatedAt
+                t.Description,
+                t.CreatedAt
             })
         });
     }
@@ -250,6 +239,7 @@ public class WalletController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult> AdminDeposit([FromBody] AdminDepositDto dto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.UserEmail);
         if (user == null) return NotFound("The specified user was not found.");
 
@@ -258,10 +248,8 @@ public class WalletController : ControllerBase
             dto.Amount,
             TransactionType.Deposit,
             string.IsNullOrEmpty(dto.Description) ? "Admin Deposit" : dto.Description,
-            null, // ReferenceId
-            "Admin", // Provider
-            Guid.NewGuid().ToString() // ProviderTransactionId (Unique for Idempotency)
-        );
+            provider: "Admin",
+            providerTransactionId: Guid.NewGuid().ToString());
 
         return Ok(new { Message = "Funds added successfully" });
     }
@@ -272,11 +260,9 @@ public class WalletController : ControllerBase
     {
         if (dto.Amount <= 0) return BadRequest("Amount must be positive");
 
-        List<string> userIds = new List<string>();
-
+        List<string> userIds;
         if (dto.IsAll)
         {
-            // Get all APPROVED teachers
             userIds = await _context.TeacherProfiles
                 .Where(t => t.IsApproved && !string.IsNullOrEmpty(t.UserId))
                 .Select(t => t.UserId)
@@ -295,35 +281,32 @@ public class WalletController : ControllerBase
 
         if (!userIds.Any()) return BadRequest("No valid teachers found for deposit.");
 
-        var batchId = Guid.NewGuid().ToString(); // Group transaction reference
-        int successCount = 0;
-
-        foreach (var userId in userIds)
+        var batchId = Guid.NewGuid().ToString();
+        var successCount = 0;
+        foreach (var targetUserId in userIds)
         {
             try
             {
                 await _walletService.ProcessTransactionAsync(
-                    userId,
+                    targetUserId,
                     dto.Amount,
                     TransactionType.Deposit,
                     string.IsNullOrEmpty(dto.Description) ? "Bulk Admin Deposit" : dto.Description,
-                    referenceId: "Bulk-" + batchId, 
-                    provider: "AdminBulk", 
-                    providerTransactionId: Guid.NewGuid().ToString()
-                );
+                    referenceId: $"Bulk-{batchId}",
+                    provider: "AdminBulk",
+                    providerTransactionId: $"{batchId}:{targetUserId}");
                 successCount++;
             }
             catch (Exception ex)
             {
-                // Log error but continue
-                _logger.LogError(ex, "Failed to deposit for user {UserId}: {Message}", userId, ex.Message);
+                _logger.LogError(ex, "Failed to deposit for user {UserId}", targetUserId);
             }
         }
 
-        return Ok(new 
-        { 
-            Message = $"Processed deposit for {successCount}/{userIds.Count} teachers.", 
-            TotalAmount = successCount * dto.Amount 
+        return Ok(new
+        {
+            Message = $"Processed deposit for {successCount}/{userIds.Count} teachers.",
+            TotalAmount = successCount * dto.Amount
         });
     }
 
@@ -333,11 +316,9 @@ public class WalletController : ControllerBase
     {
         if (dto.Amount <= 0) return BadRequest("Amount must be positive");
 
-        List<string> userIds = new List<string>();
-
+        List<string> userIds;
         if (dto.IsAll)
         {
-            // Get all user ids in "Student" role
             var students = await _userManager.GetUsersInRoleAsync("Student");
             userIds = students.Select(s => s.Id).ToList();
         }
@@ -346,7 +327,6 @@ public class WalletController : ControllerBase
             if (dto.UserIds == null || !dto.UserIds.Any())
                 return BadRequest("No students selected");
 
-            // Verify users exist (optional: verify they are students)
             userIds = await _context.Users
                 .Where(u => dto.UserIds.Contains(u.Id))
                 .Select(u => u.Id)
@@ -356,26 +336,24 @@ public class WalletController : ControllerBase
         if (!userIds.Any()) return BadRequest("No valid students found for deposit.");
 
         var batchId = Guid.NewGuid().ToString();
-        int successCount = 0;
-
-        foreach (var userId in userIds)
+        var successCount = 0;
+        foreach (var targetUserId in userIds)
         {
             try
             {
                 await _walletService.ProcessTransactionAsync(
-                    userId,
+                    targetUserId,
                     dto.Amount,
                     TransactionType.Deposit,
                     string.IsNullOrEmpty(dto.Description) ? "Bulk Student Deposit" : dto.Description,
-                    referenceId: "Bulk-" + batchId,
+                    referenceId: $"Bulk-{batchId}",
                     provider: "AdminBulk",
-                    providerTransactionId: Guid.NewGuid().ToString()
-                );
+                    providerTransactionId: $"{batchId}:{targetUserId}");
                 successCount++;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to deposit for user {UserId}: {Message}", userId, ex.Message);
+                _logger.LogError(ex, "Failed to deposit for user {UserId}", targetUserId);
             }
         }
 

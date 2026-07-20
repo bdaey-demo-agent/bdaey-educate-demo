@@ -19,12 +19,17 @@ public class Wallet
     public decimal OnHoldBalance { get; set; } = 0;
 
     [Column(TypeName = "decimal(18,2)")]
-    public decimal PendingBalance { get; set; } = 0; // Earnings waiting for 24h
+    public decimal PendingBalance { get; set; } = 0;
 
     public string Currency { get; set; } = "EGP";
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    // PostgreSQL xmin optimistic-concurrency token. Npgsql maps uint row-version
+    // properties to the system xmin column when configured with IsRowVersion().
+    [Timestamp]
+    public uint Version { get; set; }
 
     public List<WalletTransaction> Transactions { get; set; } = new();
 }

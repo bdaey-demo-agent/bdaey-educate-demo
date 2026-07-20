@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using BdaeyEducat.API.Data;
 using BdaeyEducat.API.Data.Entities;
+using BdaeyEducat.API.Filters;
 using BdaeyEducat.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
@@ -99,7 +100,11 @@ builder.Services.AddAuthentication(options =>
 });
 
 // 4. Add Controllers
-builder.Services.AddControllers()
+builder.Services.AddScoped<SecurityHardeningFilter>();
+builder.Services.AddControllers(options =>
+    {
+        options.Filters.Add<SecurityHardeningFilter>();
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
@@ -126,21 +131,19 @@ builder.Services.AddCors(options =>
                 {
                     var uri = new Uri(origin);
                     var host = uri.Host;
-                    
-                    // Allow localhost
-                    if (host == "localhost" || host == "127.0.0.1") return true;
-                    
-                    // Allow any subdomain of bdaey.com
-                    if (host == "bdaey.com" || host.EndsWith(".bdaey.com")) return true;
-                    
-                    // Allow Vercel & Netlify
-                    if (host.EndsWith(".vercel.app") || host.EndsWith(".netlify.app")) return true;
-                    
-                    // Allow local network IP addresses
-                    if (host.StartsWith("192.168.") || host.StartsWith("10.") || host.StartsWith("172.")) return true;
 
-                    // Fallback to allowedOrigins configuration
-                    return allowedOrigins.Contains(origin);
+                    // Local and private-network origins are development-only.
+                    if (builder.Environment.IsDevelopment())
+                    {
+                        if (host == "localhost" || host == "127.0.0.1") return true;
+                        if (host.StartsWith("192.168.") || host.StartsWith("10.") || host.StartsWith("172.")) return true;
+                    }
+
+                    // First-party production domains.
+                    if (host == "bdaey.com" || host.EndsWith(".bdaey.com", StringComparison.OrdinalIgnoreCase)) return true;
+
+                    // All other hosts must be explicitly configured. Wildcard Vercel/Netlify access is not trusted.
+                    return allowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase);
                 }
                 catch
                 {
@@ -267,31 +270,31 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
-// Global Exception Handler to ensure CORS headers even on hard crashes
+// Return a stable public error shape while logging the full exception server-side.
 app.UseExceptionHandler(appError =>
 {
     appError.Run(async context =>
     {
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
-        
-        // Ensure CORS headers for the error response
-        var origin = context.Request.Headers["Origin"].ToString();
-        if (!string.IsNullOrEmpty(origin))
+        var exceptionFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+        var logger = context.RequestServices
+            .GetRequiredService<ILoggerFactory>()
+            .CreateLogger("GlobalExceptionHandler");
+
+        if (exceptionFeature?.Error is not null)
         {
-            context.Response.Headers["Access-Control-Allow-Origin"] = origin;
-            context.Response.Headers["Access-Control-Allow-Credentials"] = "true";
+            logger.LogError(
+                exceptionFeature.Error,
+                "Unhandled request exception. TraceId: {TraceId}",
+                context.TraceIdentifier);
         }
 
-        var contextFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
-        if (contextFeature != null)
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsJsonAsync(new
         {
-            await context.Response.WriteAsJsonAsync(new
-            {
-                message = "Internal Server Error",
-                error = contextFeature.Error.Message
-            });
-        }
+            message = "Internal Server Error",
+            traceId = context.TraceIdentifier
+        });
     });
 });
 

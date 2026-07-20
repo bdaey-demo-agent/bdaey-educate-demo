@@ -3,6 +3,7 @@ using BdaeyEducat.API.Services;
 using BdaeyEducat.API.Data.Entities;
 using BdaeyEducat.API.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace BdaeyEducat.API.Controllers;
 
@@ -17,7 +18,7 @@ public class PaymentsController : ControllerBase
     private readonly ILogger<PaymentsController> _logger;
 
     public PaymentsController(
-        IKashierPaymentService kashierService, 
+        IKashierPaymentService kashierService,
         IWalletService walletService,
         ApplicationDbContext context,
         IConfiguration configuration,
@@ -43,26 +44,29 @@ public class PaymentsController : ControllerBase
             if (!_kashierService.ValidateSignature(query))
             {
                 _logger.LogWarning("Invalid Kashier signature for OrderId: {OrderId}", orderId);
-                await _walletService.FailDepositAsync(orderId, null, "invalid_signature");
                 return Unauthorized(new { error = "invalid_signature" });
             }
 
-            string paymentStatus = query.ContainsKey("paymentStatus") ? query["paymentStatus"].ToString() : "UNKNOWN";
-            string transactionId = query.ContainsKey("transactionId") ? query["transactionId"].ToString() : "N/A";
+            string paymentStatus = query.TryGetValue("paymentStatus", out var statusValue)
+                ? statusValue.ToString()
+                : "UNKNOWN";
+            string transactionId = query.TryGetValue("transactionId", out var transactionValue)
+                ? transactionValue.ToString()
+                : "N/A";
 
-            if (paymentStatus != "SUCCESS")
+            if (!string.Equals(paymentStatus, "SUCCESS", StringComparison.OrdinalIgnoreCase))
             {
                 _logger.LogWarning("Kashier payment failed for OrderId: {OrderId}, Status: {Status}", orderId, paymentStatus);
-                await _walletService.FailDepositAsync(orderId, transactionId, $"payment_{paymentStatus.ToLower()}");
+                await _walletService.FailDepositAsync(orderId, transactionId, $"payment_{paymentStatus.ToLowerInvariant()}");
             }
 
             var allowedOrigins = _configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
             var frontendUrl = _configuration["FrontendUrl"] ?? "https://bdaey.com";
 
-            string returnUrl = $"{frontendUrl}/wallet";
-            if (query.ContainsKey("returnTo") && !string.IsNullOrWhiteSpace(query["returnTo"]))
+            string returnUrl = $"{frontendUrl.TrimEnd('/')}/wallet";
+            if (query.TryGetValue("returnTo", out var returnToValue) && !string.IsNullOrWhiteSpace(returnToValue))
             {
-                var rawReturnUrl = query["returnTo"].ToString();
+                var rawReturnUrl = returnToValue.ToString();
                 if (IsAllowedRedirectUrl(rawReturnUrl, allowedOrigins, frontendUrl))
                 {
                     returnUrl = rawReturnUrl;
@@ -74,21 +78,29 @@ public class PaymentsController : ControllerBase
             }
 
             var pendingTx = await _context.WalletTransactions
+                .AsNoTracking()
                 .FirstOrDefaultAsync(t => t.ReferenceId == orderId);
 
             if (pendingTx != null)
             {
-                if (!string.IsNullOrEmpty(pendingTx.ReturnUrl))
+                string? storedReturnUrl = null;
+                if (!string.IsNullOrWhiteSpace(pendingTx.ReturnUrl))
                 {
-                    returnUrl = pendingTx.ReturnUrl;
+                    storedReturnUrl = pendingTx.ReturnUrl;
                 }
-                else if (pendingTx.Description.Contains("|RETURN_URL="))
+                else if (pendingTx.Description.Contains("|RETURN_URL=", StringComparison.Ordinal))
                 {
                     var parts = pendingTx.Description.Split(new[] { "|RETURN_URL=" }, StringSplitOptions.None);
                     if (parts.Length > 1 && !string.IsNullOrWhiteSpace(parts[1]))
-                    {
-                        returnUrl = parts[1].Trim();
-                    }
+                        storedReturnUrl = parts[1].Trim();
+                }
+
+                if (!string.IsNullOrWhiteSpace(storedReturnUrl))
+                {
+                    if (IsAllowedRedirectUrl(storedReturnUrl, allowedOrigins, frontendUrl))
+                        returnUrl = storedReturnUrl;
+                    else
+                        _logger.LogWarning("Blocked unsafe stored return URL for OrderId {OrderId}: {ReturnUrl}", orderId, storedReturnUrl);
                 }
             }
             else
@@ -96,32 +108,25 @@ public class PaymentsController : ControllerBase
                 _logger.LogWarning("Pending transaction NOT FOUND for OrderId: {OrderId}", orderId);
             }
 
-            if (string.IsNullOrWhiteSpace(returnUrl))
+            if (pendingTx != null && string.Equals(paymentStatus, "SUCCESS", StringComparison.OrdinalIgnoreCase))
             {
-                returnUrl = $"{frontendUrl}/wallet";
-            }
-
-            if (pendingTx != null && paymentStatus == "SUCCESS")
-            {
-                if (query.ContainsKey("amount") && query.ContainsKey("currency"))
+                if (!query.TryGetValue("amount", out var amountValue) || !query.TryGetValue("currency", out var currencyValue))
                 {
-                    string callbackAmountStr = query["amount"].ToString();
-                    string callbackCurrency = query["currency"].ToString();
+                    await _walletService.FailDepositAsync(orderId, transactionId, "missing_amount_or_currency");
+                    return Redirect(AppendStatus(returnUrl, "failed", "security_mismatch"));
+                }
 
-                    if (decimal.TryParse(callbackAmountStr, out decimal callbackAmount))
-                    {
-                        if (callbackAmount != pendingTx.Amount || callbackCurrency != pendingTx.Currency)
-                        {
-                            _logger.LogWarning("Amount/currency mismatch for OrderId: {OrderId}", orderId);
-                            await _walletService.FailDepositAsync(orderId, transactionId, "amount_currency_mismatch");
-                            string sep = returnUrl.Contains("?") ? "&" : "?";
-                            return Redirect($"{returnUrl}{sep}status=failed&reason=security_mismatch");
-                        }
-                    }
+                if (!decimal.TryParse(amountValue.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out var callbackAmount) ||
+                    callbackAmount != pendingTx.Amount ||
+                    !string.Equals(currencyValue.ToString(), pendingTx.Currency, StringComparison.OrdinalIgnoreCase))
+                {
+                    _logger.LogWarning("Amount/currency mismatch for OrderId: {OrderId}", orderId);
+                    await _walletService.FailDepositAsync(orderId, transactionId, "amount_currency_mismatch");
+                    return Redirect(AppendStatus(returnUrl, "failed", "security_mismatch"));
                 }
             }
 
-            if (paymentStatus == "SUCCESS")
+            if (string.Equals(paymentStatus, "SUCCESS", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
@@ -131,43 +136,54 @@ public class PaymentsController : ControllerBase
                 {
                     _logger.LogError(ex, "Failed to complete deposit for OrderId: {OrderId}", orderId);
                     await _walletService.FailDepositAsync(orderId, transactionId, "completion_error");
-                    string sep1 = returnUrl.Contains("?") ? "&" : "?";
-                    return Redirect($"{returnUrl}{sep1}status=failed&reason=invalid_order");
+                    return Redirect(AppendStatus(returnUrl, "failed", "invalid_order"));
                 }
             }
             else
             {
-                string sep2 = returnUrl.Contains("?") ? "&" : "?";
-                return Redirect($"{returnUrl}{sep2}status=failed&reason=payment_failed");
+                return Redirect(AppendStatus(returnUrl, "failed", "payment_failed"));
             }
 
-            string separator = returnUrl.Contains("?") ? "&" : "?";
-            return Redirect($"{returnUrl}{separator}status=success");
+            return Redirect(AppendStatus(returnUrl, "success"));
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Kashier callback error");
-            return Ok(new { error = "callback_error" });
+            return StatusCode(StatusCodes.Status500InternalServerError, new { error = "callback_error" });
         }
+    }
+
+    private static string AppendStatus(string returnUrl, string status, string? reason = null)
+    {
+        var separator = returnUrl.Contains('?') ? "&" : "?";
+        var result = $"{returnUrl}{separator}status={Uri.EscapeDataString(status)}";
+        if (!string.IsNullOrWhiteSpace(reason))
+            result += $"&reason={Uri.EscapeDataString(reason)}";
+        return result;
     }
 
     private static bool IsAllowedRedirectUrl(string url, string[] allowedOrigins, string frontendUrl)
     {
-        if (string.IsNullOrWhiteSpace(url))
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+            uri.Scheme is not ("https" or "http"))
             return false;
 
-        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
-            return false;
+        var origin = BuildOrigin(uri);
 
-        var origin = $"{uri.Scheme}://{uri.Host}{(uri.Port != 80 && uri.Port != 443 ? $":{uri.Port}" : "")}";
-
-        if (allowedOrigins.Contains(origin))
+        if (allowedOrigins.Any(configured =>
+                Uri.TryCreate(configured, UriKind.Absolute, out var configuredUri) &&
+                string.Equals(BuildOrigin(configuredUri), origin, StringComparison.OrdinalIgnoreCase)))
             return true;
 
-        if (origin == frontendUrl)
-            return true;
+        return Uri.TryCreate(frontendUrl, UriKind.Absolute, out var frontendUri) &&
+               string.Equals(BuildOrigin(frontendUri), origin, StringComparison.OrdinalIgnoreCase);
+    }
 
-        return false;
+    private static string BuildOrigin(Uri uri)
+    {
+        var isDefaultPort = (uri.Scheme == Uri.UriSchemeHttps && uri.Port == 443) ||
+                            (uri.Scheme == Uri.UriSchemeHttp && uri.Port == 80);
+        return $"{uri.Scheme}://{uri.Host}{(isDefaultPort ? string.Empty : $":{uri.Port}")}";
     }
 
     private static string ExtractOrderId(IQueryCollection query)
