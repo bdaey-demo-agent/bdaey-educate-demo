@@ -1,53 +1,97 @@
-# fly.toml app configuration file for bdaey
+# Fly.io configuration for the Bdaey Educate ASP.NET Core API.
+# Deploy from the backend directory:
+#   cd backend
+#   fly deploy
 
 app = "bdaey-lms-api"
 primary_region = "fra"
 
+kill_signal = "SIGINT"
+kill_timeout = "30s"
+
 [build]
+  dockerfile = "Dockerfile"
+
+# Only non-sensitive production settings belong here.
+# Credentials and private keys must be configured with `fly secrets set`.
+[env]
+  ASPNETCORE_ENVIRONMENT = "Production"
+  ASPNETCORE_URLS = "http://0.0.0.0:8080"
+  DOTNET_EnableDiagnostics = "0"
+
+  FrontendUrl = "https://bdaey.com"
+  PublicApiUrl = "https://bdaey-lms-api.fly.dev"
+
+  Jwt__Issuer = "BdaeyEducat"
+  Jwt__Audience = "BdaeyEducat"
+  Jwt__ExpireDays = "30"
+
+  Video__Provider = "daily"
+  Video__EarlyJoinMinutes = "15"
+  Video__LateJoinMinutes = "30"
+  Daily__Domain = "bdaey-educate.daily.co"
+
+  SmtpSettings__Port = "587"
+  SmtpSettings__EnableSsl = "true"
+
+  # Exact frontend origins accepted by the production CORS policy.
+  AllowedOrigins__0 = "https://bdaey.com"
+  AllowedOrigins__1 = "https://www.bdaey.com"
+  AllowedOrigins__2 = "https://lms.bdaey.com"
+  AllowedOrigins__3 = "https://quran.bdaey.com"
+  AllowedOrigins__4 = "https://bdaey.vercel.app"
+  AllowedOrigins__5 = "https://bdaey-quran.netlify.app"
 
 [http_service]
   internal_port = 8080
   force_https = true
 
-  # Auto start/stop based on usage
-  auto_stop_machines = true
+  # The API contains scheduled background services, so keep one Machine warm.
+  auto_stop_machines = "stop"
   auto_start_machines = true
-
-  # Keep at least 1 machine running to avoid cold starts
   min_machines_running = 1
 
   processes = ["app"]
 
   [http_service.concurrency]
     type = "requests"
-    soft_limit = 20
-    hard_limit = 25
+    soft_limit = 100
+    hard_limit = 150
+
+[[http_service.checks]]
+  grace_period = "60s"
+  interval = "30s"
+  method = "GET"
+  timeout = "5s"
+  path = "/health"
+  protocol = "http"
 
 [[vm]]
   cpu_kind = "shared"
   cpus = 1
   memory = "1gb"
 
-# Expected environment variables (uncomment and set in fly secrets):
-# [env]
-#   ConnectionStrings__DefaultConnection = ""
-#   Jwt__Key = ""
-#   Jwt__Issuer = "BdaeyEducat"
-#   Jwt__Audience = "BdaeyEducat"
-#   Jwt__ExpireDays = "7"
-#   Stripe__SecretKey = ""
-#   Stripe__PublishableKey = ""
-#   Daily__ApiKey = ""
-#   SendGrid__ApiKey = ""
-#   SendGrid__FromEmail = ""
-#   SendGrid__FromName = "Bdaey"
-#   CORS__AllowedOrigins = "http://localhost:3000"
-
-# Health check (uncomment if needed):
-# [[checks]]
-#   type = "http"
-#   path = "/health"
-#   method = "GET"
-#   interval = "30s"
-#   timeout = "5s"
-#   grace_period = "10s"
+# Configure private values outside GitHub, for example:
+#
+# fly secrets set \
+#   ConnectionStrings__DefaultConnection="postgresql-connection-string" \
+#   Jwt__Key="long-random-signing-key" \
+#   Google__ClientId="google-oauth-client-id" \
+#   DAILY_API_KEY="daily-api-key" \
+#   Redis__Configuration="redis-connection-string" \
+#   Kashier__MerchantId="merchant-id" \
+#   Kashier__ApiKey="api-key" \
+#   Kashier__SecretKey="secret-key" \
+#   Kashier__Mode="test-or-live" \
+#   Kashier__BaseUrl="https://checkout.kashier.io" \
+#   SmtpSettings__Host="smtp-host" \
+#   SmtpSettings__Email="sender-email" \
+#   SmtpSettings__Password="smtp-password" \
+#   AWS__AccessKey="aws-access-key" \
+#   AWS__SecretKey="aws-secret-key" \
+#   AWS__Region="eu-central-1" \
+#   AWS__BucketName="bucket-name"
+#
+# Optional production administrator seeding settings:
+#   Admin__Email
+#   Admin__Password
