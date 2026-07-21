@@ -18,8 +18,8 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
     const [promptState, setPromptState] = useState<PromptState>('none');
     const [tempIdToken, setTempIdToken] = useState<string>('');
 
-    const isMainDomain = ['quran.bdaey.com', 'quran-front.vercel.app', 'localhost', '127.0.0.1'].includes(window.location.hostname);
-    const MAIN_QURAN_DOMAIN = isMainDomain ? window.location.origin : 'https://quran.bdaey.com';
+    const isMainDomain = true;
+    const MAIN_QURAN_DOMAIN = typeof window !== 'undefined' ? window.location.origin : '';
 
     const handleGoogleAuth = async (idToken: string, createIfNotExists: boolean, targetedRole?: string) => {
         const activeRole = targetedRole || role;

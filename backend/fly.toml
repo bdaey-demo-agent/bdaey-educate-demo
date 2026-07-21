@@ -3,7 +3,7 @@
 #   cd backend
 #   fly deploy
 
-app = "bdaey-lms-api"
+app = "bdaey-quran"
 primary_region = "fra"
 
 kill_signal = "SIGINT"
@@ -20,7 +20,7 @@ kill_timeout = "30s"
   DOTNET_EnableDiagnostics = "0"
 
   FrontendUrl = "https://bdaey.com"
-  PublicApiUrl = "https://bdaey-lms-api.fly.dev"
+  PublicApiUrl = "https://bdaey-quran.fly.dev"
 
   Jwt__Issuer = "BdaeyEducat"
   Jwt__Audience = "BdaeyEducat"
@@ -35,12 +35,10 @@ kill_timeout = "30s"
   SmtpSettings__EnableSsl = "true"
 
   # Exact frontend origins accepted by the production CORS policy.
-  AllowedOrigins__0 = "https://bdaey.com"
-  AllowedOrigins__1 = "https://www.bdaey.com"
-  AllowedOrigins__2 = "https://lms.bdaey.com"
-  AllowedOrigins__3 = "https://quran.bdaey.com"
-  AllowedOrigins__4 = "https://bdaey.vercel.app"
-  AllowedOrigins__5 = "https://bdaey-quran.netlify.app"
+  AllowedOrigins__0 = "https://bdaey.vercel.app"
+  AllowedOrigins__1 = "https://bdaey-quran.netlify.app"
+  AllowedOrigins__2 = "https://quran-front.vercel.app"
+  AllowedOrigins__3 = "https://quran-front-ef296ldzx-yousef-812s-projects.vercel.app"
 
 [http_service]
   internal_port = 8080

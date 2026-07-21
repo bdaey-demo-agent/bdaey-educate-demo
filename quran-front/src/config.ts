@@ -19,11 +19,11 @@ const getApiUrl = () => {
             if (subdomain === 'lms' || subdomain === 'quran') return 'https://api.lms.bdaey.com/api';
             return `https://${subdomain}.lms.bdaey.com/api`;
         }
-        return 'https://bdaey-lms-api.fly.dev/api';
+        return 'https://bdaey-quran.fly.dev/api';
     }
 
     if (hostname.includes('vercel.app')) {
-        return 'https://bdaey-lms-api.fly.dev/api';
+        return 'https://bdaey-quran.fly.dev/api';
     }
 
     // 3. Localhost Development

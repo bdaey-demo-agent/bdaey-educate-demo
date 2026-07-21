@@ -11,8 +11,16 @@ public static class DataSeeder
 {
     public static async Task SeedAsync(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration? config = null)
     {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-        if (env != "Development") return;
+        var adminEmail = config?["Admin:Email"] 
+            ?? Environment.GetEnvironmentVariable("Admin__Email") 
+            ?? Environment.GetEnvironmentVariable("Admin:Email") 
+            ?? Environment.GetEnvironmentVariable("ADMIN_EMAIL") 
+            ?? "admin@bdaey.com";
+
+        var adminPassword = config?["Admin:Password"] 
+            ?? Environment.GetEnvironmentVariable("Admin__Password") 
+            ?? Environment.GetEnvironmentVariable("Admin:Password") 
+            ?? Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
 
         string[] roles = { "Admin", "Teacher", "Student" };
         foreach (var role in roles)
@@ -23,10 +31,9 @@ public static class DataSeeder
             }
         }
 
-        var adminEmail = config?["Admin:Email"] ?? "admin@bdaey.com";
-        var adminPassword = config?["Admin:Password"];
         if (string.IsNullOrEmpty(adminPassword))
         {
+            Console.WriteLine("[Seeder] Admin password not provided in environment variables (Admin__Password / Admin:Password). Skipping admin user creation.");
             return;
         }
 
