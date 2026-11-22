@@ -58,7 +58,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onClose, callObject }) =>
         // Add to local state
         const newMessage: ChatMessage = {
             id: Math.random().toString(36).substring(7),
-            senderName: localParticipant.user_name || 'أنت',
+            senderName: localParticipant.user_name || 'You',
             senderId: localParticipant.session_id,
             text: text,
             timestamp: new Date(),
@@ -71,7 +71,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onClose, callObject }) =>
         callObject.sendAppMessage({
             type: 'chat',
             text: text,
-            name: localParticipant.user_name || 'مشارك',
+            name: localParticipant.user_name || 'Participant',
         });
 
         setInputValue('');
@@ -83,7 +83,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onClose, callObject }) =>
         <div className="absolute right-0 top-0 h-full w-80 bg-gray-800 border-l border-gray-700 flex flex-col z-20 shadow-2xl transition-transform transform translate-x-0">
             {/* Header */}
             <div className="flex justify-between items-center p-4 border-b border-gray-700">
-                <h3 className="font-bold text-lg text-white">المحادثة</h3>
+                <h3 className="font-bold text-lg text-white">Chat</h3>
                 <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
                     <XMarkIcon className="w-6 h-6" />
                 </button>
@@ -93,12 +93,12 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onClose, callObject }) =>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.length === 0 ? (
                     <div className="flex items-center justify-center h-full text-gray-500 text-sm">
-                        لا توجد رسائل حتى الآن. كن أول من يرسل!
+                        No messages yet. Be the first to send one!
                     </div>
                 ) : (
                     messages.map((msg) => (
                         <div key={msg.id} className={`flex flex-col ${msg.isLocal ? 'items-end' : 'items-start'}`}>
-                            <span className="text-xs text-gray-400 mb-1">{msg.isLocal ? 'أنت' : msg.senderName}</span>
+                            <span className="text-xs text-gray-400 mb-1">{msg.isLocal ? 'You' : msg.senderName}</span>
                             <div className={`px-4 py-2 rounded-2xl max-w-[85%] break-words ${msg.isLocal ? 'bg-primary text-white rounded-br-sm' : 'bg-gray-700 text-white rounded-bl-sm'}`}>
                                 {msg.text}
                             </div>
@@ -118,7 +118,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onClose, callObject }) =>
                         type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        placeholder="اكتب رسالة..."
+                        placeholder="Type a message..."
                         className="w-full bg-gray-700 text-white rounded-full pl-12 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
                         dir="auto"
                     />

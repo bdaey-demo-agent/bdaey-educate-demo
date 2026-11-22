@@ -24,10 +24,10 @@ const ParticipantRow: React.FC<{ id: string, isLocal?: boolean }> = ({ id, isLoc
                 </div>
                 <div className="flex flex-col">
                     <span className="text-sm font-medium text-white truncate max-w-[120px]">
-                        {participant.user_name || 'مستخدم غير معروف'} {isLocal && '(أنت)'}
+                        {participant.user_name || 'Unknown user'} {isLocal && '(You)'}
                     </span>
                     <span className="text-xs text-gray-400">
-                        {participant.owner ? 'مدير الجلسة' : 'مشارك'}
+                        {participant.owner ? 'Session Host' : 'Participant'}
                     </span>
                 </div>
             </div>
@@ -56,7 +56,7 @@ const ParticipantsPanel: React.FC<ParticipantsPanelProps> = ({ isOpen, onClose }
             {/* Header */}
             <div className="flex justify-between items-center p-4 border-b border-gray-700">
                 <h3 className="font-bold text-lg text-white flex items-center gap-2">
-                    المشاركون
+                    Participants
                     <span className="bg-primary/20 text-primary text-xs px-2 py-0.5 rounded-full">
                         {totalCount}
                     </span>

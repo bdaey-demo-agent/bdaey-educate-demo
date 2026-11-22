@@ -23,14 +23,14 @@ const StudentLayout: React.FC = () => {
                 {user?.role === 'Student' && !user?.emailConfirmed && (
                     <div className="bg-orange-100 dark:bg-orange-900/30 border-r-4 border-orange-500 text-orange-800 dark:text-orange-200 p-4 mx-6 mt-4 rounded shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <p className="text-sm sm:text-base">
-                            <strong className="font-bold">تنبيه أمني: </strong>
-                            يرجى تفعيل بريدك الإلكتروني لتتمكن من استخدام المنصة بالكامل. (تحقق من قسم Spam إذا لم تصلك الرسالة).
+                            <strong className="font-bold">Security Notice: </strong>
+                            Please verify your email to use the platform fully. (Check your Spam folder if the message did not arrive).
                         </p>
                         <button
                             onClick={resendVerification}
                             className="shrink-0 bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded text-sm transition-colors shadow-sm"
                         >
-                            إرسال رابط التفعيل
+                            Send Activation Link
                         </button>
                     </div>
                 )}

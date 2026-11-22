@@ -34,18 +34,18 @@ const AdminLayout = () => {
     };
 
     const navItems = [
-        { path: 'overview', label: 'نظرة عامة', icon: LayoutDashboard },
-        { path: 'teachers', label: 'المعلمون', icon: GraduationCap },
-        { path: 'students', label: 'الطلاب', icon: Users },
-        { path: 'bookings', label: 'الحجوزات', icon: Calendar },
-        { path: 'packages', label: 'الباقات', icon: ArchiveBoxIcon },
-        { path: 'payouts', label: 'المدفوعات', icon: Wallet },
-        { path: 'withdrawals', label: 'طلبات السحب', icon: BanknotesIcon },
-        { path: 'users', label: 'المستخدمين', icon: Shield },
-        { path: 'promo-codes', label: 'الكوبونات', icon: Ticket },
-        { path: 'financial', label: 'المالية', icon: FileText },
-        { path: 'messages', label: 'الرسائل', icon: MessageSquare },
-        { path: 'settings', label: 'الإعدادات', icon: Settings },
+        { path: 'overview', label: 'Overview', icon: LayoutDashboard },
+        { path: 'teachers', label: 'Teachers', icon: GraduationCap },
+        { path: 'students', label: 'Students', icon: Users },
+        { path: 'bookings', label: 'Bookings', icon: Calendar },
+        { path: 'packages', label: 'Packages', icon: ArchiveBoxIcon },
+        { path: 'payouts', label: 'Payments', icon: Wallet },
+        { path: 'withdrawals', label: 'Withdrawals', icon: BanknotesIcon },
+        { path: 'users', label: 'Users', icon: Shield },
+        { path: 'promo-codes', label: 'Promo Codes', icon: Ticket },
+        { path: 'financial', label: 'Financial', icon: FileText },
+        { path: 'messages', label: 'Messages', icon: MessageSquare },
+        { path: 'settings', label: 'Settings', icon: Settings },
     ];
 
     return (
@@ -66,7 +66,7 @@ const AdminLayout = () => {
             `}>
                 <div className="h-full flex flex-col">
                     <div className="h-16 flex items-center px-6 border-b border-gray-100 dark:border-slate-700">
-                        <span className="text-xl font-bold text-primary dark:text-gold-500">لوحة الإدارة</span>
+                        <span className="text-xl font-bold text-primary dark:text-gold-500">Admin Panel</span>
                         <button
                             className="mr-auto lg:hidden text-gray-500 dark:text-gray-400"
                             onClick={() => setSidebarOpen(false)}
@@ -117,7 +117,7 @@ const AdminLayout = () => {
                                 className="flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
                             >
                                 <LogOut className="ml-2 h-5 w-5" />
-                                خروج
+                                Sign Out
                             </button>
                         </div>
                     </div>

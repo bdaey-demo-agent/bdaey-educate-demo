@@ -151,9 +151,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const resendVerification = async () => {
         try {
             await axios.post(`${API_BASE_URL}/auth/resend-verification`);
-            toast.success('تم إرسال رابط التفعيل، تحقق من بريدك الإلكتروني (وأيضاً قسم Spam).');
+            toast.success('Activation link sent. Check your inbox (and the Spam folder).');
         } catch (error: any) {
-            toast.error(error.response?.data || error.message || 'حدث خطأ أثناء إرسال البريد');
+            toast.error(error.response?.data || error.message || 'Error sending the email');
         }
     };
 
@@ -179,10 +179,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         // 5. User Feedback & Redirect
         if (reason === 'session_expired') {
-            toast.error('انتهت الجلسة، يرجى تسجيل الدخول مجددًا');
+            toast.error('Session expired. Please sign in again');
             window.location.href = '/login';
         } else if (reason === 'account_blocked') {
-            toast.error('تم حظر الحساب. يرجى التواصل مع الدعم الفني');
+            toast.error('Your account has been blocked. Please contact support');
             localStorage.setItem(IS_SUSPENDED_KEY, 'true');
             window.location.href = '/suspended';
         } else {

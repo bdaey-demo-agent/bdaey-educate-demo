@@ -98,7 +98,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
             if (now < allowedEndTime) {
                 const remainingMs = allowedEndTime.getTime() - now.getTime();
                 const remainingMinutes = Math.ceil(remainingMs / 60000);
-                toast.error(`لا يمكن إنهاء الجلسة الآن. يمكنك إنهاء الجلسة قبل موعد انتهائها بـ 5 دقائق. (متبقي ${remainingMinutes} دقيقة)`);
+                toast.error(`You cannot end the session yet. You can end it within 5 minutes of its scheduled end. (${remainingMinutes} min remaining)`);
                 setConfirmEndOpen(false);
                 return;
             }
@@ -122,7 +122,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
             setEvalModalOpen(true);
         } catch (error) {
             console.error('Error ending session:', error);
-            toast.error('حدث خطأ أثناء إنهاء الجلسة');
+            toast.error('Error ending the session');
             setConfirmEndOpen(false);
         }
     };
@@ -148,12 +148,12 @@ const ControlBar: React.FC<ControlBarProps> = ({
             {sessionEnded && !evaluationSubmitted && !evalModalOpen && (
                 <div className="w-full flex items-center gap-3 bg-amber-900/80 border border-amber-500/50 text-amber-100 rounded-xl px-4 py-3 text-sm font-medium animate-pulse">
                     <span className="text-amber-400 text-xl">⚠️</span>
-                    <span>لم تسجل تقرير حصة الطالب بعد!</span>
+                    <span>You have not submitted the student session report yet!</span>
                     <button
                         onClick={() => setEvalModalOpen(true)}
                         className="mr-auto bg-amber-500 hover:bg-amber-400 text-amber-900 font-bold px-3 py-1.5 rounded-lg text-xs transition-colors"
                     >
-                        فتح النموذج
+                        Open Form
                     </button>
                 </div>
             )}
@@ -163,7 +163,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
                 {/* Audio Toggle */}
                 <button
                     onClick={toggleAudio}
-                    title={isAudioEnabled ? "كتم الصوت" : "تشغيل الصوت"}
+                    title={isAudioEnabled ? "Mute" : "Unmute"}
                     className={`p-3.5 rounded-2xl transition-all flex items-center justify-center ${isAudioEnabled
                         ? 'bg-gray-700 hover:bg-gray-600 text-white'
                         : 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 ring-2 ring-red-500 ring-offset-2 ring-offset-gray-800'
@@ -179,7 +179,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
                 {/* Video Toggle */}
                 <button
                     onClick={toggleVideo}
-                    title={isVideoEnabled ? "إيقاف الكاميرا" : "تشغيل الكاميرا"}
+                    title={isVideoEnabled ? "Stop Camera" : "Start Camera"}
                     className={`p-3.5 rounded-2xl transition-all flex items-center justify-center ${isVideoEnabled
                         ? 'bg-gray-700 hover:bg-gray-600 text-white'
                         : 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 ring-2 ring-red-500 ring-offset-2 ring-offset-gray-800'
@@ -195,7 +195,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
                 {/* Screen Share Toggle (Hidden by request) */}
                 <button
                     onClick={toggleScreenShare}
-                    title={isSharingScreen ? "إيقاف مشاركة الشاشة" : "مشاركة الشاشة"}
+                    title={isSharingScreen ? "Stop Sharing" : "Share Screen"}
                     className={`p-3.5 rounded-2xl transition-all items-center justify-center hidden ${isSharingScreen
                         ? 'bg-primary hover:bg-primary-hover text-white shadow-lg shadow-primary/30 ring-2 ring-primary ring-offset-2 ring-offset-gray-800 flex'
                         : 'bg-gray-700 hover:bg-gray-600 text-white flex'
@@ -208,7 +208,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
                 {onToggleFullscreen && (
                     <button
                         onClick={onToggleFullscreen}
-                        title={isFullscreen ? "تصغير الشاشة" : "ملء الشاشة"}
+                        title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                         className="p-3.5 rounded-2xl transition-all flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white"
                     >
                         {isFullscreen ? (
@@ -225,7 +225,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
                 {onToggleQuran && (
                     <button
                         onClick={onToggleQuran}
-                        title={isQuranOpen ? "إغلاق المصحف" : "فتح المصحف"}
+                        title={isQuranOpen ? "Close Quran" : "Open Quran"}
                         className={`p-3.5 rounded-2xl transition-all flex items-center justify-center ${isQuranOpen
                             ? 'bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-500/30 ring-2 ring-amber-500 ring-offset-2 ring-offset-gray-800'
                             : 'bg-gray-700 hover:bg-gray-600 text-amber-500'
@@ -238,7 +238,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
                 {/* Participants Toggle */}
                 <button
                     onClick={onToggleParticipants}
-                    title="قائمة المشاركين"
+                    title="Participants"
                     className="p-3.5 rounded-2xl bg-gray-700 hover:bg-gray-600 text-white transition-all flex items-center justify-center"
                 >
                     <UsersIcon className="w-6 h-6" />
@@ -247,7 +247,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
                 {/* Chat Toggle */}
                 <button
                     onClick={onToggleChat}
-                    title="المحادثة الجانبية"
+                    title="Side Chat"
                     className="p-3.5 rounded-2xl bg-gray-700 hover:bg-gray-600 text-white transition-all flex items-center justify-center relative"
                 >
                     <ChatBubbleLeftRightIcon className="w-6 h-6" />
@@ -263,11 +263,11 @@ const ControlBar: React.FC<ControlBarProps> = ({
                 {/* Leave Room */}
                 <button
                     onClick={handleLeave}
-                    title="مغادرة الجلسة"
+                    title="Leave Session"
                     className="p-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl transition-all shadow-lg shadow-red-500/20 flex items-center justify-center gap-2 font-medium"
                 >
                     <PhoneXMarkIcon className="w-6 h-6" />
-                    <span className="hidden sm:inline">مغادرة</span>
+                    <span className="hidden sm:inline">Leave</span>
                 </button>
 
                 {/* End Session (Teacher Only) */}
@@ -283,10 +283,10 @@ const ControlBar: React.FC<ControlBarProps> = ({
                             }
                             setConfirmEndOpen(true);
                         }}
-                        title="إنهاء الجلسة تماماً"
+                        title="End Session Completely"
                         className="px-6 py-4 bg-red-700 hover:bg-red-800 text-white rounded-xl font-bold ml-2 transition-colors shadow-lg shadow-red-500/30"
                     >
-                        إنهاء (للمعلم)
+                        End (Teacher)
                     </button>
                 )}
             </div>
@@ -295,9 +295,9 @@ const ControlBar: React.FC<ControlBarProps> = ({
                 isOpen={confirmEndOpen}
                 onClose={() => setConfirmEndOpen(false)}
                 onConfirm={handleEndSession}
-                title="إنهاء الجلسة"
-                message="هل أنت متأكد من إنهاء الجلسة بشكل كامل لجميع المشاركين؟ سيتم نقلك بعدها لشاشة التقييم."
-                confirmText="نعم، إنهاء الجلسة"
+                title="End Session"
+                message="Are you sure you want to end the session for everyone? You will be taken to the evaluation screen afterwards."
+                confirmText="Yes, End Session"
                 isDanger={false}
             />
 

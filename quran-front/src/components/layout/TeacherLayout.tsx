@@ -34,7 +34,7 @@ const TeacherLayout: React.FC = () => {
     const isPending = status === 'Pending' || status === 'Rejected';
     const isProfilePage = location.pathname.includes('/teacher/profile');
 
-    if (loading) return <div className="p-10 text-center">جاري التحميل...</div>;
+    if (loading) return <div className="p-10 text-center">Loading...</div>;
 
     return (
         <div className="min-h-screen bg-light dark:bg-gray-900 transition-colors duration-300" dir="ltr">
@@ -58,8 +58,8 @@ const TeacherLayout: React.FC = () => {
                                 <div className="ml-3">
                                     <p className="text-sm text-yellow-700 font-bold">
                                         {status === 'Pending'
-                                            ? 'حسابك قيد المراجعة. يرجى إكمال جميع بيانات الملف الشخصي ليتسنى للإدارة الموافقة على طلبك.'
-                                            : 'عذراً، تم تعليق حسابك مؤقتاً. يرجى مراجعة الإدارة.'}
+                                            ? 'Your account is under review. Please complete your profile so the team can approve your application.'
+                                            : 'Sorry, your account has been temporarily suspended. Please contact the admin team.'}
                                     </p>
                                 </div>
                             </div>
@@ -69,8 +69,8 @@ const TeacherLayout: React.FC = () => {
                     {/* Enforce Profile/Dashboard only if Pending */}
                     {isPending && !isProfilePage && !location.pathname.includes('/teacher/dashboard') ? (
                         <div className="text-center mt-20">
-                            <h2 className="text-2xl font-bold text-gray-700">الوصول مقيد</h2>
-                            <p className="mt-2 text-gray-500 mb-6">يجب إكمال الملف الشخصي وانتظار الموافقة للوصول إلى هذه الصفحة.</p>
+                            <h2 className="text-2xl font-bold text-gray-700">Access Restricted</h2>
+                            <p className="mt-2 text-gray-500 mb-6">Complete your profile and wait for approval to access this page.</p>
                             <Navigate to="/teacher/dashboard" replace />
                         </div>
                     ) : (

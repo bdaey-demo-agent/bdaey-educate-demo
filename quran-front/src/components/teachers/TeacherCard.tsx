@@ -117,7 +117,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({ teacher, isFavorite, onToggle
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
                         </span>
-                        <span className="text-[10px] font-bold text-gray-800 dark:text-gray-200">متاح الآن</span>
+                        <span className="text-[10px] font-bold text-gray-800 dark:text-gray-200">Available Now</span>
                     </div>
                 )}
 
@@ -174,7 +174,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({ teacher, isFavorite, onToggle
                     {hasAudio && !isHovered && (
                         <div className="flex items-center gap-1 text-primary-600 dark:text-primary-400">
                             <PlayCircleIcon className="h-3.5 w-3.5" />
-                            <span>مقدمة صوتية</span>
+                            <span>Voice Intro</span>
                         </div>
                     )}
                 </div>
@@ -196,7 +196,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({ teacher, isFavorite, onToggle
                 {/* Pricing & Action */}
                 <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
                     <div className="flex flex-col">
-                        <span className="text-[10px] text-gray-500 dark:text-gray-400">أسعار الباقات تبدأ من</span>
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400">Packages start at</span>
                         <span className="text-lg font-bold text-gray-900 dark:text-white">
                             {teacher.minPackagePrice ?? teacher.priceStart} <span className="text-xs font-normal text-gray-500">{teacher.currency}</span>
                         </span>
@@ -206,7 +206,7 @@ const TeacherCard: React.FC<TeacherCardProps> = ({ teacher, isFavorite, onToggle
                         to={`/teacher/${teacher.userName || teacher.user?.userName || teacher.id}`}
                         className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-bold rounded-lg transition-colors shadow-sm"
                     >
-                        عرض الملف
+                        View Profile
                     </Link>
                 </div>
             </div>

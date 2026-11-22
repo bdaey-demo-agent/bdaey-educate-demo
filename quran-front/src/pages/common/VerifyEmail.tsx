@@ -19,7 +19,7 @@ const VerifyEmail: React.FC = () => {
 
             if (!userId || !token) {
                 setStatus('error');
-                setMessage('رابط غير صالح');
+                setMessage('Invalid link');
                 return;
             }
 
@@ -55,7 +55,7 @@ const VerifyEmail: React.FC = () => {
             } catch (err: any) {
                 console.error(err);
                 setStatus('error');
-                setMessage(err.response?.data || 'فشل التحقق من البريد الإلكتروني. الرابط قد يكون منتهي الصلاحية.');
+                setMessage(err.response?.data || 'Email verification failed. The link may have expired.');
             }
         };
 
@@ -69,30 +69,30 @@ const VerifyEmail: React.FC = () => {
                 {status === 'verifying' && (
                     <div className="flex flex-col items-center">
                         <div className="h-12 w-12 border-4 border-gold-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">جاري التحقق...</h2>
+                        <h2 className="text-xl font-bold text-gray-800 dark:text-white">Verifying...</h2>
                     </div>
                 )}
 
                 {status === 'success' && (
                     <div className="flex flex-col items-center">
                         <CheckCircleIcon className="h-16 w-16 text-green-500 mb-4" />
-                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">تم تفعيل الحساب!</h2>
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Account Activated!</h2>
                         <p className="text-gray-600 dark:text-gray-300 mb-6">
-                            تم تأكيد بريدك الإلكتروني بنجاح. {isLoggedIn ? 'يمكنك الآن العودة إلى الملف الشخصي واستكمال التصفح.' : 'يمكنك الآن تسجيل الدخول.'}
+                            Your email has been verified. {isLoggedIn ? 'You can return to your profile and keep browsing.' : 'You can now sign in.'}
                         </p>
                         {isLoggedIn ? (
                             <Link
                                 to="/student/profile"
                                 className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md transition-all w-full"
                             >
-                                العودة للملف الشخصي
+                                Back to Profile
                             </Link>
                         ) : (
                             <Link
                                 to="/teacher/login"
                                 className="bg-gold-500 hover:bg-gold-600 text-white font-bold py-3 px-6 rounded-md transition-all w-full"
                             >
-                                تسجيل الدخول
+                                Sign In
                             </Link>
                         )}
                     </div>
@@ -101,7 +101,7 @@ const VerifyEmail: React.FC = () => {
                 {status === 'error' && (
                     <div className="flex flex-col items-center">
                         <XCircleIcon className="h-16 w-16 text-red-500 mb-4" />
-                        <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">فشل التحقق</h2>
+                        <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Verification Failed</h2>
                         <p className="text-red-500 mb-6">
                             {message}
                         </p>
@@ -109,7 +109,7 @@ const VerifyEmail: React.FC = () => {
                             to="/"
                             className="text-gray-500 hover:text-gray-700 dark:text-gray-400"
                         >
-                            العودة للرئيسية
+                            Back to Home
                         </Link>
                     </div>
                 )}

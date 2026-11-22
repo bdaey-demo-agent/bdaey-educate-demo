@@ -86,10 +86,10 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
             if (e?.data?.type === 'QURAN_APPROVED' && !isTeacher) {
                 setIsQuranOpen(true);
                 if (e.data.page !== undefined) setQuranPage(e.data.page);
-                showQuranNotification('وافق المعلم على فتح المصحف.', 'success');
+                showQuranNotification('The teacher approved opening the Quran.', 'success');
             }
             if (e?.data?.type === 'QURAN_REJECTED' && !isTeacher) {
-                showQuranNotification('تم رفض طلب فتح المصحف بواسطة المعلم.', 'error');
+                showQuranNotification('The teacher declined the Quran request.', 'error');
             }
         };
 
@@ -130,8 +130,8 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
 
     const handleToggleQuran = () => {
         if (!isTeacher) {
-            callObject?.sendAppMessage({ type: 'QURAN_REQUEST', name: displayName || 'الطالب' });
-            showQuranNotification('تم إرسال طلب بفتح المصحف للمعلم.', 'success');
+            callObject?.sendAppMessage({ type: 'QURAN_REQUEST', name: displayName || 'Student' });
+            showQuranNotification('Quran open request sent to the teacher.', 'success');
             return;
         }
 
@@ -191,7 +191,7 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
                 }
             } catch (err) {
                 console.error(`Error attempting to enable fullscreen: ${err}`);
-                toast.error('لم نتمكن من تكبير الشاشة في هذا المتصفح.');
+                toast.error('Could not enter fullscreen in this browser.');
             }
         } else {
             if (document.exitFullscreen) {
@@ -337,7 +337,7 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
 
         } catch (error) {
             console.error('Failed to join daily room:', error);
-            toast.error('حدث خطأ أثناء الاتصال بقاعة الفيديو.');
+            toast.error('Error connecting to the video room.');
             setIsJoining(false);
             navigate(-1);
         }
@@ -357,7 +357,7 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
 
         const handleError = (e: any) => {
             console.error('Daily Error:', e);
-            toast.error(e?.errorMsg || 'حدث خطأ في قاعة الاجتماع');
+            toast.error(e?.errorMsg || 'Meeting room error');
         };
 
         callObject.on('error', handleError);
@@ -371,7 +371,7 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
         return (
             <div className="flex flex-col items-center justify-center h-full w-full bg-gray-900 text-white">
                 <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4"></div>
-                <p className="font-medium animate-pulse">جاري تحضير القاعة...</p>
+                <p className="font-medium animate-pulse">Preparing the room...</p>
             </div>
         );
     }
@@ -387,7 +387,7 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
         return (
             <div className="flex flex-col items-center justify-center h-full w-full bg-gray-900 text-white rounded-xl shadow-2xl p-4 md:p-8 relative overflow-y-auto overflow-x-hidden">
                 <div className="w-full max-w-3xl flex flex-col items-center z-10 py-8 my-auto">
-                    <h2 className="text-3xl font-bold mb-6 text-center">الاستعداد للدخول للقاعة</h2>
+                    <h2 className="text-3xl font-bold mb-6 text-center">Get Ready to Join</h2>
 
                     {/* Preview Video Box */}
                     <div className="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-xl mb-8 border-4 border-gray-800">
@@ -403,7 +403,7 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
                             {/* Audio Toggle */}
                             <button
                                 onClick={toggleAudioPreview}
-                                title={isAudioEnabled ? "كتم الصوت" : "تشغيل الصوت"}
+                                title={isAudioEnabled ? "Mute" : "Unmute"}
                                 className={`p-4 rounded-full transition-all flex items-center justify-center ${isAudioEnabled
                                     ? 'bg-gray-700/80 hover:bg-gray-600 text-white'
                                     : 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 ring-2 ring-red-500 ring-offset-2 ring-offset-black'
@@ -419,7 +419,7 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
                             {/* Video Toggle */}
                             <button
                                 onClick={toggleVideoPreview}
-                                title={isVideoEnabled ? "إيقاف الكاميرا" : "تشغيل الكاميرا"}
+                                title={isVideoEnabled ? "Stop Camera" : "Start Camera"}
                                 className={`p-4 rounded-full transition-all flex items-center justify-center ${isVideoEnabled
                                     ? 'bg-gray-700/80 hover:bg-gray-600 text-white'
                                     : 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 ring-2 ring-red-500 ring-offset-2 ring-offset-black'
@@ -438,9 +438,9 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
                         onClick={handleJoinClick}
                         className="px-10 py-4 bg-primary hover:bg-primary-hover text-white text-xl font-bold rounded-xl shadow-[0_0_20px_rgba(33,150,243,0.3)] transition-all hover:scale-105 active:scale-95"
                     >
-                        دخول القاعة الآن
+                        Join Now
                     </button>
-                    <p className="mt-4 text-sm text-gray-400 text-center">يرجى التأكد من تشغيل الكاميرا والميكروفون والموافقة على الصلاحيات المطلوبة</p>
+                    <p className="mt-4 text-sm text-gray-400 text-center">Please enable your camera and microphone and grant the required permissions</p>
                 </div>
 
                 {/* Background Decor */}
@@ -463,7 +463,7 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
             <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-lg text-sm z-10 border border-white/10">
                 <span className="flex items-center gap-2">
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    غرفة الجلسة
+                    Session Room
                 </span>
             </div>
 
@@ -478,18 +478,18 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
             {quranRequest && isTeacher && (
                 <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-gray-800 border border-gray-600 shadow-2xl rounded-xl p-4 w-80 animate-fade-in-down">
                     <div className="flex flex-col gap-3 font-sans">
-                        <span className="font-bold text-lg text-white">طلب فتح المصحف</span>
-                        <span className="text-sm text-gray-300">يطلب المشارك <strong className="text-amber-400">{quranRequest.name}</strong> فتح المصحف المشترك. هل توافق؟</span>
+                        <span className="font-bold text-lg text-white">Quran Open Request</span>
+                        <span className="text-sm text-gray-300"><strong className="text-amber-400">{quranRequest.name}</strong> is asking to open the shared Quran. Do you approve?</span>
                         <div className="flex gap-2 mt-2">
                             <button onClick={() => {
                                 setIsQuranOpen(true);
                                 callObject?.sendAppMessage({ type: 'QURAN_APPROVED', page: quranPage });
                                 setQuranRequest(null);
-                            }} className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-sm font-bold flex-1 transition-colors">موافقة وفتح</button>
+                            }} className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-sm font-bold flex-1 transition-colors">Approve & Open</button>
                             <button onClick={() => {
                                 callObject?.sendAppMessage({ type: 'QURAN_REJECTED' }, quranRequest.fromId);
                                 setQuranRequest(null);
-                            }} className="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg text-sm font-bold flex-1 transition-colors">رفض</button>
+                            }} className="bg-gray-700 hover:bg-gray-600 text-gray-200 px-4 py-2 rounded-lg text-sm font-bold flex-1 transition-colors">Decline</button>
                         </div>
                     </div>
                 </div>
@@ -514,7 +514,7 @@ const CustomClassroom: React.FC<CustomClassroomProps> = ({ roomUrl, token, sessi
                                     }}
                                 />
                                 <div className="absolute bottom-4 right-4 bg-black/70 px-3 py-1.5 rounded-lg text-sm font-medium border border-white/10 backdrop-blur-md">
-                                    مشاركة شاشة
+                                    Screen Share
                                 </div>
                             </div>
                         </div>

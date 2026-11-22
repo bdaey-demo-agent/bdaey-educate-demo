@@ -66,7 +66,7 @@ const QuranPanel: React.FC<QuranPanelProps> = ({ isOpen, onClose, isTeacher, syn
                     containerRef.current.scrollTop = 0; // scroll to top on page change
                 }
             } catch (error) {
-                toast.error('حدث خطأ أثناء جلب الصفحة القرانية');
+                toast.error('Error fetching the Quran page');
             } finally {
                 setIsLoading(false);
             }
@@ -123,7 +123,7 @@ const QuranPanel: React.FC<QuranPanelProps> = ({ isOpen, onClose, isTeacher, syn
                     <button onClick={onClose} className="p-1 hover:bg-amber-100 rounded text-gray-500 hover:text-red-500 transition-colors">
                         <XMarkIcon className="w-6 h-6" />
                     </button>
-                    {!isTeacher && <span className="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-1 rounded-full border border-amber-200">وضع التلقين (مُزامن)</span>}
+                    {!isTeacher && <span className="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-1 rounded-full border border-amber-200">Follow Mode (synced)</span>}
                 </div>
 
                 <div className="flex-1 flex justify-center items-center gap-2 md:gap-6 px-2">
@@ -132,14 +132,14 @@ const QuranPanel: React.FC<QuranPanelProps> = ({ isOpen, onClose, isTeacher, syn
                         onClick={handleNextPage}
                         disabled={currentPage === 604 || (!isTeacher)}
                         className={`p-2 rounded-full ${(!isTeacher || currentPage === 604) ? 'opacity-30 cursor-not-allowed' : 'hover:bg-amber-100 text-amber-700'}`}
-                        title="الصفحة التالية"
+                        title="Next page"
                     >
                         <ChevronLeftIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
 
                     <div className="text-center min-w-[120px]">
                         <h3 className="font-bold text-lg sm:text-xl font-['Amiri'] text-amber-900">{currentSurahName}</h3>
-                        <p className="text-xs font-medium text-amber-700 font-sans mt-0.5">صفحة {currentPage}</p>
+                        <p className="text-xs font-medium text-amber-700 font-sans mt-0.5">Page {currentPage}</p>
                     </div>
 
                     {/* Navigation Next (Page - 1) */}
@@ -147,7 +147,7 @@ const QuranPanel: React.FC<QuranPanelProps> = ({ isOpen, onClose, isTeacher, syn
                         onClick={handlePrevPage}
                         disabled={currentPage === 1 || (!isTeacher)}
                         className={`p-2 rounded-full ${(!isTeacher || currentPage === 1) ? 'opacity-30 cursor-not-allowed' : 'hover:bg-amber-100 text-amber-700'}`}
-                        title="الصفحة السابقة"
+                        title="Previous page"
                     >
                         <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
@@ -167,11 +167,11 @@ const QuranPanel: React.FC<QuranPanelProps> = ({ isOpen, onClose, isTeacher, syn
                                 onPageChangeBroadcast(newPage);
                             }}
                         >
-                            <option value="1" disabled className="hidden">اختر السورة...</option>
+                            <option value="1" disabled className="hidden">Choose a surah...</option>
                             {surahs.map(s => {
                                 return (
                                     <option key={s.number} value={s.number}>
-                                        {s.number}. سورة {s.name.replace('سُورَةُ ', '')}
+                                        {s.number}. Surah {s.name.replace('سُورَةُ ', '')}
                                     </option>
                                 );
                             })}
@@ -249,7 +249,7 @@ const QuranPanel: React.FC<QuranPanelProps> = ({ isOpen, onClose, isTeacher, syn
 
             {/* Optional Footer/Decor */}
             <div className="bg-amber-50 absolute bottom-0 left-0 right-0 h-6 border-t border-amber-100 flex items-center justify-center">
-                <p className="text-[10px] text-amber-600 font-['Amiri'] font-bold">قرآن كريم - رسم عثماني</p>
+                <p className="text-[10px] text-amber-600 font-['Amiri'] font-bold">Holy Quran - Uthmani script</p>
             </div>
         </div>
     );
