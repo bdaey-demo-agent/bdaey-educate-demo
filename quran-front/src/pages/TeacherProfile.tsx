@@ -16,6 +16,7 @@ import type { Package } from '../types/booking';
 import Modal from '../components/common/Modal';
 import toast from 'react-hot-toast';
 import GuestBanner from '../components/common/GuestBanner';
+import FileUpload from '../components/common/FileUpload';
 
 
 
@@ -966,12 +967,7 @@ const TeacherProfile: React.FC = () => {
                                                             <div>
                                                                 <label className="block text-xs font-medium text-gray-500 mb-1">Degree Certificate</label>
                                                                 <div className="flex item-center gap-2">
-                                                                    <input
-                                                                        type="file"
-                                                                        accept="image/*,application/pdf"
-                                                                        onChange={(e) => e.target.files?.[0] && handleFileUpload('QualificationCertificateImage', e.target.files[0])}
-                                                                        className="text-sm text-gray-500 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-gray-100 file:text-xs"
-                                                                    />
+                                                                    <FileUpload accept="image/*,application/pdf" onFileSelected={(f) => handleFileUpload('QualificationCertificateImage', f)} />
                                                                     {teacher.qualificationCertificateUrl && <CheckCircleIcon className="h-5 w-5 text-green-500" title="Uploaded" />}
                                                                 </div>
                                                                 <label className="flex items-center space-x-2 space-x-reverse cursor-pointer mt-2">
@@ -1008,12 +1004,7 @@ const TeacherProfile: React.FC = () => {
                                                                         <div>
                                                                             <label className="block text-xs font-medium text-gray-500 mb-1">Ijazah Certificate</label>
                                                                             <div className="flex item-center gap-2">
-                                                                                <input
-                                                                                    type="file"
-                                                                                    accept="image/*,application/pdf"
-                                                                                    onChange={(e) => e.target.files?.[0] && handleFileUpload('IjazaCertificateImage', e.target.files[0])}
-                                                                                    className="text-sm text-gray-500 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-gray-100 file:text-xs"
-                                                                                />
+                                                                                <FileUpload accept="image/*,application/pdf" onFileSelected={(f) => handleFileUpload('IjazaCertificateImage', f)} />
                                                                                 {teacher.ijazaCertificateUrl && <CheckCircleIcon className="h-5 w-5 text-green-500" title="Uploaded" />}
                                                                             </div>
                                                                             <label className="flex items-center space-x-2 space-x-reverse cursor-pointer mt-2">
@@ -1111,12 +1102,7 @@ const TeacherProfile: React.FC = () => {
                                                         <div className="mt-4 border-t pt-4 dark:border-gray-700">
                                                             <label className="block text-xs font-medium text-gray-500 mb-1">Experience Certificate</label>
                                                             <div className="flex item-center gap-2">
-                                                                <input
-                                                                    type="file"
-                                                                    accept="image/*,application/pdf"
-                                                                    onChange={(e) => e.target.files?.[0] && handleFileUpload('ExperienceCertificateImage', e.target.files[0])}
-                                                                    className="text-sm text-gray-500 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-gray-100 file:text-xs"
-                                                                />
+                                                                <FileUpload accept="image/*,application/pdf" onFileSelected={(f) => handleFileUpload('ExperienceCertificateImage', f)} />
                                                                 {teacher.experienceCertificateUrl && <CheckCircleIcon className="h-5 w-5 text-green-500" title="Uploaded" />}
                                                             </div>
                                                             <label className="flex items-center space-x-2 space-x-reverse cursor-pointer mt-2">

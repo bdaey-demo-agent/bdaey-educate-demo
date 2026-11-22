@@ -29,6 +29,7 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { signalRService } from '../../services/signalrService';
 import CustomAudioPlayer from '../../components/common/CustomAudioPlayer';
+import FileUpload from '../../components/common/FileUpload';
 
 
 
@@ -377,14 +378,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
         }));
     };
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
+    const handleAudioFile = async (file: File) => {
+        {
 
             // Check file size (10MB limit)
             if (file.size > 10 * 1024 * 1024) {
                 toast.error('Sorry, the audio file is too large. The maximum is 10 MB');
-                e.target.value = ''; // Reset input
                 return;
             }
 
@@ -1102,16 +1101,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ID Card Photo</label>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => {
-                                            if (e.target.files && e.target.files[0]) {
-                                                setProfileData({ ...profileData, nationalIdImage: e.target.files[0] });
-                                            }
-                                        }}
-                                        className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gold-50 file:text-gold-700 hover:file:bg-gold-100 dark:file:bg-gold-900/30 dark:file:text-gold-400"
-                                    />
+                                    <FileUpload accept="image/*" variant="gold" onFileSelected={(f) => setProfileData({ ...profileData, nationalIdImage: f })} />
                                     {profileData.nationalIdImageUrl && !profileData.nationalIdImage && (
                                         <p className="mt-1 text-xs text-green-600">ID photo already uploaded</p>
                                     )}
@@ -1186,17 +1176,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                 {profileData.degree && (
                                     <div className="animate-fadeIn">
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Degree Certificate Photo</label>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(e) => {
-                                                if (e.target.files && e.target.files[0]) {
-                                                    const file = e.target.files[0];
-                                                    setProfileData(prev => ({ ...prev, qualificationCertificate: file }));
-                                                }
-                                            }}
-                                            className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gold-50 file:text-gold-700 hover:file:bg-gold-100 dark:file:bg-gold-900/30 dark:file:text-gold-400"
-                                        />
+                                        <FileUpload accept="image/*" variant="gold" onFileSelected={(f) => setProfileData(prev => ({ ...prev, qualificationCertificate: f }))} />
                                         {profileData.qualificationCertificateUrl && !profileData.qualificationCertificate && (
                                             <p className="mt-1 text-xs text-green-600">Certificate already uploaded</p>
                                         )}
@@ -1269,17 +1249,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                         </div>
                                         <div className="md:col-span-2">
                                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ijazah Certificate Photo</label>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => {
-                                                    if (e.target.files && e.target.files[0]) {
-                                                        const file = e.target.files[0];
-                                                        setProfileData(prev => ({ ...prev, ijazaCertificate: file }));
-                                                    }
-                                                }}
-                                                className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gold-50 file:text-gold-700 hover:file:bg-gold-100 dark:file:bg-gold-900/30 dark:file:text-gold-400"
-                                            />
+                                            <FileUpload accept="image/*" variant="gold" onFileSelected={(f) => setProfileData(prev => ({ ...prev, ijazaCertificate: f }))} />
                                             {profileData.ijazaCertificateUrl && !profileData.ijazaCertificate && (
                                                 <p className="mt-1 text-xs text-green-600">Ijazah photo already uploaded</p>
                                             )}
@@ -1372,16 +1342,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
 
                                     <div className="mt-4">
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Experience Certificate *</label>
-                                        <input
-                                            type="file"
-                                            accept="image/*,application/pdf"
-                                            onChange={(e) => {
-                                                if (e.target.files && e.target.files[0]) {
-                                                    setProfileData({ ...profileData, experienceCertificate: e.target.files[0] });
-                                                }
-                                            }}
-                                            className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gold-50 file:text-gold-700 hover:file:bg-gold-100 dark:file:bg-gold-900/30 dark:file:text-gold-400"
-                                        />
+                                        <FileUpload accept="image/*,application/pdf" variant="gold" onFileSelected={(f) => setProfileData({ ...profileData, experienceCertificate: f })} />
                                         {profileData.experienceCertificateUrl && !profileData.experienceCertificate && (
                                             <p className="mt-1 text-xs text-green-600">Experience certificate already uploaded</p>
                                         )}
@@ -1426,20 +1387,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Upload an audio recording of Surah Al-Fatiha
                                 </label>
-                                <input
-                                    type="file"
-                                    accept="audio/*"
-                                    onChange={handleFileChange}
-                                    disabled={isUploadingAudio}
-                                    className="block w-full text-sm text-gray-500 dark:text-gray-400
-                                        file:mr-4 file:py-2 file:px-4
-                                        file:rounded-md file:border-0
-                                        file:text-sm file:font-semibold
-                                        file:bg-gold-50 file:text-gold-700
-                                        hover:file:bg-gold-100
-                                        dark:file:bg-gold-900/30 dark:file:text-gold-400
-                                        disabled:opacity-50 disabled:cursor-not-allowed"
-                                />
+                                <FileUpload accept="audio/*" variant="gold" disabled={isUploadingAudio} onFileSelected={handleAudioFile} />
                                 {isUploadingAudio && (
                                     <div className="mt-2 text-sm text-blue-600 flex items-center gap-2">
                                         <svg className="animate-spin h-4 w-4 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
