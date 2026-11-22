@@ -412,7 +412,7 @@ public class AdminController : ControllerBase
         // Prevent deleting the system administrator
         var adminEmail = _configuration["Admin:Email"] ?? string.Empty;
         if (!string.IsNullOrEmpty(adminEmail) && string.Equals(user.Email, adminEmail, StringComparison.OrdinalIgnoreCase))
-            return BadRequest("لا يمكن حذف الأدمن المسؤول عن النظام.");
+            return BadRequest("The system admin account cannot be deleted.");
 
         // --- SAFEGUARD CHECKS ---
 
@@ -420,7 +420,7 @@ public class AdminController : ControllerBase
         var wallet = await _context.Wallets.FirstOrDefaultAsync(w => w.UserId == id);
         if (wallet != null && wallet.Balance > 0)
         {
-            return BadRequest(new { code = "ActiveBalance", message = $"لا يمكن حذف هذا الحساب لأن لديه رصيداً في المحفظة ({wallet.Balance} {wallet.Currency}). يرجى تصفير الرصيد أو حظر الحساب بدلاً من ذلك." });
+            return BadRequest(new { code = "ActiveBalance", message = $"This account cannot be deleted because it has a wallet balance ({wallet.Balance} {wallet.Currency}). Please zero the balance or block the account instead." });
         }
 
         // 2. Check active bookings
@@ -429,7 +429,7 @@ public class AdminController : ControllerBase
             .AnyAsync(b => (b.StudentId == id || b.TeacherProfile!.UserId == id) && activeBookingStatuses.Contains(b.Status));
         if (hasActiveBookings)
         {
-            return BadRequest(new { code = "ActiveBookings", message = "لا يمكن حذف هذا الحساب لأن لديه حجوزات نشطة. يرجى إلغاء الحجوزات أو حظر الحساب بدلاً من ذلك." });
+            return BadRequest(new { code = "ActiveBookings", message = "This account cannot be deleted because it has active bookings. Cancel the bookings or block the account instead." });
         }
 
         // 3. Check upcoming sessions
@@ -437,7 +437,7 @@ public class AdminController : ControllerBase
             .AnyAsync(s => (s.StudentId == id || s.TeacherProfile!.UserId == id) && s.ScheduledAt > DateTimeOffset.UtcNow && s.Status != SessionStatus.Completed && s.Status != SessionStatus.Cancelled);
         if (hasUpcomingSessions)
         {
-            return BadRequest(new { code = "UpcomingSessions", message = "لا يمكن حذف هذا الحساب لأن لديه جلسات مجدولة قادمة. يرجى إلغاء الجلسات أو حظر الحساب بدلاً من ذلك." });
+            return BadRequest(new { code = "UpcomingSessions", message = "This account cannot be deleted because it has upcoming scheduled sessions. Cancel the sessions or block the account instead." });
         }
 
         // --- DELETION ---
@@ -507,10 +507,10 @@ public class AdminController : ControllerBase
         var deleteResult = await _userManager.DeleteAsync(user);
         if (!deleteResult.Succeeded)
         {
-            return StatusCode(500, new { message = "فشل حذف الحساب. يرجى المحاولة لاحقاً." });
+            return StatusCode(500, new { message = "Failed to delete the account. Please try again later." });
         }
 
-        return Ok(new { message = "تم حذف الحساب بنجاح." });
+        return Ok(new { message = "Account deleted successfully." });
     }
 
     // 8. One-time data fix for submission status
@@ -539,6 +539,6 @@ public class AdminController : ControllerBase
     {
         _cache.Remove("ApprovedTeachersList");
         _cache.Remove("SitemapXml");
-        return Ok(new { message = "تم تفريغ الذاكرة المؤقتة بنجاح." });
+        return Ok(new { message = "Cache cleared successfully." });
     }
 }

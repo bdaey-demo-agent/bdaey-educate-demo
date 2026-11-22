@@ -122,7 +122,7 @@ public class AdminUsersController : ControllerBase
             // Prevent blocking the system administrator (Case-insensitive check)
             var adminEmail = _configuration["Admin:Email"] ?? string.Empty;
             if (!string.IsNullOrEmpty(adminEmail) && string.Equals(user.Email, adminEmail, StringComparison.OrdinalIgnoreCase)) 
-                return BadRequest("لا يمكن حظر الأدمن المسؤول عن النظام.");
+                return BadRequest("The system admin cannot be blocked.");
 
             user.IsBlocked = dto.IsBlocked;
             var result = await _userManager.UpdateAsync(user);
@@ -158,7 +158,7 @@ public class AdminUsersController : ControllerBase
                 return BadRequest("New password is required.");
 
             if (dto.NewPassword.Length < 6)
-                return BadRequest("يجب أن تكون كلمة المرور 6 أحرف على الأقل.");
+                return BadRequest("Password must be at least 6 characters.");
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();
@@ -170,7 +170,7 @@ public class AdminUsersController : ControllerBase
                 string.Equals(user.Email, adminEmail, StringComparison.OrdinalIgnoreCase) && 
                 !string.Equals(User.FindFirstValue(ClaimTypes.Email), adminEmail, StringComparison.OrdinalIgnoreCase))
             {
-                return BadRequest("لا يمكنك تغيير كلمة مرور المسؤول الرئيسي للنظام.");
+                return BadRequest("You cannot change the main system admin password.");
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -186,14 +186,14 @@ public class AdminUsersController : ControllerBase
                     new { Email = user.Email }, 
                     Guid.NewGuid().ToString()
                 );
-                return Ok(new { Message = "تم تعيين كلمة المرور الجديدة بنجاح." });
+                return Ok(new { Message = "New password set successfully." });
             }
 
-            return StatusCode(500, new { Message = "فشل تغيير كلمة المرور. يرجى المحاولة لاحقاً." });
+            return StatusCode(500, new { Message = "Failed to change the password. Please try again later." });
         }
         catch (Exception)
         {
-            return StatusCode(500, new { Message = "فشل تغيير كلمة المرور. يرجى المحاولة لاحقاً." });
+            return StatusCode(500, new { Message = "Failed to change the password. Please try again later." });
         }
     }
 
@@ -205,7 +205,7 @@ public class AdminUsersController : ControllerBase
         if (user == null) return NotFound();
 
         if (user.EmailConfirmed)
-            return BadRequest("البريد الإلكتروني مفعل بالفعل.");
+            return BadRequest("This email is already verified.");
 
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         
@@ -214,7 +214,7 @@ public class AdminUsersController : ControllerBase
 
         var verifyLink = $"{origin}/verify-email?userId={user.Id}&token={Uri.EscapeDataString(emailToken)}";
 
-        await _emailService.SendEmailAsync(user.Email!, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
+        await _emailService.SendEmailAsync(user.Email!, $"Activate your {_configuration["Branding:NameEn"] ?? "Bdaey"} account", 
             BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
 
         user.EmailConfirmationSentAt = DateTime.UtcNow;
@@ -223,7 +223,7 @@ public class AdminUsersController : ControllerBase
         var adminId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         await _auditLogService.LogAsync(adminId!, "ResendVerification", "User", id, new { Email = user.Email }, Guid.NewGuid().ToString());
 
-        return Ok(new { Message = "تم إعادة إرسال رسالة التفعيل بنجاح." });
+        return Ok(new { Message = "Activation email resent." });
     }
 
     [HttpPost("{id}/impersonate")]
@@ -241,12 +241,12 @@ public class AdminUsersController : ControllerBase
             var userRoles = await _userManager.GetRolesAsync(user);
             if (userRoles.Contains("Admin"))
             {
-                return BadRequest("لا يمكنك تسجيل الدخول كمسؤول آخر.");
+                return BadRequest("You cannot sign in as another admin.");
             }
 
             if (user.IsBlocked)
             {
-                return BadRequest("هذا الحساب محظور.");
+                return BadRequest("This account is blocked.");
             }
 
             var token = _jwtTokenService.GenerateJwtToken(user, userRoles);
