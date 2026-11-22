@@ -35,7 +35,7 @@ const StudentDashboard: React.FC = () => {
             setGamificationProfile(gamificationData);
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
-            toast.error('حدث خطأ أثناء جلب البيانات');
+            toast.error('An error occurred while fetching data');
         } finally {
             setLoading(false);
             setLoadingGamification(false);
@@ -59,9 +59,9 @@ const StudentDashboard: React.FC = () => {
     const totalSessions = bookings.reduce((sum, b) => sum + b.sessionsCount, 0);
 
     const stats = [
-        { name: 'الحجوزات المؤكدة', value: confirmedBookings.toString(), icon: CheckCircleIcon, color: 'text-success-text bg-success-bg' },
-        { name: 'في انتظار الموافقة', value: pendingBookings.toString(), icon: ExclamationCircleIcon, color: 'text-warning-text bg-warning-bg' },
-        { name: 'إجمالي الجلسات', value: totalSessions.toString(), icon: BookOpenIcon, color: 'text-secondary-blue bg-blue-50' },
+        { name: 'Confirmed Bookings', value: confirmedBookings.toString(), icon: CheckCircleIcon, color: 'text-success-text bg-success-bg' },
+        { name: 'Awaiting Approval', value: pendingBookings.toString(), icon: ExclamationCircleIcon, color: 'text-warning-text bg-warning-bg' },
+        { name: 'Total Sessions', value: totalSessions.toString(), icon: BookOpenIcon, color: 'text-secondary-blue bg-blue-50' },
     ];
 
     const getStatusBadge = (status: string) => {
@@ -80,13 +80,13 @@ const StudentDashboard: React.FC = () => {
     const confirmCancel = async () => {
         if (!bookingToCancel) return;
         try {
-            await bookingsService.updateBookingStatus(bookingToCancel, 'Cancelled', 'إلغاء من قبل الطالب');
-            toast.success('تم إلغاء الحجز بنجاح');
+            await bookingsService.updateBookingStatus(bookingToCancel, 'Cancelled', 'Cancelled by the student');
+            toast.success('Booking cancelled successfully');
             setShowCancelModal(false);
             fetchDashboardData();
         } catch (error) {
             console.error('Error cancelling booking:', error);
-            toast.error('حدث خطأ أثناء الإلغاء');
+            toast.error('An error occurred while cancelling');
         }
     };
 
@@ -95,15 +95,15 @@ const StudentDashboard: React.FC = () => {
             <div className="mb-8 flex justify-between items-end">
                 <div>
                     <h1 className="text-3xl font-heading font-bold text-primary-gold mb-2">
-                        مرحباً، {user?.fullName} 👋
+                        Hello, {user?.fullName} 👋
                     </h1>
                     <p className="text-text-secondary text-lg">
-                        تابع تقدمك التعليمي وجدول حصصك القادمة
+                        Track your learning progress and upcoming sessions
                     </p>
                 </div>
                 <Link to="/teachers-public" data-tour="student-find-teacher" className="btn-primary flex items-center gap-2 no-underline">
                     <UserIcon className="h-5 w-5" />
-                    <span>ابحث عن معلم</span>
+                    <span>Find a Teacher</span>
                 </Link>
             </div>
 
@@ -126,15 +126,15 @@ const StudentDashboard: React.FC = () => {
                         <div className="flex justify-between items-end mb-2">
                             <div>
                                 <h3 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
-                                    المستوى الحالي
+                                    Current Level
                                     <StarIcon className="h-5 w-5 text-amber-500 fill-amber-500" />
                                 </h3>
-                                <p className="text-sm text-gray-500 font-medium">إجمالي النقاط: <span className="font-bold text-primary-gold text-lg">{gamificationProfile.totalPoints}</span> XP</p>
+                                <p className="text-sm text-gray-500 font-medium">Total points: <span className="font-bold text-primary-gold text-lg">{gamificationProfile.totalPoints}</span> XP</p>
                             </div>
 
                             {gamificationProfile.nextBadgePoints > 0 && (
                                 <div className="text-left">
-                                    <p className="text-xs text-gray-500 mb-1">الوسام القادم: {gamificationProfile.nextBadgeName}</p>
+                                    <p className="text-xs text-gray-500 mb-1">Next badge: {gamificationProfile.nextBadgeName}</p>
                                     <p className="text-sm font-bold text-primary-green">{gamificationProfile.nextBadgePoints} XP</p>
                                 </div>
                             )}
@@ -187,29 +187,29 @@ const StudentDashboard: React.FC = () => {
             {/* Bookings List */}
             <div className="card border dark:border-gray-700 bg-white dark:bg-gray-800">
                 <div className="card-header flex justify-between items-center">
-                    <h3 className="card-title text-xl text-primary-green">جدول الحجوزات</h3>
-                    <Link to="/student/schedule" className="text-sm text-primary-gold hover:text-primary-green-light font-medium">عرض التقويم الكامل</Link>
+                    <h3 className="card-title text-xl text-primary-green">Bookings</h3>
+                    <Link to="/student/schedule" className="text-sm text-primary-gold hover:text-primary-green-light font-medium">View Full Calendar</Link>
                 </div>
 
                 <div className="card-body p-0">
                     {loading ? (
                         <div className="p-12 text-center">
                             <div className="spinner mx-auto mb-4 border-t-primary-gold"></div>
-                            <p className="text-text-secondary">جاري تحميل بياناتك...</p>
+                            <p className="text-text-secondary">Loading your data...</p>
                         </div>
                     ) : bookings.length === 0 ? (
                         <div className="p-16 text-center">
                             <div className="w-20 h-20 bg-bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
                                 <BookOpenIcon className="h-10 w-10 text-text-tertiary" />
                             </div>
-                            <h4 className="text-lg font-bold text-text-primary mb-2">لا توجد حجوزات نشطة</h4>
-                            <p className="text-text-secondary mb-6">ابدأ رحلتك في حفظ وإتقان القرآن الكريم اليوم.</p>
+                            <h4 className="text-lg font-bold text-text-primary mb-2">No active bookings</h4>
+                            <p className="text-text-secondary mb-6">Start your Quran memorization and mastery journey today.</p>
                             <Link
                                 to="/teachers-public"
                                 className="btn-gold inline-flex items-center gap-2"
                             >
                                 <UserIcon className="h-5 w-5" />
-                                تصفح المعلمين المتاحين
+                                Browse Available Teachers
                             </Link>
                         </div>
                     ) : (
@@ -234,10 +234,10 @@ const StudentDashboard: React.FC = () => {
                                                 </span>
                                                 <span className="flex items-center gap-1.5">
                                                     <CalendarIcon className="h-4 w-4 text-primary-gold" />
-                                                    {booking.sessionsCount} حصص
+                                                    {booking.sessionsCount} sessions
                                                 </span>
                                                 <span className="flex items-center gap-1.5 text-text-tertiary text-xs">
-                                                    تم الحجز: {new Date(booking.createdAt).toLocaleDateString('ar-EG')}
+                                                    Booked: {new Date(booking.createdAt).toLocaleDateString('en-GB')}
                                                 </span>
                                             </div>
                                         </div>
@@ -254,7 +254,7 @@ const StudentDashboard: React.FC = () => {
                                                         onClick={() => handleCancelClick(booking.id)}
                                                         className="text-xs text-secondary-red hover:bg-red-50 px-3 py-1.5 rounded-md transition-colors"
                                                     >
-                                                        إلغاء الحجز
+                                                        Cancel Booking
                                                     </button>
                                                 )}
                                                 {/* Add more actions if needed */}
@@ -277,22 +277,22 @@ const StudentDashboard: React.FC = () => {
                                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 mb-4">
                                     <ExclamationCircleIcon className="h-6 w-6 text-red-600 dark:text-red-400" />
                                 </div>
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">تأكيد الإلغاء</h3>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Confirm Cancellation</h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                                    هل أنت متأكد من رغبتك في إلغاء هذا الحجز؟ لا يمكن تراجع عن هذا الإجراء.
+                                    Are you sure you want to cancel this booking? This action cannot be undone.
                                 </p>
                                 <div className="flex gap-3">
                                     <button
                                         onClick={() => setShowCancelModal(false)}
                                         className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
                                     >
-                                        تراجع
+                                        Go Back
                                     </button>
                                     <button
                                         onClick={confirmCancel}
                                         className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
                                     >
-                                        نعم، إلغاء
+                                        Yes, Cancel
                                     </button>
                                 </div>
                             </div>

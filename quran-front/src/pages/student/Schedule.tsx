@@ -21,7 +21,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
     const { user: authUser } = useAuth();
     // Use prop role if provided, otherwise fallback to auth user, or default 'Student' for demo safety
     const user = demoMode
-        ? { role: role || 'Student', fullName: 'مستخدم تجريبي' }
+        ? { role: role || 'Student', fullName: 'Demo User' }
         : authUser;
 
     const [rateSessionId, setRateSessionId] = useState<number | null>(null);
@@ -51,8 +51,8 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
             setSessions([
                 {
                     id: 1,
-                    studentName: 'يوسف علي',
-                    teacherName: 'الشيخ أحمد',
+                    studentName: 'Youssef Ali',
+                    teacherName: 'Sheikh Ahmed',
                     status: 'Scheduled',
                     scheduledAt: tomorrow.toISOString(),
                     durationMinutes: 60,
@@ -60,8 +60,8 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                 },
                 {
                     id: 2,
-                    studentName: 'يوسف علي',
-                    teacherName: 'الشيخ أحمد',
+                    studentName: 'Youssef Ali',
+                    teacherName: 'Sheikh Ahmed',
                     status: 'Completed',
                     scheduledAt: new Date(now.getTime() - 86400000).toISOString(), // Yesterday
                     durationMinutes: 60,
@@ -70,8 +70,8 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                 },
                 {
                     id: 3,
-                    studentName: 'يوسف علي',
-                    teacherName: 'الشيخ أحمد',
+                    studentName: 'Youssef Ali',
+                    teacherName: 'Sheikh Ahmed',
                     status: 'InProgress', // Feature live session
                     scheduledAt: new Date(now.getTime() - 1000 * 60 * 10).toISOString(), // Started 10 mins ago
                     durationMinutes: 60,
@@ -88,7 +88,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
             setSessions(data);
         } catch (error) {
             console.error("Failed to fetch sessions", error);
-            toast.error("فشل تحميل الحصص");
+            toast.error("Failed to load sessions");
         } finally {
             setLoading(false);
         }
@@ -100,18 +100,18 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
 
     // Handlers
     const handleStartSession = async (session: Session) => {
-        const toastId = toast.loading('جاري تحضير القاعة التعليمية...');
+        const toastId = toast.loading('Preparing the classroom...');
         try {
             // 1. Prepare Room
             await videoService.prepareRoom(session.id);
             // 2. Update status
             await sessionsService.updateSession(session.id, { status: 'InProgress' } as any);
 
-            toast.success('تم تحضير القاعة بنجاح', { id: toastId });
+            toast.success('Classroom ready', { id: toastId });
             fetchSessions(); // "Invalidate queries" replacement
         } catch (error) {
             console.error('Error starting session:', error);
-            toast.error('حدث خطأ أثناء بدء الجلسة', { id: toastId });
+            toast.error('An error occurred while starting the session', { id: toastId });
         }
     };
 
@@ -129,7 +129,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                 if (now < allowedEndTime) {
                     const remainingMs = allowedEndTime.getTime() - now.getTime();
                     const remainingMinutes = Math.ceil(remainingMs / 60000);
-                    toast.error(`لا يمكن إنهاء الجلسة الآن. يمكنك إنهاء الجلسة قبل موعد انتهائها بـ 5 دقائق. (متبقي ${remainingMinutes} دقيقة)`);
+                    toast.error(`Cannot end the session now. You can end it up to 5 minutes before its scheduled end. (${remainingMinutes} min remaining)`);
                     return;
                 }
             }
@@ -143,11 +143,11 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
 
         try {
             await sessionsService.updateSession(sessionId, { status: newStatus } as any);
-            toast.success('تم تحديث الحالة بنجاح');
+            toast.success('Status updated successfully');
             fetchSessions(); // "Invalidate queries" replacement
         } catch (error) {
             console.error('Error updating status:', error);
-            toast.error('حدث خطأ أثناء تحديث الحالة');
+            toast.error('An error occurred while updating the status');
         } finally {
             setConfirmModalState({ ...confirmModalState, isOpen: false });
         }
@@ -170,8 +170,8 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">جدول الحصص</h1>
-                    <p className="text-gray-600 dark:text-gray-400">تابع مواعيد حصصك القادمة والسابقة</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Session Schedule</h1>
+                    <p className="text-gray-600 dark:text-gray-400">Track your upcoming and past sessions</p>
                 </div>
 
                 <div className="flex items-center gap-2 bg-white dark:bg-gray-800 p-1 rounded-lg border border-gray-200 dark:border-gray-700">
@@ -182,7 +182,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                             : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700'
                             }`}
                     >
-                        الحالية
+                        Current
                     </button>
                     <button
                         onClick={() => setFilter('completed')}
@@ -191,7 +191,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                             : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700'
                             }`}
                     >
-                        المكتملة
+                        Completed
                     </button>
                     <button
                         onClick={() => setFilter('cancelled')}
@@ -200,7 +200,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                             : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700'
                             }`}
                     >
-                        الملغاة
+                        Cancelled
                     </button>
                     <button
                         onClick={() => setFilter('all')}
@@ -209,7 +209,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                             : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700'
                             }`}
                     >
-                        الكل
+                        All
                     </button>
                 </div>
             </div>
@@ -219,8 +219,8 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
             ) : sessions.length === 0 ? (
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-12 text-center border-2 border-dashed border-gray-300 dark:border-gray-700">
                     <CalendarIcon className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">لا توجد حصص مجدولة</h3>
-                    <p className="text-gray-600 dark:text-gray-400">عندما يتم تأكيد حجوزاتك، ستظهر جلساتك هنا.</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No scheduled sessions</h3>
+                    <p className="text-gray-600 dark:text-gray-400">Once your bookings are confirmed, your sessions will appear here.</p>
                 </div>
             ) : (
                 <div className="space-y-4">
@@ -254,8 +254,8 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                         <div>
                                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                                                 {user?.role === 'Teacher'
-                                                    ? `حصة مع الطالب ${session.studentName}`
-                                                    : `حصة مع المعلم ${session.teacherName}`}
+                                                    ? `Session with student ${session.studentName}`
+                                                    : `Session with teacher ${session.teacherName}`}
                                             </h3>
                                             <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                                                 <span className="flex items-center gap-1">
@@ -264,7 +264,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                                     {' - '}
                                                     {new Date(sessionDate.getTime() + session.durationMinutes * 60000).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}
                                                 </span>
-                                                <span>({session.durationMinutes} دقيقة)</span>
+                                                <span>({session.durationMinutes} min)</span>
                                             </div>
                                         </div>
                                     </div>
@@ -273,7 +273,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                     <div className="flex items-center gap-3">
                                         {session.bookingStatus === 'Pending' && (
                                             <span className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-200">
-                                                انتظار الموافقة
+                                                Awaiting Approval
                                             </span>
                                         )}
 
@@ -298,7 +298,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                                                 <button
                                                                     onClick={() => {
                                                                         if (isTooEarly) {
-                                                                            toast.error('لا يمكن بدء الجلسة قبل موعدها بـ 15 دقيقة');
+                                                                            toast.error('You cannot start the session more than 15 minutes before its time');
                                                                             return;
                                                                         }
                                                                         handleStartSession(session);
@@ -308,14 +308,14 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                                                         : 'bg-gray-400 cursor-not-allowed opacity-70'
                                                                         }`}
                                                                     disabled={isTooEarly}
-                                                                    title={isTooEarly ? 'متاح قبل الموعد بـ 15 دقيقة' : 'بدء الجلسة'}
+                                                                    title={isTooEarly ? 'Available 15 minutes before the session' : 'Start Session'}
                                                                 >
                                                                     <VideoCameraIcon className="h-5 w-5" />
-                                                                    بدء الجلسة
+                                                                    Start Session
                                                                 </button>
                                                                 {isTooEarly && (
                                                                     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                                                        يفتح الزر قبل الموعد بـ 15 دقيقة
+                                                                        The button unlocks 15 minutes before the session
                                                                     </div>
                                                                 )}
                                                             </div>
@@ -329,14 +329,14 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                                             className="flex items-center gap-2 px-4 py-2 bg-gold-500 hover:bg-gold-600 text-white font-bold rounded-lg transition-colors"
                                                         >
                                                             <VideoCameraIcon className="h-5 w-5" />
-                                                            دخول القاعة
+                                                            Enter Classroom
                                                         </Link>
                                                         <button
                                                             onClick={() => handleUpdateStatus(session.id, 'Completed')}
                                                             className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors"
                                                         >
                                                             <CheckCircleIcon className="h-5 w-5" />
-                                                            إنهاء الجلسة
+                                                            End Session
                                                         </button>
                                                     </div>
                                                 )}
@@ -350,7 +350,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                                         className="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg transition-colors shadow-sm animate-pulse"
                                                     >
                                                         <CheckCircleIcon className="h-5 w-5" />
-                                                        سجل تقرير الحصة
+                                                        Record Session Report
                                                     </button>
                                                 )}
                                             </>
@@ -365,7 +365,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                                         className="flex items-center gap-2 px-4 py-2 bg-gold-500 hover:bg-gold-600 text-white font-bold rounded-lg transition-colors animate-pulse"
                                                     >
                                                         <VideoCameraIcon className="h-5 w-5" />
-                                                        دخول الحصة
+                                                        Join Session
                                                     </Link>
                                                 )}
 
@@ -376,7 +376,7 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                                         className="flex items-center gap-2 px-4 py-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-bold rounded-lg transition-colors"
                                                     >
                                                         <StarIcon className="h-5 w-5" />
-                                                        تقييم
+                                                        Rate
                                                     </button>
                                                 )}
 
@@ -414,9 +414,9 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                 isOpen={confirmModalState.isOpen}
                 onClose={() => setConfirmModalState({ ...confirmModalState, isOpen: false })}
                 onConfirm={executeStatusUpdate}
-                title="إنهاء الجلسة"
-                message="هل أنت متأكد من إنهاء الجلسة؟"
-                confirmText="نعم، إنهاء الجلسة"
+                title="End Session"
+                message="Are you sure you want to end the session?"
+                confirmText="Yes, end session"
                 isDanger={false}
             />
 

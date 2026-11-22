@@ -35,14 +35,14 @@ const Leaderboard: React.FC = () => {
                 <div className="inline-flex items-center justify-center p-4 bg-amber-50 dark:bg-amber-900/20 rounded-full mb-4">
                     <TrophyIcon className="h-12 w-12 text-amber-500" />
                 </div>
-                <h1 className="text-4xl font-heading font-bold text-gray-900 dark:text-white mb-3">لوحة الشرف والمتميزين</h1>
-                <p className="text-gray-500 text-lg">أكثر الطلاب تميزاً وحصداً للنقاط في رحلة حفظ القرآن الكريم</p>
+                <h1 className="text-4xl font-heading font-bold text-gray-900 dark:text-white mb-3">Leaderboard</h1>
+                <p className="text-gray-500 text-lg">The most distinguished students earning points on their Quran memorization journey</p>
             </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                 {leaderboard.length === 0 ? (
                     <div className="p-12 text-center text-gray-500">
-                        لا توجد بيانات متاحة حالياً.
+                        No data available right now.
                     </div>
                 ) : (
                     <div className="divide-y divide-gray-100 dark:divide-gray-700">

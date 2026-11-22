@@ -19,7 +19,7 @@ const StudentHome: React.FC<StudentHomeProps> = ({ demoMode = false }) => {
 
     // Mock user for demo mode
     const user = demoMode ? {
-        fullName: 'عبدالله محمد',
+        fullName: 'Abdullah Mohamed',
         role: 'Student'
     } : authUser;
 
@@ -28,38 +28,38 @@ const StudentHome: React.FC<StudentHomeProps> = ({ demoMode = false }) => {
     const studentSteps: OnboardingStep[] = [
         {
             id: 1,
-            title: 'ابحث عن معلمك',
-            description: 'تصفح قائمة المعلمين المؤهلين واختر الأنسب لك بناءً على التقييمات والخبرات.',
+            title: 'Find Your Teacher',
+            description: 'Browse qualified teachers and pick the best fit based on ratings and experience.',
             icon: MagnifyingGlassIcon,
             linkTo: '/teachers-public',
-            linkText: 'تصفح المعلمين',
+            linkText: 'Browse Teachers',
             isCompleted: false
         },
         {
             id: 2,
-            title: 'اشحن محفظتك',
-            description: 'أضف رصيداً إلى محفظتك الإلكترونية لتتمكن من حجز الباقات.',
+            title: 'Top Up Your Wallet',
+            description: 'Add credit to your digital wallet so you can book packages.',
             icon: WalletIcon,
             linkTo: '/student/wallet',
-            linkText: 'اذهب للمحفظة',
+            linkText: 'Go to Wallet',
             isCompleted: false
         },
         {
             id: 3,
-            title: 'احجز باقتك الأولى',
-            description: 'اختر باقة تناسب جدولك وابدأ رحلتك التعليمية.',
+            title: 'Book Your First Package',
+            description: 'Choose a package that fits your schedule and start your learning journey.',
             icon: CalendarDaysIcon,
             linkTo: '/teachers-public',
-            linkText: 'احجز الآن',
+            linkText: 'Book Now',
             isCompleted: false
         },
         {
             id: 4,
-            title: 'احضر جلستك',
-            description: 'تابع جدول حصصك وادخل الجلسة في موعدها المحدد.',
+            title: 'Attend Your Session',
+            description: 'Follow your session schedule and join the session on time.',
             icon: VideoCameraIcon,
             linkTo: '/student/schedule',
-            linkText: 'جدول الحصص',
+            linkText: 'Session Schedule',
             isCompleted: false
         }
     ];
@@ -71,17 +71,17 @@ const StudentHome: React.FC<StudentHomeProps> = ({ demoMode = false }) => {
                 <div className="absolute top-0 left-0 w-full h-full bg-pattern opacity-10"></div>
                 <div className="relative z-10 max-w-2xl">
                     <h1 className="text-4xl font-bold font-heading mb-4">
-                        أهلاً بك، {user?.fullName} 👋
+                        Welcome, {user?.fullName} 👋
                     </h1>
                     <p className="text-xl text-emerald-50 leading-relaxed mb-8">
-                        نحن سعداء بوجودك معنا في منصة {branding.nameAr}. هذه صفحتك الرئيسية حيث يمكنك الانطلاق في رحلتك لتعلم القرآن الكريم.
+                        We are glad to have you on {branding.nameEn}. This is your home page, where your Quran learning journey begins.
                     </p>
                     <div className="flex gap-4">
                         <Link id="btn-get-started" to="/teachers-public" className="btn-gold px-8 py-3 font-bold text-gray-900 shadow-md transform hover:-translate-y-1 transition-transform">
-                            ابدأ رحلتك
+                            Start Your Journey
                         </Link>
                         <Link to="/student/dashboard" className="btn-outline border-white text-white hover:bg-white hover:text-emerald-900 px-8 py-3 font-bold">
-                            لوحة التحكم
+                            Dashboard
                         </Link>
                     </div>
                 </div>
@@ -89,10 +89,10 @@ const StudentHome: React.FC<StudentHomeProps> = ({ demoMode = false }) => {
 
             {/* Quick Actions / Introduction */}
             <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">ابدأ من هنا</h2>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Start Here</h2>
                 <OnboardingGuide
-                    title="دليلك السريع"
-                    subtitle="خطوات بسيطة للانطلاق"
+                    title="Your Quick Guide"
+                    subtitle="Simple steps to get going"
                     role="Student"
                     steps={studentSteps}
                 />
