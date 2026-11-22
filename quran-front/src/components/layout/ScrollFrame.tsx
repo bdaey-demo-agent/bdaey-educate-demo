@@ -44,25 +44,25 @@ const ScrollFrame: React.FC = () => {
         <div className="fixed inset-0 pointer-events-none z-[9999]" aria-hidden="true">
             {/* Top Bar (Left to Right) */}
             <div
-                className="absolute top-0 left-0 h-[3px] bg-primary-green transition-all duration-75 ease-out shadow-[0_0_10px_#4CAF50]"
+                className="absolute top-0 left-0 h-[3px] bg-primary-green transition-all duration-75 ease-out shadow-[0_0_10px_var(--primary-green-lighter)]"
                 style={{ width: `${topProgress}%` }}
             />
 
             {/* Right Bar (Top to Bottom) */}
             <div
-                className="absolute top-0 right-0 w-[3px] bg-primary-green transition-all duration-75 ease-out shadow-[0_0_10px_#4CAF50]"
+                className="absolute top-0 right-0 w-[3px] bg-primary-green transition-all duration-75 ease-out shadow-[0_0_10px_var(--primary-green-lighter)]"
                 style={{ height: `${rightProgress}%` }}
             />
 
             {/* Bottom Bar (Right to Left) */}
             <div
-                className="absolute bottom-0 right-0 h-[3px] bg-primary-green transition-all duration-75 ease-out shadow-[0_0_10px_#4CAF50]"
+                className="absolute bottom-0 right-0 h-[3px] bg-primary-green transition-all duration-75 ease-out shadow-[0_0_10px_var(--primary-green-lighter)]"
                 style={{ width: `${bottomProgress}%` }}
             />
 
             {/* Left Bar (Bottom to Top) */}
             <div
-                className="absolute bottom-0 left-0 w-[3px] bg-primary-green transition-all duration-75 ease-out shadow-[0_0_10px_#4CAF50]"
+                className="absolute bottom-0 left-0 w-[3px] bg-primary-green transition-all duration-75 ease-out shadow-[0_0_10px_var(--primary-green-lighter)]"
                 style={{ height: `${leftProgress}%` }}
             />
         </div>
