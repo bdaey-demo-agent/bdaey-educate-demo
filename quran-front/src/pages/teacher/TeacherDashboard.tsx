@@ -401,7 +401,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                 } else {
                     toast.error("Audio upload failed. Please try again.");
                 }
-                e.target.value = ''; // Reset input so user can re-select if needed
             } finally {
                 setIsUploadingAudio(false);
             }
