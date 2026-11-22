@@ -44,19 +44,19 @@ const SessionsList: React.FC = () => {
     const handleStartSession = async (session: Session) => {
         try {
             // 1. Prepare Room
-            toast.loading('جاري تحضير القاعة التعليمية...', { id: 'prepare-room' });
+            toast.loading('Preparing the classroom...', { id: 'prepare-room' });
             await videoService.prepareRoom(session.id);
 
             // 2. Update status to InProgress
             await sessionsService.updateSessionStatus(session.id, 'InProgress');
 
-            toast.success('تم تحضير القاعة بنجاح', { id: 'prepare-room' });
+            toast.success('Classroom ready', { id: 'prepare-room' });
 
             // 3. Navigate to classroom
             navigate(`/teacher/classroom/${session.id}`);
         } catch (error) {
             console.error('Error starting session:', error);
-            toast.error('حدث خطأ أثناء بدء الجلسة', { id: 'prepare-room' });
+            toast.error('Error starting the session', { id: 'prepare-room' });
         }
     };
 
@@ -65,14 +65,14 @@ const SessionsList: React.FC = () => {
         try {
             await sessionsService.updateSessionStatus(sessionToEnd, 'Completed');
             loadSessions();
-            toast.success('تم إنهاء الجلسة بنجاح');
+            toast.success('Session ended');
 
             if (isTeacher && sessionToEval) {
                 setEvalModalOpen(true);
             }
         } catch (error) {
             console.error('Error updating status:', error);
-            toast.error('حدث خطأ أثناء إنهاء الجلسة');
+            toast.error('Error ending the session');
         } finally {
             setConfirmEndOpen(false);
             setSessionToEnd(null);
@@ -97,10 +97,10 @@ const SessionsList: React.FC = () => {
             await sessionsService.updateSessionLink(selectedSessionId, linkInput);
             setLinkModalOpen(false);
             loadSessions();
-            toast.success('تم حفظ الرابط بنجاح');
+            toast.success('Link saved');
         } catch (error) {
             console.error('Error saving link:', error);
-            toast.error('حدث خطأ أثناء حفظ الرابط');
+            toast.error('Error saving the link');
         }
     };
 
@@ -116,10 +116,10 @@ const SessionsList: React.FC = () => {
 
     const getStatusBadge = (status: string) => {
         const statusConfig: any = {
-            'Scheduled': { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-400', label: 'مجدولة' },
-            'InProgress': { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-400', label: 'جارية الآن' },
-            'Completed': { bg: 'bg-gray-100 dark:bg-gray-700', text: 'text-gray-700 dark:text-gray-300', label: 'مكتملة' },
-            'Cancelled': { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-400', label: 'ملغية' },
+            'Scheduled': { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-400', label: 'Scheduled' },
+            'InProgress': { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-400', label: 'Live Now' },
+            'Completed': { bg: 'bg-gray-100 dark:bg-gray-700', text: 'text-gray-700 dark:text-gray-300', label: 'Completed' },
+            'Cancelled': { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-400', label: 'Cancelled' },
         };
         const config = statusConfig[status] || statusConfig.Scheduled;
         return (
@@ -133,12 +133,12 @@ const SessionsList: React.FC = () => {
         <div className="p-6">
             <div className="mb-8">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                    جلساتي
+                    My Sessions
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">
-                    جدول الجلسات وحالتها
+                    Session schedule and status
                     <span className="text-xs text-blue-500 mx-2 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">
-                        (🕒 المواعيد أدناه بتوقيتك المحلي)
+                        (🕒 Times below are in your local timezone)
                     </span>
                 </p>
             </div>
@@ -152,7 +152,7 @@ const SessionsList: React.FC = () => {
                         : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
                         }`}
                 >
-                    القادمة / الجارية
+                    Upcoming / Live
                 </button>
                 <button
                     onClick={() => setActiveTab('history')}
@@ -161,18 +161,18 @@ const SessionsList: React.FC = () => {
                         : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
                         }`}
                 >
-                    السجل السابق
+                    History
                 </button>
             </div>
 
             {/* List */}
             <div className="space-y-4">
                 {loading ? (
-                    <div className="text-center py-8 text-gray-500">جاري التحميل...</div>
+                    <div className="text-center py-8 text-gray-500">Loading...</div>
                 ) : relevantSessions.length === 0 ? (
                     <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700">
                         <CalendarIcon className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                        <p className="text-gray-500">لا توجد جلسات في هذه القائمة</p>
+                        <p className="text-gray-500">No sessions in this list</p>
                     </div>
                 ) : (
                     relevantSessions.map(session => (
@@ -202,7 +202,7 @@ const SessionsList: React.FC = () => {
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <UserIcon className="h-4 w-4" />
-                                            {session.durationMinutes} دقيقة
+                                            {session.durationMinutes} min
                                         </span>
                                     </div>
                                     {/* Show link if exists (Internal or External) */}
@@ -212,7 +212,7 @@ const SessionsList: React.FC = () => {
                                             className="mt-2 text-sm text-blue-600 hover:underline flex items-center gap-1"
                                         >
                                             <VideoCameraIcon className="h-4 w-4" />
-                                            دخول القاعة المباشرة
+                                            Join Classroom
                                         </Link>
                                     )}
                                 </div>
@@ -228,7 +228,7 @@ const SessionsList: React.FC = () => {
                                             className="flex-1 md:flex-none flex items-center justify-center gap-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                                         >
                                             <LinkIcon className="h-4 w-4" />
-                                            {session.roomUrl ? 'تعديل الرابط' : 'إضافة رابط'}
+                                            {session.roomUrl ? 'Edit Link' : 'Add Link'}
                                         </button>
 
                                         {session.status === 'Scheduled' && (
@@ -237,7 +237,7 @@ const SessionsList: React.FC = () => {
                                                 className="flex-1 md:flex-none flex items-center justify-center gap-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition shadow-sm"
                                             >
                                                 <PlayIcon className="h-4 w-4" />
-                                                بدء الجلسة
+                                                Start Session
                                             </button>
                                         )}
 
@@ -247,7 +247,7 @@ const SessionsList: React.FC = () => {
                                                 className="flex-1 md:flex-none flex items-center justify-center gap-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition"
                                             >
                                                 <CheckCircleIcon className="h-4 w-4" />
-                                                إنهاء الجلسة
+                                                End Session
                                             </button>
                                         )}
 
@@ -260,7 +260,7 @@ const SessionsList: React.FC = () => {
                                                 className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-bold transition shadow-sm animate-pulse"
                                             >
                                                 <CheckCircleIcon className="h-4 w-4" />
-                                                سجل تقرير الحصة
+                                                Submit Session Report
                                             </button>
                                         )}
                                     </>
@@ -273,12 +273,12 @@ const SessionsList: React.FC = () => {
                                             className="flex-1 md:flex-none flex items-center justify-center gap-1 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition animate-pulse shadow-lg"
                                         >
                                             <VideoCameraIcon className="h-4 w-4" />
-                                            انضمام الآن
+                                            Join Now
                                         </Link>
                                     ) : (
                                         session.status === 'Scheduled' && (
                                             <div className="flex-1 md:flex-none px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-lg text-sm font-medium text-center">
-                                                في انتظار المعلم...
+                                                Waiting for the teacher...
                                             </div>
                                         )
                                     )
@@ -294,7 +294,7 @@ const SessionsList: React.FC = () => {
             {linkModalOpen && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
-                        <h3 className="text-lg font-bold mb-4 dark:text-white">إضافة رابط الاجتماع</h3>
+                        <h3 className="text-lg font-bold mb-4 dark:text-white">Add Meeting Link</h3>
                         <input
                             type="text"
                             placeholder="https://meet.google.com/..."
@@ -307,13 +307,13 @@ const SessionsList: React.FC = () => {
                                 onClick={() => setLinkModalOpen(false)}
                                 className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg"
                             >
-                                إلغاء
+                                Cancel
                             </button>
                             <button
                                 onClick={handleSaveLink}
                                 className="px-4 py-2 bg-gold-500 text-white rounded-lg hover:bg-gold-600"
                             >
-                                حفظ
+                                Save
                             </button>
                         </div>
                     </div>
@@ -325,9 +325,9 @@ const SessionsList: React.FC = () => {
                 isOpen={confirmEndOpen}
                 onClose={() => setConfirmEndOpen(false)}
                 onConfirm={confirmEndSession}
-                title="إنهاء الجلسة"
-                message="هل أنت متأكد من إنهاء الجلسة؟"
-                confirmText="نعم، إنهاء الجلسة"
+                title="End Session"
+                message="Are you sure you want to end the session?"
+                confirmText="Yes, End Session"
                 isDanger={false}
             />
 

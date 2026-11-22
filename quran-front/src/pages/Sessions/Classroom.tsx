@@ -26,7 +26,7 @@ const Classroom: React.FC = () => {
             const isSecure = window.isSecureContext || window.location.hostname === 'localhost';
 
             if (!isSecure) {
-                toast.error('المكالمات المرئية تتطلب اتصالاً آمناً (HTTPS) لعرض الكاميرا والميكروفون.');
+                toast.error('Video calls require a secure (HTTPS) connection to use the camera and microphone.');
                 navigate(-1);
                 return;
             }
@@ -34,7 +34,7 @@ const Classroom: React.FC = () => {
             const support = DailyIframe.supportedBrowser();
             if (!support.supported) {
                 console.warn('[Daily] Browser support check returned false.');
-                toast('تنبيه: قد يواجه هذا المتصفح مشكلات في القاعة.', { icon: '⚠️' });
+                toast('Note: this browser may have issues in the classroom.', { icon: '⚠️' });
             }
 
             try {
@@ -44,7 +44,7 @@ const Classroom: React.FC = () => {
             } catch (error: any) {
                 console.error('Failed to get join info:', error);
 
-                let errorMessage = 'فشل الدخول إلى القاعة التعليمية';
+                let errorMessage = 'Failed to join the classroom';
                 if (error.response?.data?.error) {
                     errorMessage = error.response.data.error;
                 }
@@ -67,7 +67,7 @@ const Classroom: React.FC = () => {
     useEffect(() => {
         const handleDisconnect = (disconnectedSessionId: any) => {
             if (disconnectedSessionId && String(disconnectedSessionId) === String(sessionId)) {
-                toast.error('تم تسجيل الدخول من جهاز آخر. سيتم إغلاق الجلسة هنا.', { duration: 5000 });
+                toast.error('You signed in from another device. This session will close here.', { duration: 5000 });
                 callObject?.leave();
                 navigate('/');
             }
@@ -93,8 +93,8 @@ const Classroom: React.FC = () => {
                         </svg>
                     </button>
                     <div>
-                        <h1 className="font-bold text-lg">بث الجلسة</h1>
-                        {joinInfo && <p className="text-xs text-gray-400">مرحباً {joinInfo.displayName}</p>}
+                        <h1 className="font-bold text-lg">Session Stream</h1>
+                        {joinInfo && <p className="text-xs text-gray-400">Welcome, {joinInfo.displayName}</p>}
                     </div>
                 </div>
 
@@ -103,7 +103,7 @@ const Classroom: React.FC = () => {
                         <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm z-10">
                             <div className="flex flex-col items-center gap-4">
                                 <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                                <p className="text-gray-400 font-medium animate-pulse">جاري تحضير الغرفة...</p>
+                                <p className="text-gray-400 font-medium animate-pulse">Preparing the room...</p>
                             </div>
                         </div>
                     ) : joinInfo ? (
