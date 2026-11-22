@@ -69,6 +69,7 @@ export default {
                     900: '#14532d',
                 },
                 gold: {
+                    DEFAULT: 'var(--primary-gold)',
                     500: 'var(--primary-gold)',
                     600: 'var(--primary-gold-light)',
                 }
