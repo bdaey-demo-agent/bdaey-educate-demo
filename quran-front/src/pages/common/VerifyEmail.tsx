@@ -44,9 +44,12 @@ const VerifyEmail: React.FC = () => {
                         emailConfirmed: response.data.emailConfirmed
                     }));
                     localStorage.setItem('token', response.data.token);
+                    if (response.data.refreshToken) {
+                        localStorage.setItem('refreshToken', response.data.refreshToken);
+                    }
 
                     // Also trigger context login
-                    login(response.data.token, response.data);
+                    login(response.data.token, response.data, response.data.refreshToken);
                 }
 
             } catch (err: any) {

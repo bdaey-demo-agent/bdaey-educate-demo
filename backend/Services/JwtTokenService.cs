@@ -22,9 +22,12 @@ public class JwtTokenService : IJwtTokenService
         var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.Id),
+            new(JwtRegisteredClaimNames.Sub, user.Id),
+            new(ClaimTypes.NameIdentifier, user.Id), // Explicitly mapped for SignalR UserIdentifier
+            new(JwtRegisteredClaimNames.Email, user.Email ?? ""),
             new(ClaimTypes.Email, user.Email ?? ""),
-            new("FullName", user.FullName ?? "")
+            new("FullName", user.FullName ?? ""),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
@@ -32,7 +35,7 @@ public class JwtTokenService : IJwtTokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddDays(double.Parse(jwtSettings["ExpireDays"] ?? "30")),
+            Expires = GetAccessTokenExpiry(),
             Issuer = jwtSettings["Issuer"],
             Audience = jwtSettings["Audience"],
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -41,5 +44,20 @@ public class JwtTokenService : IJwtTokenService
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
+    }
+
+    public DateTime GetAccessTokenExpiry()
+    {
+        var jwtSettings = _configuration.GetSection("Jwt");
+        // Preferred setting: Jwt:ExpireMinutes. Jwt:ExpireDays is kept as a
+        // fallback so older deployments do not break before their config is updated.
+        var minutes = jwtSettings.GetValue<double?>("ExpireMinutes");
+        if (minutes.HasValue)
+        {
+            return DateTime.UtcNow.AddMinutes(minutes.Value);
+        }
+
+        var days = jwtSettings.GetValue<double?>("ExpireDays") ?? 30;
+        return DateTime.UtcNow.AddDays(days);
     }
 }

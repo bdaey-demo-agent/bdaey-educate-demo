@@ -26,6 +26,8 @@ public class AuthController : ControllerBase
     private readonly IWebHostEnvironment _env;
     private readonly IMemoryCache _cache;
     private readonly ILogger<AuthController> _logger;
+    private readonly BdaeyEducat.API.Services.IJwtTokenService _jwtTokenService;
+    private readonly BdaeyEducat.API.Services.IRefreshTokenService _refreshTokenService;
 
     public AuthController(
         UserManager<ApplicationUser> userManager, 
@@ -35,7 +37,9 @@ public class AuthController : ControllerBase
         BdaeyEducat.API.Services.IEmailService emailService,
         IWebHostEnvironment env,
         IMemoryCache cache,
-        ILogger<AuthController> logger)
+        ILogger<AuthController> logger,
+        BdaeyEducat.API.Services.IJwtTokenService jwtTokenService,
+        BdaeyEducat.API.Services.IRefreshTokenService refreshTokenService)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -45,6 +49,8 @@ public class AuthController : ControllerBase
         _env = env;
         _cache = cache;
         _logger = logger;
+        _jwtTokenService = jwtTokenService;
+        _refreshTokenService = refreshTokenService;
     }
 
     [HttpPost("register")]
@@ -139,27 +145,9 @@ public class AuthController : ControllerBase
         }
         // --- EMAIL VERIFICATION END ---
 
-        // Generate Token (For Students or others who don't need immediate verification)
-        var token = await GenerateJwtToken(user);
-        
-        // Ensure EmailConfirmed is true for non-teachers if we want to skip verification logic for them
-        // Or just leave it as false but don't check it in Login.
-        // Let's safe-guard: if not teacher, maybe auto-confirm? 
-        // User said "Verify teacher email ONLY".
-        // It's cleaner to just not check it in Login for others.
-
-        return Ok(new AuthResponseDto
-        {
-            Id = user.Id,
-            Token = token,
-            Email = user.Email!,
-            FullName = user.FullName,
-            Role = role,
-            UserName = user.UserName,
-            Expiration = DateTime.UtcNow.AddDays(30),
-            EmailConfirmed = user.EmailConfirmed,
-            Gender = user.Gender
-        });
+        // Generate tokens (For Students or others who don't need immediate verification)
+        // It's cleaner to just not check email confirmation in Login for non-teachers.
+        return Ok(await BuildAuthResponseAsync(user, role));
     }
 
     [HttpGet("confirm-email")]
@@ -174,24 +162,8 @@ public class AuthController : ControllerBase
         var result = await _userManager.ConfirmEmailAsync(user, token);
         if (result.Succeeded)
         {
-            // Generate a fresh token with EmailConfirmed=true claim
-            var newToken = await GenerateJwtToken(user);
-            var roles = await _userManager.GetRolesAsync(user);
-            var userRole = roles.FirstOrDefault();
-
-            return Ok(new AuthResponseDto
-            {
-                Id = user.Id,
-                Token = newToken,
-                Email = user.Email!,
-                FullName = user.FullName,
-                Role = userRole,
-                UserName = user.UserName,
-                Expiration = DateTime.UtcNow.AddDays(30),
-                IsBlocked = user.IsBlocked,
-                EmailConfirmed = user.EmailConfirmed,
-                Gender = user.Gender
-            });
+            // Generate fresh tokens now that the email is confirmed
+            return Ok(await BuildAuthResponseAsync(user, null));
         }
 
         return BadRequest("Email confirmation failed");
@@ -222,21 +194,7 @@ public class AuthController : ControllerBase
             return StatusCode(403, new { code = "AccountSuspended", message = "Account has been suspended." });
         }
 
-        var token = await GenerateJwtToken(user);
-
-        return Ok(new AuthResponseDto
-        {
-            Id = user.Id,
-            Token = token,
-            Email = user.Email!,
-            FullName = user.FullName,
-            Role = userRole,
-            UserName = user.UserName,
-            Expiration = DateTime.UtcNow.AddDays(30),
-            IsBlocked = user.IsBlocked,
-            EmailConfirmed = user.EmailConfirmed,
-            Gender = user.Gender
-        });
+        return Ok(await BuildAuthResponseAsync(user, userRole));
     }
 
     [HttpPost("google")]
@@ -310,23 +268,7 @@ public class AuthController : ControllerBase
                 return StatusCode(403, new { code = "AccountSuspended", message = "Account has been suspended." });
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var token = await GenerateJwtToken(user);
-
-            return Ok(new AuthResponseDto
-            {
-                Id = user.Id,
-                Token = token,
-                Email = user.Email!,
-                FullName = user.FullName,
-                Role = roles.FirstOrDefault(),
-                UserName = user.UserName,
-                Expiration = DateTime.UtcNow.AddDays(30),
-                IsBlocked = user.IsBlocked,
-                EmailConfirmed = user.EmailConfirmed,
-                Gender = user.Gender,
-                IsNewUser = isNewUser
-            });
+            return Ok(await BuildAuthResponseAsync(user, null, isNewUser));
         }
         catch (InvalidJwtException)
         {
@@ -508,24 +450,44 @@ public class AuthController : ControllerBase
             await _userManager.UpdateAsync(user);
         }
 
-        // Always issue a new token on profile update so Claims (FullName, Email, EmailConfirmed) stay fresh
-        var newToken = await GenerateJwtToken(user);
-        var roles = await _userManager.GetRolesAsync(user);
-        var userRole = roles.FirstOrDefault();
+        // Always issue new tokens on profile update so claims (FullName, Email, EmailConfirmed) stay fresh
+        return Ok(await BuildAuthResponseAsync(user, null));
+    }
 
-        return Ok(new AuthResponseDto
+    /// <summary>
+    /// Exchanges a valid refresh token for a new access token + rotated refresh token.
+    /// Anonymous by design: the refresh token itself is the credential.
+    /// </summary>
+    [HttpPost("refresh")]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("auth")]
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto model)
+    {
+        if (model == null || string.IsNullOrWhiteSpace(model.RefreshToken))
+            return BadRequest("Refresh token is required");
+
+        var result = await _refreshTokenService.RotateAsync(model.RefreshToken);
+        if (!result.Success || result.User == null)
         {
-            Id = user.Id,
-            Token = newToken,
-            Email = user.Email!,
-            FullName = user.FullName,
-            Role = userRole,
-            UserName = user.UserName,
-            Expiration = DateTime.UtcNow.AddDays(30),
-            IsBlocked = user.IsBlocked,
-            EmailConfirmed = user.EmailConfirmed,
-            Gender = user.Gender
-        });
+            return Unauthorized(new { code = "InvalidRefreshToken", message = result.Error ?? "Session expired. Please log in again." });
+        }
+
+        if (result.User.IsBlocked)
+        {
+            return StatusCode(403, new { code = "AccountSuspended", message = "Account has been suspended." });
+        }
+
+        return Ok(await BuildAuthResponseAsync(result.User, null, existingRefreshToken: result.NewRawToken));
+    }
+
+    /// <summary>Revokes a refresh token on logout. Best effort, always succeeds.</summary>
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout([FromBody] RefreshTokenRequestDto model)
+    {
+        if (!string.IsNullOrWhiteSpace(model?.RefreshToken))
+        {
+            await _refreshTokenService.RevokeAsync(model.RefreshToken, "User logged out");
+        }
+        return Ok(new { message = "Logged out" });
     }
 
     [HttpGet("test-email")]
@@ -569,38 +531,32 @@ public class AuthController : ControllerBase
         return $"{origin}/verify-email?userId={userId}&token={Uri.EscapeDataString(emailToken)}";
     }
 
-    private async Task<string> GenerateJwtToken(ApplicationUser user)
+    /// <summary>
+    /// Issues a short-lived access token plus a rotating refresh token and shapes the
+    /// standard auth response. Single place so every login path stays consistent.
+    /// </summary>
+    private async Task<AuthResponseDto> BuildAuthResponseAsync(ApplicationUser user, string? role, bool isNewUser = false, string? existingRefreshToken = null)
     {
-        var jwtSettings = _configuration.GetSection("Jwt");
-        var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
-        var userRoles = await _userManager.GetRolesAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
+        var accessToken = _jwtTokenService.GenerateJwtToken(user, roles.ToList());
+        // During rotation the rotated token is passed in; minting another one here would
+        // leave a valid orphan token in the database.
+        var refreshToken = existingRefreshToken ?? await _refreshTokenService.CreateAsync(user);
 
-        var claims = new List<Claim>
+        return new AuthResponseDto
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(ClaimTypes.NameIdentifier, user.Id), // Explicitly map for SignalR UserIdentifier
-            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
-            new Claim("FullName", user.FullName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            Id = user.Id,
+            Token = accessToken,
+            RefreshToken = refreshToken,
+            Email = user.Email!,
+            FullName = user.FullName,
+            Role = role ?? roles.FirstOrDefault(),
+            UserName = user.UserName,
+            Expiration = _jwtTokenService.GetAccessTokenExpiry(),
+            IsBlocked = user.IsBlocked,
+            EmailConfirmed = user.EmailConfirmed,
+            Gender = user.Gender,
+            IsNewUser = isNewUser
         };
-
-        // Add roles to claims
-        foreach (var role in userRoles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddDays(Convert.ToDouble(jwtSettings["ExpireDays"])),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            Issuer = jwtSettings["Issuer"],
-            Audience = jwtSettings["Audience"]
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
     }
 }

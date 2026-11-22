@@ -71,7 +71,6 @@ namespace BdaeyEducat.API.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NationalId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
@@ -108,9 +107,6 @@ namespace BdaeyEducat.API.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NationalId")
-                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -556,6 +552,50 @@ namespace BdaeyEducat.API.Migrations
                     b.ToTable("PromoCodeUsages", "quran");
                 });
 
+            modelBuilder.Entity("BdaeyEducat.API.Data.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReplacedByTokenHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("RevokeReason")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens", "quran");
+                });
+
             modelBuilder.Entity("BdaeyEducat.API.Data.Entities.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -938,6 +978,12 @@ namespace BdaeyEducat.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId")
@@ -1003,6 +1049,8 @@ namespace BdaeyEducat.API.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ReferenceId");
 
                     b.HasIndex("WalletId");
 
@@ -1350,6 +1398,17 @@ namespace BdaeyEducat.API.Migrations
                         .IsRequired();
 
                     b.Navigation("PromoCode");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BdaeyEducat.API.Data.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("BdaeyEducat.API.Data.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

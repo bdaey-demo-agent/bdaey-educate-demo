@@ -38,8 +38,8 @@ const Login: React.FC = () => {
                 email,
                 password
             });
-            const { token, fullName, email: userEmail, role, id, emailConfirmed } = response.data;
-            login(token, { id, email: userEmail, fullName, role, emailConfirmed });
+            const { token, fullName, email: userEmail, role, id, emailConfirmed, refreshToken } = response.data;
+            login(token, { id, email: userEmail, fullName, role, emailConfirmed }, refreshToken);
 
             if (role === 'Student') navigate('/student/home');
             else if (role === 'Teacher') navigate('/teacher/home');

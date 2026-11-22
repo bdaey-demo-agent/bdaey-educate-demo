@@ -1,6 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { API_BASE_URL } from '../config';
-import { AUTH_TOKEN_KEY, IS_SUSPENDED_KEY, USER_KEY } from '../constants';
+import { AUTH_TOKEN_KEY, IS_SUSPENDED_KEY, REFRESH_TOKEN_KEY, USER_KEY } from '../constants';
 import { v4 as uuidv4 } from 'uuid';
 
 // Extended type to include our custom property
@@ -17,6 +17,32 @@ const api = axios.create({
 });
 
 let isLoggingOut = false;
+
+// Single-flight refresh: concurrent 401s share one refresh call.
+let refreshPromise: Promise<string | null> | null = null;
+
+const tryRefreshAccessToken = (): Promise<string | null> => {
+    if (!refreshPromise) {
+        refreshPromise = (async () => {
+            const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+            if (!refreshToken) return null;
+            try {
+                const response = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken });
+                const newToken = response.data?.token;
+                const newRefreshToken = response.data?.refreshToken;
+                if (!newToken) return null;
+                localStorage.setItem(AUTH_TOKEN_KEY, newToken);
+                if (newRefreshToken) localStorage.setItem(REFRESH_TOKEN_KEY, newRefreshToken);
+                return newToken as string;
+            } catch {
+                return null;
+            }
+        })().finally(() => {
+            refreshPromise = null;
+        });
+    }
+    return refreshPromise;
+};
 
 // Request Interceptor
 api.interceptors.request.use((config: CustomAxiosRequestConfig) => {
@@ -47,8 +73,18 @@ api.interceptors.response.use(
 
         // Handle 401 Unauthorized
         if (error.response?.status === 401) {
-            // Logic to prevent loops on login page or if already retried
-            if (!originalRequest._retry && window.location.pathname !== '/login') {
+            const url = originalRequest?.url ?? '';
+            const isAuthEndpoint = url.includes('/auth/login') || url.includes('/auth/refresh') || url.includes('/auth/google') || url.includes('/auth/register');
+
+            // Try a transparent token refresh once before giving up the session.
+            if (!originalRequest._retry && !isAuthEndpoint && window.location.pathname !== '/login') {
+                originalRequest._retry = true;
+                const newToken = await tryRefreshAccessToken();
+                if (newToken) {
+                    originalRequest.headers = originalRequest.headers ?? {};
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                    return api(originalRequest);
+                }
                 handleLogout('session_expired');
             }
             return Promise.reject(error);
@@ -83,6 +119,7 @@ const handleLogout = (reason: 'session_expired' | 'account_blocked') => {
 
     // Clear storage
     localStorage.removeItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
 
     if (reason === 'account_blocked') {

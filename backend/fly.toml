@@ -24,7 +24,8 @@ kill_timeout = "30s"
 
   Jwt__Issuer = "BdaeyEducat"
   Jwt__Audience = "BdaeyEducat"
-  Jwt__ExpireDays = "30"
+  Jwt__ExpireMinutes = "15"
+  Jwt__RefreshTokenDays = "14"
 
   Video__Provider = "daily"
   Video__EarlyJoinMinutes = "15"

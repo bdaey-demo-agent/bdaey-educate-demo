@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
-import { AUTH_TOKEN_KEY, USER_KEY, IS_SUSPENDED_KEY } from '../constants';
+import { AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY, IS_SUSPENDED_KEY } from '../constants';
+import authService from '../services/authService';
 import { signalRService } from '../services/signalrService';
 import toast from 'react-hot-toast';
 import { safeJsonParse } from '../utils/helpers';
@@ -23,7 +24,7 @@ interface AuthContextType {
     user: User | null;
     token: string | null;
     isLoading: boolean;
-    login: (token: string, user: User) => void;
+    login: (token: string, user: User, refreshToken?: string) => void;
     register: (email: string, password: string, fullName: string, phoneNumber: string, dateOfBirth: Date, gender: string, role?: string, username?: string) => Promise<void>;
     logout: (reason?: 'session_expired' | 'account_blocked' | 'manual') => void;
     resendVerification: () => Promise<void>;
@@ -87,11 +88,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
 
-    const login = (newToken: string, newUser: User) => {
+    const login = (newToken: string, newUser: User, newRefreshToken?: string) => {
         setToken(newToken);
         setUser(newUser);
         localStorage.setItem(AUTH_TOKEN_KEY, newToken);
         localStorage.setItem(USER_KEY, JSON.stringify(newUser));
+        // undefined: keep the existing stored refresh token (e.g. impersonation flows
+        // that receive no new one). A passed value always replaces it.
+        if (newRefreshToken !== undefined) {
+            localStorage.setItem(REFRESH_TOKEN_KEY, newRefreshToken);
+        }
         localStorage.removeItem(IS_SUSPENDED_KEY); // Clear suspension flag
         axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     };
@@ -133,7 +139,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                 // If it's a student and a token is returned, login immediately
                 if (response.data.token) {
-                    login(response.data.token, userData);
+                    login(response.data.token, userData, response.data.refreshToken);
                 }
             }
 
@@ -152,12 +158,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const logout = (reason?: 'session_expired' | 'account_blocked' | 'manual') => {
+        // 0. Revoke the refresh token server-side (fire and forget)
+        if (reason === undefined || reason === 'manual') {
+            authService.logout();
+        }
+
         // 1. Clear State
         setToken(null);
         setUser(null);
 
         // 2. Clear Storage
         localStorage.removeItem(AUTH_TOKEN_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
         localStorage.removeItem(USER_KEY);
         localStorage.removeItem(IS_SUSPENDED_KEY);
         delete axios.defaults.headers.common['Authorization'];

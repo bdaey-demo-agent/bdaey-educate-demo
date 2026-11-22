@@ -36,9 +36,9 @@ const LoginTeacher: React.FC = () => {
                 email,
                 password
             });
-            const { token, fullName, email: userEmail, role, id, emailConfirmed } = response.data;
+            const { token, fullName, email: userEmail, role, id, emailConfirmed, refreshToken } = response.data;
 
-            login(token, { id, email: userEmail, fullName, role, emailConfirmed });
+            login(token, { id, email: userEmail, fullName, role, emailConfirmed }, refreshToken);
 
             // Force redirect to Teacher Dashboard
             navigate('/teacher/dashboard');

@@ -31,11 +31,22 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Badge> Badges { get; set; }
     public DbSet<StudentBadge> StudentBadges { get; set; }
     public DbSet<FavoriteTeacher> FavoriteTeachers { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
         builder.HasDefaultSchema("quran");
+
+        builder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasIndex(r => r.TokenHash).IsUnique();
+            entity.HasIndex(r => r.UserId);
+            entity.HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
         builder.Entity<ChatMessage>()
             .HasOne(m => m.Sender)

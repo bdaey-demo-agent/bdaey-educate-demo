@@ -199,6 +199,7 @@ builder.Services.AddScoped<BdaeyEducat.API.Services.Video.VideoService>();
 
 // JWT Token Service
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<BdaeyEducat.API.Services.IRefreshTokenService, BdaeyEducat.API.Services.RefreshTokenService>();
 
 // Financial Services
 builder.Services.AddScoped<BdaeyEducat.API.Services.IPayoutService, BdaeyEducat.API.Services.PayoutService>();

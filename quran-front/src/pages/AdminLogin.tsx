@@ -27,8 +27,8 @@ const AdminLogin: React.FC = () => {
                 email,
                 password
             });
-            const { token, fullName, email: userEmail, emailConfirmed } = response.data;
-            login(token, { email: userEmail, fullName, role: 'Admin', emailConfirmed });
+            const { token, fullName, email: userEmail, emailConfirmed, refreshToken } = response.data;
+            login(token, { email: userEmail, fullName, role: 'Admin', emailConfirmed }, refreshToken);
 
             toast.success('مرحباً بك في لوحة التحكم');
             navigate(from, { replace: true });

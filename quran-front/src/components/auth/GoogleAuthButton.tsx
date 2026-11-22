@@ -31,8 +31,8 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
                 createIfNotExists
             });
 
-            const { token, fullName, email: userEmail, role: userRole, id, emailConfirmed } = response.data;
-            login(token, { id, email: userEmail, fullName, role: userRole, emailConfirmed });
+            const { token, fullName, email: userEmail, role: userRole, id, emailConfirmed, refreshToken } = response.data;
+            login(token, { id, email: userEmail, fullName, role: userRole, emailConfirmed }, refreshToken);
 
             toast.dismiss(loadingToast);
             toast.success('تم تسجيل الدخول بنجاح');

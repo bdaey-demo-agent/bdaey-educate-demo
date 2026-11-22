@@ -1,5 +1,6 @@
 import api from './api';
 import type { LoginRequest, RegisterRequest, AuthResponse } from '../types/auth';
+import { REFRESH_TOKEN_KEY } from '../constants';
 
 
 const login = async (data: LoginRequest): Promise<AuthResponse> => {
@@ -28,8 +29,23 @@ const updateProfile = async (data: { fullName: string; phoneNumber?: string; ema
             emailConfirmed: response.data.emailConfirmed
         }));
         localStorage.setItem('token', response.data.token);
+        if (response.data.refreshToken) {
+            localStorage.setItem(REFRESH_TOKEN_KEY, response.data.refreshToken);
+        }
     }
     return response.data;
+};
+
+// Best-effort server-side revocation of the refresh token.
+// Local cleanup always happens in AuthContext regardless of the outcome.
+const logout = async (): Promise<void> => {
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+    if (!refreshToken) return;
+    try {
+        await api.post('/auth/logout', { refreshToken });
+    } catch {
+        // Ignore network failures - the token expires on its own.
+    }
 };
 
 const changePassword = async (data: any) => {
@@ -60,6 +76,7 @@ const checkUsernameAvailability = async (username: string) => {
 const authService = {
     login,
     register,
+    logout,
     updateProfile,
     changePassword,
     getProfile,
