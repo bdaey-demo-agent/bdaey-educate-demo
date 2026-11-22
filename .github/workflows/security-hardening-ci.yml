@@ -32,6 +32,12 @@ jobs:
       - name: Build backend
         run: dotnet build backend/BdaeyEducat.API.csproj --configuration Release --no-restore
 
+      - name: Restore tests
+        run: dotnet restore tests/BdaeyEducat.API.Tests/BdaeyEducat.API.Tests.csproj
+
+      - name: Run money-path and auth tests
+        run: dotnet test tests/BdaeyEducat.API.Tests/BdaeyEducat.API.Tests.csproj --no-restore
+
   frontend:
     name: Frontend build
     runs-on: ubuntu-latest
