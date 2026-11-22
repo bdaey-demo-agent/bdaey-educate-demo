@@ -120,7 +120,7 @@ public class SessionsController : ControllerBase
             {
                 var timeDiff = session.ScheduledAt - DateTimeOffset.UtcNow;
                 if (!isAdmin && timeDiff.TotalMinutes > 15)
-                    return BadRequest("لا يمكن بدء الجلسة قبل 15 دقيقة من الموعد المحدد.");
+                    return BadRequest("You can only start the session within 15 minutes of its scheduled time.");
 
                 if (!isAdmin && DateTimeOffset.UtcNow > session.ScheduledAt.AddMinutes(session.DurationMinutes + 30))
                     return BadRequest(new { message = "The session start window has expired." });
@@ -221,8 +221,8 @@ public class SessionsController : ControllerBase
 
         if (session == null) return NotFound();
         if (session.StudentId != userId) return Forbid();
-        if (session.Status != SessionStatus.Completed) return BadRequest("لا يمكن تقييم جلسة لم تكتمل بعد");
-        if (session.Rating.HasValue) return BadRequest("تم تقييم الجلسة مسبقاً");
+        if (session.Status != SessionStatus.Completed) return BadRequest("Cannot rate a session that is not completed yet");
+        if (session.Rating.HasValue) return BadRequest("This session has already been rated");
 
         session.Rating = dto.Rating;
         session.ReviewComment = dto.Comment;

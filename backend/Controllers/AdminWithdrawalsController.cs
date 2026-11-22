@@ -95,8 +95,8 @@ public class AdminWithdrawalsController : ControllerBase
             // Notify Teacher
             await _notificationService.SendToUserAsync(
                 request.TeacherId,
-                "تم الموافقة على طلب السحب",
-                $"تم تأكيد طلب السحب وتحويل مبلغ {request.Amount} ج.م بنجاح.",
+                "Withdrawal request approved",
+                $"Withdrawal confirmed and {request.Amount} EGP transferred.",
                 "System",
                 request.Id.ToString()
             );
@@ -137,8 +137,8 @@ public class AdminWithdrawalsController : ControllerBase
             // Notify Teacher
             await _notificationService.SendToUserAsync(
                  request.TeacherId,
-                 "تم رفض طلب السحب",
-                 $"عذراً، تم رفض طلب السحب. السبب: {dto.Reason}",
+                 "Withdrawal request rejected",
+                 $"Sorry, your withdrawal request was rejected. Reason: {dto.Reason}",
                  "System",
                  request.Id.ToString()
              );

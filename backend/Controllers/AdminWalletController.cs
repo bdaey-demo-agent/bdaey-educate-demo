@@ -162,15 +162,15 @@ public class AdminWalletController : ControllerBase
 
             // Post-Commit Notification
             var msg = dto.Action == "Approve" 
-                ? $"تم الموافقة على طلب السحب #{id}. المرجع: {dto.ReferenceCode}"
-                : $"تم رفض طلب السحب #{id}. السبب: {dto.RejectionReason}";
+                ? $"Withdrawal request #{id} approved. Reference: {dto.ReferenceCode}"
+                : $"Withdrawal request #{id} rejected. Reason: {dto.RejectionReason}";
             
             await _hubContext.Clients.Group(request.TeacherId).SendAsync("ReceiveNotification", msg);
 
              _context.Notifications.Add(new Notification
             {
                  UserId = request.TeacherId,
-                 Title = "تحديث طلب السحب",
+                 Title = "Withdrawal Request Update",
                  Message = msg,
                  Type = "Wallet",
                  RelatedEntityId = request.Id.ToString()

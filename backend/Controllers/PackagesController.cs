@@ -82,7 +82,7 @@ public class PackagesController : ControllerBase
             var package = await _packageService.CreatePackageAsync(userId, dto, isAdmin);
             return CreatedAtAction(nameof(GetTeacherPackages), new { teacherId = package.TeacherProfileId }, package);
         }
-        catch (UnauthorizedAccessException) { return NotFound("لم يتم العثور على ملف المعلم"); }
+        catch (UnauthorizedAccessException) { return NotFound("Teacher profile not found"); }
         catch (ArgumentException ex) { return BadRequest(ex.Message); }
         catch (InvalidOperationException ex) { return BadRequest(ex.Message); }
         catch (Exception ex) { return BadRequest($"CRITICAL ERROR: {ex.Message}"); }
@@ -102,7 +102,7 @@ public class PackagesController : ControllerBase
             var package = await _packageService.UpdatePackageAsync(id, userId, dto, isAdmin);
             return Ok(package);
         }
-        catch (ArgumentException) { return NotFound("الباقة غير موجودة"); }
+        catch (ArgumentException) { return NotFound("Package not found"); }
         catch (UnauthorizedAccessException) { return Forbid(); }
         catch (InvalidOperationException ex) { return BadRequest(ex.Message); } // Conflict or Pending Bookings
         catch (Exception ex) { return BadRequest($"CRITICAL ERROR: {ex.Message}"); }
@@ -157,7 +157,7 @@ public class PackagesController : ControllerBase
         }
         catch (Exception)
         {
-            return StatusCode(500, new { message = "هناك خطأ في الخادم أثناء استعادة الباقة." });
+            return StatusCode(500, new { message = "Server error while restoring the package." });
         }
     }
 }

@@ -251,7 +251,7 @@ public class AdminBookingsController : ControllerBase
         // 4. Post-Commit Notifications
         try
         {
-             var msg = $"تم إلغاء الحجز #{id} من قبل الإدارة. السبب: {dto.Reason}";
+             var msg = $"Booking #{id} was cancelled by the admin team. Reason: {dto.Reason}";
              await _hubContext.Clients.Group(booking.StudentId).SendAsync("ReceiveNotification", msg);
              
              // Notify teacher too

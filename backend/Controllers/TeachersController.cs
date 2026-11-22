@@ -89,7 +89,7 @@ public class TeachersController : ControllerBase
             );
         }
 
-        if (!string.IsNullOrWhiteSpace(category) && category != "الكل")
+        if (!string.IsNullOrWhiteSpace(category) && category != "All")
         {
             var cat = category.ToLowerInvariant();
             filteredTeachers = filteredTeachers.Where(t => 

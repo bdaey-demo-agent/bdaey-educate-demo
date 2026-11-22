@@ -75,7 +75,7 @@ public class WithdrawalsController : ControllerBase
                  // Check for duplicate name
                  if (await _context.WithdrawalMethods.AnyAsync(m => m.TeacherId == userId && m.Nickname == dto.MethodName))
                  {
-                     throw new InvalidOperationException($"عذراً، لديك طريقة محفوظة بنفس الاسم '{dto.MethodName}' بالفعل.");
+                     throw new InvalidOperationException($"You already have a saved method named '{dto.MethodName}'.");
                  }
 
                  var savedMethod = new WithdrawalMethod
@@ -101,8 +101,8 @@ public class WithdrawalsController : ControllerBase
             // Notify Teacher
             await _notificationService.SendToUserAsync(
                 userId!,
-                "تم استلام طلب السحب",
-                "تم استلام الطلب، وسيتم التحويل خلال 24 ساعة من التأكيد",
+                "Withdrawal request received",
+                "Your request was received. The transfer will be made within 24 hours of confirmation",
                 "System",
                 request.Id.ToString()
             );
@@ -145,7 +145,7 @@ public class WithdrawalsController : ControllerBase
          // Check for duplicate name
          if (!string.IsNullOrEmpty(dto.Nickname) && await _context.WithdrawalMethods.AnyAsync(m => m.TeacherId == userId && m.Nickname == dto.Nickname))
          {
-             return BadRequest($"عذراً، لديك طريقة محفوظة بنفس الاسم '{dto.Nickname}' بالفعل.");
+             return BadRequest($"You already have a saved method named '{dto.Nickname}'.");
          }
 
          var method = new WithdrawalMethod
