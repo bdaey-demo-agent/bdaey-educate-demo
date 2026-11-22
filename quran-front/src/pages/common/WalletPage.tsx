@@ -47,11 +47,11 @@ const WalletPage: React.FC = () => {
 
     const getTransactionText = (type: string) => {
         switch (type) {
-            case 'Deposit': return 'إيداع';
-            case 'Withdrawal': return 'سحب';
-            case 'Payment': return 'دفع لحصة';
-            case 'Income': return 'دخل من حصة';
-            case 'Refund': return 'استرداد';
+            case 'Deposit': return 'Deposit';
+            case 'Withdrawal': return 'Withdrawal';
+            case 'Payment': return 'Session Payment';
+            case 'Income': return 'Session Income';
+            case 'Refund': return 'Refund';
             default: return type;
         }
     };
@@ -60,28 +60,28 @@ const WalletPage: React.FC = () => {
         if (status === 'Pending' && type === 'Income') {
             return (
                 <span className="text-xs font-medium text-orange-500 mt-1 bg-orange-50 dark:bg-orange-900/20 inline-block px-2 py-0.5 rounded">
-                    معلّق (يتاح بعد 24 ساعة من الحصة)
+                    Pending (available 24h after the session)
                 </span>
             );
         }
         if (status === 'Pending') {
             return (
                 <span className="text-xs font-medium text-yellow-600 mt-1 bg-yellow-50 dark:bg-yellow-900/20 inline-block px-2 py-0.5 rounded">
-                    قيد المعالجة
+                    Processing
                 </span>
             );
         }
         if (status === 'Failed' || status === 'Cancelled') {
             return (
                 <span className="text-xs font-medium text-red-600 mt-1 bg-red-50 dark:bg-red-900/20 inline-block px-2 py-0.5 rounded">
-                    {status === 'Cancelled' ? 'ألغيت' : 'فشلت'}
+                    {status === 'Cancelled' ? 'Cancelled' : 'Failed'}
                 </span>
             );
         }
         if (status === 'Succeeded') {
             return (
                 <span className="text-xs font-medium text-green-600 mt-1 bg-green-50 dark:bg-green-900/20 inline-block px-2 py-0.5 rounded">
-                    نجحت
+                    Successful
                 </span>
             );
         }
@@ -97,7 +97,7 @@ const WalletPage: React.FC = () => {
 
     const handleDeposit = async () => {
         if (depositAmount < 10) {
-            toast.error("أقل مبلغ للشحن هو 10 جنيه");
+            toast.error("Minimum top-up is 10 EGP");
             return;
         }
         try {
@@ -106,7 +106,7 @@ const WalletPage: React.FC = () => {
             window.location.href = paymentUrl; // Redirect to Kashier
         } catch (e) {
             console.error("Deposit error", e);
-            toast.error("حدث خطأ أثناء الاتصال ببوابة الدفع");
+            toast.error("Error connecting to the payment gateway");
         }
     };
 
@@ -115,7 +115,7 @@ const WalletPage: React.FC = () => {
         setIsRedeeming(true);
         try {
             const data = await walletService.redeemPromoCode(promoCodeInput.trim());
-            toast.success(`تم شحن المحفظة بنجاح بقيمة ${data.amount} ج.م`);
+            toast.success(`Wallet topped up with ${data.amount} EGP`);
             setShowPromoModal(false);
             setPromoCodeInput('');
             // Refetch wallet
@@ -123,7 +123,7 @@ const WalletPage: React.FC = () => {
             setWallet(newWalletData);
         } catch (e: any) {
             console.error("Redeem error", e);
-            toast.error(e.response?.data?.message || "الكود غير صالح أو منتهي الصلاحية");
+            toast.error(e.response?.data?.message || "Invalid or expired code");
         } finally {
             setIsRedeeming(false);
         }
@@ -154,13 +154,13 @@ const WalletPage: React.FC = () => {
         );
     }
 
-    if (error) return <div className="text-center py-10 text-red-500">فشل تحميل بيانات المحفظة أو حدث خطأ في الدفع.</div>;
+    if (error) return <div className="text-center py-10 text-red-500">Failed to load wallet data or a payment error occurred.</div>;
     if (!wallet) return <div></div>;
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
             <div className="container mx-auto px-4 max-w-4xl">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">المحفظة الالكترونية</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">E-Wallet</h1>
 
                 {/* Balance Card */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl shadow-xl p-8 text-white mb-8 relative overflow-hidden">
@@ -168,14 +168,14 @@ const WalletPage: React.FC = () => {
                         <BanknotesIcon className="h-48 w-48" />
                     </div>
                     <div className="relative z-10">
-                        <p className="text-blue-100 mb-2">الرصيد الحالي</p>
+                        <p className="text-blue-100 mb-2">Current Balance</p>
                         <h2 className="text-5xl font-bold mb-6">
                             {wallet.balance.toLocaleString()} <span className="text-2xl">{wallet.currency}</span>
                         </h2>
 
                         {wallet.pendingBalance > 0 && (
                             <div className="bg-blue-900/40 border border-blue-400/30 rounded-lg p-3 inline-flex items-center gap-2 mb-6">
-                                <span className="text-blue-200 text-sm">رصيد معلّق (للأرباح):</span>
+                                <span className="text-blue-200 text-sm">Pending balance (earnings):</span>
                                 <span className="font-bold text-lg text-white">{wallet.pendingBalance.toLocaleString()} {wallet.currency}</span>
                             </div>
                         )}
@@ -186,7 +186,7 @@ const WalletPage: React.FC = () => {
                                     onClick={() => setShowWithdrawalModal(true)}
                                     className="bg-white text-blue-700 hover:bg-blue-50 py-2 px-6 rounded-lg font-bold transition-colors shadow-sm"
                                 >
-                                    سحب الرصيد
+                                    Withdraw
                                 </button>
                             )}
 
@@ -203,10 +203,10 @@ const WalletPage: React.FC = () => {
                                         ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                                         : 'bg-green-500 text-white hover:bg-green-600'
                                         }`}
-                                    title={!user?.emailConfirmed ? "يرجى تأكيد بريدك الإلكتروني" : "شحن الرصيد بالبطاقة البنكية"}
+                                    title={!user?.emailConfirmed ? "Please verify your email" : "Top up with a bank card"}
                                 >
                                     <ArrowDownIcon className="h-5 w-5" />
-                                    شحن رصيدي
+                                    Top Up
                                 </button>
                             )}
 
@@ -225,7 +225,7 @@ const WalletPage: React.FC = () => {
                                         }`}
                                 >
                                     <TicketIcon className="h-5 w-5" />
-                                    شحن بـ كوبون
+                                    Redeem Coupon
                                 </button>
                             )}
                         </div>
@@ -239,9 +239,9 @@ const WalletPage: React.FC = () => {
                             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-orange-100 dark:bg-orange-900/30 mb-6">
                                 <ExclamationTriangleIcon className="h-8 w-8 text-orange-600 dark:text-orange-400" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">تأكيد البريد الإلكتروني مطلوب</h3>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Email Verification Required</h3>
                             <p className="text-gray-600 dark:text-gray-400 mb-8 text-sm">
-                                عذراً، يجب عليك تأكيد بريدك الإلكتروني أولاً لتتمكن من استخدام المحفظة وشحن الرصيد. يمكنك طلب رابط التفعيل عبر الجوال التوجه إلى ملفك الشخصي.
+                                Please verify your email first to use the wallet and top up. You can request an activation link from your profile page.
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-3">
@@ -249,14 +249,14 @@ const WalletPage: React.FC = () => {
                                     onClick={() => setShowVerificationModal(false)}
                                     className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
                                 >
-                                    إلغاء
+                                    Cancel
                                 </button>
                                 <Link
                                     to="/student/profile"
                                     onClick={() => setShowVerificationModal(false)}
                                     className="flex-1 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium transition-colors"
                                 >
-                                    الانتقال للملف الشخصي
+                                    Go to Profile
                                 </Link>
                             </div>
                         </div>
@@ -267,11 +267,11 @@ const WalletPage: React.FC = () => {
                 {showDepositModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">شحن رصيد المحفظة</h3>
-                            <p className="text-gray-500 dark:text-gray-400 mb-6">أدخل المبلغ المراد شحنه (بالجنيه المصري)</p>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Top Up Wallet</h3>
+                            <p className="text-gray-500 dark:text-gray-400 mb-6">Enter the amount to add (in EGP)</p>
 
                             <div className="mb-6">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">المبلغ</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount</label>
                                 <input
                                     type="number"
                                     min="10"
@@ -286,13 +286,13 @@ const WalletPage: React.FC = () => {
                                     onClick={() => setShowDepositModal(false)}
                                     className="px-4 py-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                 >
-                                    إلغاء
+                                    Cancel
                                 </button>
                                 <button
                                     onClick={handleDeposit}
                                     className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold shadow-lg shadow-blue-500/30"
                                 >
-                                    شحن الآن
+                                    Top Up Now
                                 </button>
                             </div>
                         </div>
@@ -303,15 +303,15 @@ const WalletPage: React.FC = () => {
                 {showPromoModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">شحن رصيد بواسطة كوبون</h3>
-                            <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">أدخل رمز الكوبون لشحن محفظتك. يرجى الملاحظة أن الحد الأقصى للشحن بالكوبونات هو 100 جنيه شهرياً.</p>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Redeem a Coupon</h3>
+                            <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">Enter your coupon code to top up. Note: coupon top-ups are capped at 100 EGP per month.</p>
 
                             <div className="mb-6">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">رمز الكوبون</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Coupon Code</label>
                                 <input
                                     type="text"
                                     value={promoCodeInput}
-                                    placeholder="أدخل الرمز هنا (مثال: FREE50)"
+                                    placeholder="Enter the code here (e.g. FREE50)"
                                     onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, ''))}
                                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white dir-ltr text-center font-bold tracking-widest uppercase"
                                 />
@@ -323,7 +323,7 @@ const WalletPage: React.FC = () => {
                                     disabled={isRedeeming}
                                     className="px-4 py-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                 >
-                                    إلغاء
+                                    Cancel
                                 </button>
                                 <button
                                     onClick={handleRedeemPromoCode}
@@ -331,7 +331,7 @@ const WalletPage: React.FC = () => {
                                     className="px-6 py-2 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white rounded-lg font-bold shadow-lg shadow-primary-500/30 flex items-center gap-2"
                                 >
                                     {isRedeeming && <div className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />}
-                                    تفعيل الكوبون
+                                    Redeem
                                 </button>
                             </div>
                         </div>
@@ -353,12 +353,12 @@ const WalletPage: React.FC = () => {
                 {/* Transactions History */}
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
                     <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">سجل العمليات</h3>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">Transaction History</h3>
                     </div>
 
                     {wallet.transactions.length === 0 ? (
                         <div className="p-12 text-center text-gray-500 dark:text-gray-400">
-                            لا توجد عمليات سابقة.
+                            No transactions yet.
                         </div>
                     ) : (
                         <div className="divide-y divide-gray-100 dark:divide-gray-700">

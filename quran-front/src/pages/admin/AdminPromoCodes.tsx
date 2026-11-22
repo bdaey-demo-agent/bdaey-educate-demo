@@ -246,7 +246,7 @@ const AdminPromoCodes: React.FC = () => {
                                     required
                                     value={newCode}
                                     onChange={(e) => setNewCode(e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, ''))}
-                                    placeholder="مثال: WELCOME20"
+                                    placeholder="e.g. WELCOME20"
                                     className="input-field"
                                     style={{ direction: 'ltr' }}
                                 />

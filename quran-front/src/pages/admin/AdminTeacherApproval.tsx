@@ -257,7 +257,7 @@ const AdminTeacherApproval: React.FC = () => {
                                     <div>
                                         <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Qualifications</h4>
                                         <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                            <p><span className="font-medium">المؤهل:</span> {(selectedTeacher.educationDegree === 'bachelor' ? 'Bachelor\'s' :
+                                            <p><span className="font-medium">Degree:</span> {(selectedTeacher.educationDegree === 'bachelor' ? 'Bachelor\'s' :
                                                 selectedTeacher.educationDegree === 'master' ? 'Master\'s' :
                                                     selectedTeacher.educationDegree === 'phd' ? 'PhD' :
                                                         selectedTeacher.educationDegree) || '-'}</p>

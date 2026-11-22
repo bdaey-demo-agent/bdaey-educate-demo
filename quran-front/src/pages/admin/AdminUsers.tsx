@@ -541,7 +541,7 @@ const AdminUsers = () => {
                                     onClick={() => { setResetPasswordUser(null); setNewPassword(''); }}
                                     className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
                                 >
-                                    إلغاء
+                                    Cancel
                                 </button>
                                 <button
                                     onClick={handleResetPassword}
