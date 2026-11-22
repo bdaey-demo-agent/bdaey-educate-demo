@@ -70,13 +70,13 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
     });
 
     const WEEKDAYS = [
-        { id: 6, label: 'السبت' },
-        { id: 0, label: 'الأحد' },
-        { id: 1, label: 'الاثنين' },
-        { id: 2, label: 'الثلاثاء' },
-        { id: 3, label: 'الأربعاء' },
-        { id: 4, label: 'الخميس' },
-        { id: 5, label: 'الجمعة' },
+        { id: 6, label: 'Saturday' },
+        { id: 0, label: 'Sunday' },
+        { id: 1, label: 'Monday' },
+        { id: 2, label: 'Tuesday' },
+        { id: 3, label: 'Wednesday' },
+        { id: 4, label: 'Thursday' },
+        { id: 5, label: 'Friday' },
     ];
 
     // Auto Calculate Max Students
@@ -139,17 +139,17 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
             // Mock Packages
             const mockPackages: any[] = [
                 {
-                    id: 1, name: 'باقة الحفظ المكثف', description: '5 جلسات أسبوعياً لحفظ القرآن الكريم كاملاً خلال سنتين.',
+                    id: 1, name: 'Intensive Memorization Package', description: '5 sessions per week to memorize the entire Quran within two years.',
                     price: 800, currency: 'EGP', durationMinutes: 60, sessionsCount: 20, periodType: 'Monthly',
                     sessionsPerWeek: 5, hasActiveBookings: false
                 },
                 {
-                    id: 2, name: 'تصحيح التلاوة', description: 'جلسة واحدة أسبوعياً لضبط التلاوة وأحكام التجويد.',
+                    id: 2, name: 'Recitation Correction', description: 'One weekly session to refine recitation and Tajweed rules.',
                     price: 200, currency: 'EGP', durationMinutes: 45, sessionsCount: 4, periodType: 'Monthly',
                     sessionsPerWeek: 1, hasActiveBookings: true
                 },
                 {
-                    id: 3, name: 'تأسيس الأطفال (نور البيان)', description: 'منهج نور البيان لتعليم القراءة والكتابة للأطفال من سن 5 سنوات.',
+                    id: 3, name: 'Children Foundation (Noor Al-Bayan)', description: 'The Noor Al-Bayan curriculum teaching reading and writing to children from age 5.',
                     price: 600, currency: 'EGP', durationMinutes: 30, sessionsCount: 12, periodType: 'Monthly',
                     sessionsPerWeek: 3, hasActiveBookings: false, allowedGender: 'All'
                 }
@@ -237,13 +237,13 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
         const bufferTime = new Date(now.getTime() - 5 * 60000);
 
         if (selectedStart < bufferTime) {
-            toast.error('لا يمكن أن يكون وقت بدء الباقة في الماضي.');
+            toast.error('The package start time cannot be in the past.');
             return;
         }
 
         // Validation: Ensure enough available days for the sessions per week (One Session Per Day Rule)
         if (formData.availableDays.length < formData.sessionsPerWeek) {
-            toast.error(`عدد الأيام المختارة (${formData.availableDays.length}) غير كافٍ. يجب اختيار ${formData.sessionsPerWeek} أيام على الأقل لهذه الباقة (بمعدل جلسة واحدة في اليوم بحد أقصى).`);
+            toast.error(`The selected days (${formData.availableDays.length}) are not enough. Choose at least ${formData.sessionsPerWeek} days for this package (max one session per day).`);
             return;
         }
 
@@ -253,7 +253,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
 
         if (normalizedStartDay !== minAvailableDay) {
             const firstDayName = WEEKDAYS.find(w => (w.id + 1) % 7 === minAvailableDay)?.label;
-            toast.error(`تاريخ بدء الباقة غير صحيح. يجب أن تبدأ الباقة في أول يوم متاح لها في الأسبوع (${firstDayName}).`);
+            toast.error(`Invalid package start date. The package must start on its first available day of the week (${firstDayName}).`);
             return;
         }
 
@@ -270,10 +270,10 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
 
             if (editingId) {
                 await packagesService.updatePackage(editingId, submissionData);
-                toast.success('تم تحديث الباقة بنجاح!');
+                toast.success('Package updated successfully!');
             } else {
                 await packagesService.createPackage(submissionData);
-                toast.success('تم إنشاء الباقة بنجاح!');
+                toast.success('Package created successfully!');
             }
             setShowModal(false);
             setEditingId(null);
@@ -295,7 +295,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
             });
             loadPackages();
         } catch (error: any) {
-            let msg = 'حدث خطأ أثناء العملية';
+            let msg = 'An error occurred during the operation';
             if (error.response && error.response.data) {
                 if (typeof error.response.data === 'string') {
                     msg = error.response.data;
@@ -311,11 +311,11 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
         if (!deleteId) return;
         try {
             await packagesService.deletePackage(deleteId);
-            toast.success('تم أرشفة الباقة بنجاح');
+            toast.success('Package archived successfully');
             loadPackages();
         } catch (error) {
             console.error('Error deleting package:', error);
-            toast.error('حدث خطأ أثناء الحذف');
+            toast.error('An error occurred while deleting');
         } finally {
             setDeleteId(null);
         }
@@ -327,10 +327,10 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
         try {
             // Only pass newStartDate if the user selected one
             await packagesService.restorePackage(restoreId, newStartDate || undefined);
-            toast.success('تم استعادة الباقة بنجاح');
+            toast.success('Package restored successfully');
             loadPackages();
         } catch (error: any) {
-            toast.error(error.response?.data?.message || 'تعذر استعادة الباقة، ربما انتهى وقتها وتتطلب تعديل.');
+            toast.error(error.response?.data?.message || 'Could not restore the package; it may have expired and needs updating.');
             console.error('Error restoring package:', error);
         } finally {
             setRestoreId(null);
@@ -347,7 +347,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
             {isAdmin && (
                 <div className="mb-4">
                     <Link to="/admin/teachers" className="text-primary-600 hover:text-primary-700 flex items-center gap-1 text-sm font-bold">
-                        <ChevronRightIcon className="h-4 w-4" /> العودة لقائمة المعلمين
+                        <ChevronRightIcon className="h-4 w-4" /> Back to Teachers List
                     </Link>
                 </div>
             )}
@@ -356,10 +356,10 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
                 <div>
                     <h1 className="text-3xl font-bold font-heading text-primary-900 dark:text-white mb-2">
-                        {isAdmin ? `باقات المعلم: ${targetTeacherName}` : 'باقاتي التعليمية'}
+                        {isAdmin ? `Teacher packages: ${targetTeacherName}` : 'My Teaching Packages'}
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400">
-                        {isAdmin ? 'يمكنك إدارة وتعديل باقات المعلم أو إضافة باقات جديدة لمساعدته.' : 'صمم باقاتك التعليمية وتحكم في مواعيدك وأسعارك بسهولة'}
+                        {isAdmin ? 'You can manage and edit this teacher packages or add new ones to help them.' : 'Design your teaching packages and control your schedule and prices easily'}
                     </p>
                 </div>
                 <button
@@ -387,7 +387,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                     className="btn-primary flex items-center gap-2 px-6 py-3 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all text-gold-600 dark:text-gold-400 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 font-bold"
                 >
                     <PlusIcon className="h-6 w-6" />
-                    <span>إضافة باقة جديدة</span>
+                    <span>Add New Package</span>
                 </button>
             </div>
 
@@ -400,7 +400,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                         : 'text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700'
                         }`}
                 >
-                    الباقات النشطة
+                    Active Packages
                 </button>
                 <button
                     onClick={() => setActiveTab('Archived')}
@@ -409,7 +409,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                         : 'text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700'
                         }`}
                 >
-                    الباقات المؤرشفة
+                    Archived Packages
                 </button>
             </div>
 
@@ -424,17 +424,17 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                         <PlusIcon className="h-10 w-10 text-primary-600" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                        {activeTab === 'Active' ? 'ابدأ بإضافة باقتك الأولى' : 'لا توجد باقات مؤرشفة'}
+                        {activeTab === 'Active' ? 'Start by adding your first package' : 'No archived packages'}
                     </h3>
                     <p className="text-gray-500 max-w-md mx-auto mb-8">
-                        {activeTab === 'Active' ? 'قم بإنشاء باقات تعليمية متنوعة لجذب الطلاب. يمكنك تحديد السعر، المواعيد، وعدد الجلسات.' : 'الباقات التي ينتهي وقتها أو تقوم بحذفها تظهر هنا لمدة 30 يوماً قبل أن تحذف نهائياً.'}
+                        {activeTab === 'Active' ? 'Create varied teaching packages to attract students. You can set the price, schedule, and number of sessions.' : 'Expired or deleted packages appear here for 30 days before permanent deletion.'}
                     </p>
                     {activeTab === 'Active' && (
                         <button
                             onClick={() => setShowModal(true)}
                             className="text-primary-600 font-bold hover:underline"
                         >
-                            اضغط لإنشاء باقة
+                            Click to Create a Package
                         </button>
                     )}
                 </div>
@@ -454,7 +454,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                             <button
                                                 onClick={() => setRestoreId(pkg.id)}
                                                 className="p-2 text-primary-600 hover:bg-primary-50 rounded-lg"
-                                                title="استعادة الباقة"
+                                                title="Restore Package"
                                             >
                                                 <ArrowPathIcon className="h-5 w-5 text-primary-600" />
                                             </button>
@@ -463,7 +463,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                                 <button
                                                     onClick={() => {
                                                         if (!isAdmin && pkg.hasPendingBookings) {
-                                                            toast.error('لا يمكن التعديل لوجود طلبات معلقة');
+                                                            toast.error('Cannot edit while there are pending requests');
                                                             return;
                                                         }
                                                         setEditingId(pkg.id);
@@ -492,7 +492,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                                 <button
                                                     onClick={() => handleDeleteClick(pkg.id)}
                                                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
-                                                    title="أرشفة الباقة"
+                                                    title="Archive Package"
                                                 >
                                                     <TrashIcon className="h-5 w-5" />
                                                 </button>
@@ -510,28 +510,28 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                             {pkg.sessionsCount}
                                         </span>
                                         <span>
-                                            جلسة {pkg.periodType === 'Weekly' ? 'أسبوعياً' : pkg.periodType === 'Yearly' ? 'سنوياً' : 'شهرياً'}
+                                            sessions {pkg.periodType === 'Weekly' ? 'per week' : pkg.periodType === 'Yearly' ? 'per year' : 'per month'}
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                                         <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                                             <ClockIcon className="h-4 w-4" />
                                         </span>
-                                        <span>{pkg.durationMinutes} دقيقة / جلسة</span>
+                                        <span>{pkg.durationMinutes} min / session</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                                         <span className={`px-2 py-1 rounded-md text-xs font-bold ${pkg.allowedGender === 'Male' ? 'bg-blue-100 text-blue-700' :
                                             pkg.allowedGender === 'Female' ? 'bg-pink-100 text-pink-700' :
                                                 'bg-green-100 text-green-700'
                                             }`}>
-                                            النوع المسموح: {pkg.allowedGender === 'Male' ? 'ذكور فقط' : pkg.allowedGender === 'Female' ? 'إناث فقط' : 'الجميع'}
+                                            Allowed: {pkg.allowedGender === 'Male' ? 'Male only' : pkg.allowedGender === 'Female' ? 'Female only' : 'Everyone'}
                                         </span>
                                     </div>
                                 </div>
 
                                 <div className="pt-6 border-t border-gray-100 dark:border-gray-700 flex items-end justify-between">
                                     <div>
-                                        <p className="text-xs text-gray-400 mb-1">سعر الباقة</p>
+                                        <p className="text-xs text-gray-400 mb-1">Package Price</p>
                                         <p className="text-2xl font-bold text-primary-600 font-heading">
                                             {pkg.price} <span className="text-sm font-sans font-normal text-gray-500">{pkg.currency}</span>
                                         </p>
@@ -540,7 +540,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                         ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
                                         : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                                         }`}>
-                                        {pkg.status === 'Archived' || pkg.status === 'Paused' ? 'مؤرشفة' : 'نشطة'}
+                                        {pkg.status === 'Archived' || pkg.status === 'Paused' ? 'Archived' : 'Active'}
                                     </span>
                                 </div>
                             </div>
@@ -563,11 +563,11 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                 <div className="sm:flex sm:items-start justify-between border-b border-gray-100 dark:border-gray-700 pb-4 mb-4">
                                     <div className="mt-3 text-center sm:mt-0 sm:mr-4 sm:text-right">
                                         <h3 className="text-xl leading-6 font-bold text-gray-900 dark:text-white" id="modal-title">
-                                            {editingId ? 'تعديل بيانات الباقة' : 'تصميم باقة جديدة'}
+                                            {editingId ? 'Edit Package' : 'Create New Package'}
                                         </h3>
                                         <div className="mt-1">
                                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                قم بتعبئة تفاصيل الباقة بدقة ليتمكن الطلاب من حجزها.
+                                                Fill in the package details accurately so students can book it.
                                             </p>
                                         </div>
                                     </div>
@@ -575,7 +575,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                         onClick={() => setShowModal(false)}
                                         className="bg-gray-100 dark:bg-gray-700 rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                                     >
-                                        <span className="sr-only">إغلاق</span>
+                                        <span className="sr-only">Close</span>
                                         <svg className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                         </svg>
@@ -585,7 +585,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                 {packages.find(p => p.id === editingId)?.hasActiveBookings && (
                                     <div className="mb-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-3 flex items-start gap-2">
                                         <span className="text-yellow-600 dark:text-yellow-400 text-sm font-medium">
-                                            ⚠️ تنبيه: لا يمكن تعديل الجدول الزمني أو السعر لوجود حجوزات نشطة.
+                                            ⚠️ Note: schedule and price cannot be edited while there are active bookings.
                                         </span>
                                     </div>
                                 )}
@@ -593,25 +593,25 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 gap-6">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">اسم الباقة</label>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Package Name</label>
                                             <input
                                                 type="text"
                                                 required
                                                 value={formData.name}
                                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                placeholder="مثال: باقة التأسيس الشاملة"
+                                                placeholder="Example: Complete Foundation Package"
                                                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gold-500"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">وصف الباقة</label>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Package Description</label>
                                             <textarea
                                                 required
                                                 rows={3}
                                                 value={formData.description}
                                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                                placeholder="اكتب وصفاً جذاباً لما سيتعلمه الطالب..."
+                                                placeholder="Write an engaging description of what the student will learn..."
                                                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gold-500"
                                             />
                                         </div>
@@ -619,7 +619,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            تاريخ بدء الباقة
+                                            Package Start Date
                                         </label>
                                         <input
                                             type="date"
@@ -629,45 +629,45 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                             onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gold-500"
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">تاريخ بداية تفعيل الباقة للطلاب.</p>
+                                        <p className="text-xs text-gray-500 mt-1">The date the package becomes available to students.</p>
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">النوع المسموح به</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Allowed Gender</label>
                                         <select
                                             disabled={!!packages.find(p => p.id === editingId)?.hasActiveBookings}
                                             value={formData.allowedGender}
                                             onChange={(e) => setFormData({ ...formData, allowedGender: e.target.value as any })}
                                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gold-500 disabled:bg-gray-100 dark:disabled:bg-gray-800"
                                         >
-                                            <option value="All">الجميع</option>
-                                            <option value="Male">ذكور فقط</option>
-                                            <option value="Female">إناث فقط</option>
+                                            <option value="All">Everyone</option>
+                                            <option value="Male">Male only</option>
+                                            <option value="Female">Female only</option>
                                         </select>
                                     </div>
 
                                     <div className="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-5 border border-gray-100 dark:border-gray-700">
                                         <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                             <ClockIcon className="h-5 w-5 text-primary-600" />
-                                            تفاصيل الجدول والوقت
+                                            Schedule and Time Details
                                         </h4>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">نوع التكرار</label>
+                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Repeat</label>
                                                 <select
                                                     disabled={!!packages.find(p => p.id === editingId)?.hasActiveBookings}
                                                     value={formData.periodType}
                                                     onChange={(e) => setFormData({ ...formData, periodType: e.target.value as any })}
                                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gold-500 disabled:bg-gray-100 dark:disabled:bg-gray-800"
                                                 >
-                                                    <option value="Weekly">أسبوعي</option>
-                                                    <option value="Monthly">شهري</option>
-                                                    <option value="Yearly">سنوي</option>
+                                                    <option value="Weekly">Weekly</option>
+                                                    <option value="Monthly">Monthly</option>
+                                                    <option value="Yearly">Yearly</option>
                                                 </select>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">جلسات في الأسبوع</label>
+                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Sessions per Week</label>
                                                 <select
                                                     disabled={!!packages.find(p => p.id === editingId)?.hasActiveBookings}
                                                     value={formData.sessionsPerWeek}
@@ -678,7 +678,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                                 </select>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">مدة الجلسة (دقيقة)</label>
+                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Session Duration (min)</label>
                                                 <select
                                                     disabled={!!packages.find(p => p.id === editingId)?.hasActiveBookings}
                                                     required
@@ -686,30 +686,30 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                                     onChange={(e) => setFormData({ ...formData, durationMinutes: parseInt(e.target.value) || 30 })}
                                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gold-500 disabled:bg-gray-100 dark:disabled:bg-gray-800"
                                                 >
-                                                    <option value="30">30 دقيقة</option>
-                                                    <option value="45">45 دقيقة</option>
-                                                    <option value="60">60 دقيقة</option>
-                                                    <option value="90">90 دقيقة</option>
+                                                    <option value="30">30 minutes</option>
+                                                    <option value="45">45 minutes</option>
+                                                    <option value="60">60 minutes</option>
+                                                    <option value="90">90 minutes</option>
                                                 </select>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">فاصل استراحة (دقيقة)</label>
+                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Break Between Sessions (min)</label>
                                                 <select
                                                     disabled={!!packages.find(p => p.id === editingId)?.hasActiveBookings}
                                                     value={formData.sessionBufferMinutes}
                                                     onChange={(e) => setFormData({ ...formData, sessionBufferMinutes: parseInt(e.target.value) || 0 })}
                                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gold-500 disabled:bg-gray-100 dark:disabled:bg-gray-800"
                                                 >
-                                                    <option value="0">بدون فاصل</option>
-                                                    <option value="10">10 دقائق</option>
-                                                    <option value="15">15 دقيقة</option>
-                                                    <option value="30">30 دقيقة</option>
+                                                    <option value="0">No break</option>
+                                                    <option value="10">10 minutes</option>
+                                                    <option value="15">15 minutes</option>
+                                                    <option value="30">30 minutes</option>
                                                 </select>
                                             </div>
                                         </div>
 
                                         <div className="mb-4">
-                                            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">الأيام المتاحة</label>
+                                            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Available Days</label>
                                             <div className="flex flex-wrap gap-2">
                                                 {WEEKDAYS.map((day) => (
                                                     <button
@@ -735,7 +735,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
 
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">من الساعة</label>
+                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">From</label>
                                                 <input
                                                     type="time"
                                                     disabled={!!packages.find(p => p.id === editingId)?.hasActiveBookings}
@@ -746,7 +746,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">إلى الساعة</label>
+                                                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">To</label>
                                                 <input
                                                     type="time"
                                                     disabled={!!packages.find(p => p.id === editingId)?.hasActiveBookings}
@@ -760,7 +760,7 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">السعر الإجمالي (جنيه مصري)</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Total Price (EGP)</label>
                                         <div className="relative rounded-md shadow-sm">
                                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                                 <span className="text-gray-500 sm:text-sm">EGP</span>
@@ -787,13 +787,13 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                                             onClick={() => setShowModal(false)}
                                             className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 font-medium transition-colors"
                                         >
-                                            إلغاء
+                                            Cancel
                                         </button>
                                         <button
                                             type="submit"
                                             className="flex-1 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all"
                                         >
-                                            {editingId ? 'حفظ التغييرات' : 'إنشاء الباقة'}
+                                            {editingId ? 'Save Changes' : 'Create Package'}
                                         </button>
                                     </div>
                                 </form>
@@ -807,10 +807,10 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                 isOpen={!!deleteId}
                 onClose={() => setDeleteId(null)}
                 onConfirm={confirmDelete}
-                title="أرشفة الباقة"
-                message={`⚠️ تحذير: سيتم إلغاء جميع الحجوزات النشطة واسترداد أموال الطلاب المتبقية. سيتم تقييد الباقة في الأرشيف وحذفها نهائياً بعد مرور 30 يوماً. سيتم خصم غرامة ${penaltyAmount} EGP من رصيدك بسبب إلغاء الباقة (ولن يتم خصم أي مبالغ إذا لم يكن هناك حجوزات نشطة بالفعل). هل أنت متأكد؟`}
-                confirmText="نعم، أرشفة وتحمل العقوبة"
-                cancelText="إلغاء"
+                title="Archive Package"
+                message={`⚠️ Warning: all active bookings will be cancelled and students refunded their remaining amounts. The package will be archived and permanently deleted after 30 days. A penalty of ${penaltyAmount} EGP will be deducted from your balance for cancelling the package (nothing is deducted if there are no active bookings). Are you sure?`}
+                confirmText="Yes, archive and accept the penalty"
+                cancelText="Cancel"
                 isDanger={true}
             />
 
@@ -819,15 +819,15 @@ const TeacherPackages: React.FC<TeacherPackagesProps> = ({ demoMode = false }) =
                 isOpen={!!restoreId}
                 onClose={() => { setRestoreId(null); setNewStartDate(''); }}
                 onConfirm={confirmRestore}
-                title="استعادة الباقة"
-                message={`هل أنت متأكد أنك تريد استعادة هذه الباقة للأرشيف لتعمل من جديد؟ \n\n إذا كان تاريخ تبدأ الباقة في الماضي، يجب عليك إدخال تاريخ جديد:`}
-                confirmText="تأكيد الاستعادة"
-                cancelText="إلغاء"
+                title="Restore Package"
+                message={`Are you sure you want to restore this package from the archive? \n\n If its start date is in the past, you must enter a new date:`}
+                confirmText="Confirm Restore"
+                cancelText="Cancel"
                 isDanger={false}
             >
                 <div className="mt-4 text-right">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        تاريخ البدء الجديد (اختياري إلا في حالة انتهاء القديم)
+                        New Start Date (optional unless the old one expired)
                     </label>
                     <input
                         type="date"

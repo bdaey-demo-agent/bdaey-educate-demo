@@ -71,7 +71,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
             setTeacher(data);
         } catch (error) {
             console.error("Failed to fetch profile", error);
-            // toast.error("فشل تحميل الملف الشخصي");
+            // toast.error("Failed to load profile");
         } finally {
             if (!silent) setProfileLoading(false);
         }
@@ -86,7 +86,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
             setBookings(data || []);
         } catch (error) {
             console.error("Failed to fetch bookings", error);
-            // toast.error("فشل تحميل الحجوزات"); 
+            // toast.error("Failed to load bookings"); 
         } finally {
             setStatsLoading(false);
         }
@@ -100,29 +100,29 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
             const mockTeacher: TeacherProfileResponse = {
                 id: 1,
                 userId: 'user-123',
-                name: 'الشيخ أحمد محمد',
+                name: 'Sheikh Ahmed Mohamed',
                 email: 'demo@example.com',
                 imageUrl: 'https://placehold.co/400',
-                title: 'الشيخ',
-                bio: 'معلم قرآن كريم خبرة 10 سنوات، مجاز بالقراءات العشر.',
-                educationDegree: 'دكتوراه في الدراسات الإسلامية',
+                title: 'Sheikh',
+                bio: 'Quran teacher with 10 years of experience, certified in the Ten Qiraat.',
+                educationDegree: 'PhD in Islamic Studies',
                 experienceYears: '10',
                 rating: 4.9,
                 reviewCount: 120,
                 studentCount: 0,
                 status: 'Approved',
                 isDataSubmitted: true,
-                subjects: ['قرآن كريم', 'تجويد', 'قراءات'],
+                subjects: ['Quran', 'Tajweed', 'Qiraat'],
                 priceStart: 150,
                 currency: 'EGP',
                 isHafiz: true,
                 hasIjaza: true,
-                ijazaType: 'القراءات العشر',
-                ijazaIssuer: 'الأزهر الشريف',
+                ijazaType: 'The Ten Qiraat',
+                ijazaIssuer: 'Al-Azhar Al-Sharif',
                 profilePictureUrl: '', // Could add a placeholder or rely on UI fallback
                 socialLinks: '',
                 user: {
-                    fullName: 'أحمد محمد',
+                    fullName: 'Ahmed Mohamed',
                     email: 'test@example.com',
                 }
             };
@@ -138,9 +138,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
 
             // Mock Recent Bookings
             const mockBookings: any[] = [
-                { id: 1, studentName: 'يوسف علي', packageName: 'باقة الحفظ المكثف', createdAt: new Date().toISOString(), status: 'Confirmed', totalPrice: 450, currency: 'EGP' },
-                { id: 2, studentName: 'كريم محمود', packageName: 'تصحيح التلاوة', createdAt: new Date().toISOString(), status: 'Pending', totalPrice: 200, currency: 'EGP' },
-                { id: 3, studentName: 'عمر خالد', packageName: 'إجازة حفص', createdAt: new Date(Date.now() - 86400000).toISOString(), status: 'Completed', totalPrice: 1500, currency: 'EGP' },
+                { id: 1, studentName: 'Youssef Ali', packageName: 'Intensive Memorization Package', createdAt: new Date().toISOString(), status: 'Confirmed', totalPrice: 450, currency: 'EGP' },
+                { id: 2, studentName: 'Karim Mahmoud', packageName: 'Recitation Correction', createdAt: new Date().toISOString(), status: 'Pending', totalPrice: 200, currency: 'EGP' },
+                { id: 3, studentName: 'Omar Khaled', packageName: 'Hafs Ijazah', createdAt: new Date(Date.now() - 86400000).toISOString(), status: 'Completed', totalPrice: 1500, currency: 'EGP' },
             ];
             setRecentBookings(mockBookings);
             setProfileLoading(false);
@@ -263,23 +263,23 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
     const [completionPercentage, setCompletionPercentage] = useState(0);
 
     const specialtiesOptions = [
-        'تحفيظ القرآن الكريم',
-        'مراجعة المحفوظ',
-        'تعليم التجويد النظري',
-        'تطبيق التجويد العملي',
-        'تفسير القرآن',
-        'القراءات العشر',
-        'تعليم الكبار',
-        'تعليم الأطفال'
+        'Quran Memorization',
+        'Memorization Review',
+        'Theoretical Tajweed',
+        'Practical Tajweed',
+        'Quran Tafsir',
+        'The Ten Qiraat',
+        'Adult Education',
+        'Children Education'
     ];
 
     useEffect(() => {
         // Listen for Wallet Notifications
         const handleNotification = (message: string) => {
-            if (message.includes('إيداع') || message.includes('خصم') || message.includes('محفظتك')) {
+            if (message.includes('deposit') || message.includes('deduct') || message.includes('wallet') || message.includes('إيداع') || message.includes('خصم') || message.includes('محفظتك')) {
                 // queryClient.invalidateQueries({ queryKey: queryKeys.bookings.teacher });
                 fetchBookings(); // Refetch bookings
-                toast.success('تم تحديث رصيد المحفظة', { icon: '💰' });
+                toast.success('Wallet balance updated', { icon: '💰' });
             }
         };
 
@@ -383,7 +383,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
 
             // Check file size (10MB limit)
             if (file.size > 10 * 1024 * 1024) {
-                toast.error('عفواً، حجم الملف الصوتي كبير جداً. الحد الأقصى هو 10 ميجابايت');
+                toast.error('Sorry, the audio file is too large. The maximum is 10 MB');
                 e.target.value = ''; // Reset input
                 return;
             }
@@ -393,14 +393,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                 const url = await teacherService.uploadAudio(file);
                 // Update state immediately with the returned URL to allow preview
                 setProfileData(prev => ({ ...prev, audioSample: file, audioSampleUrl: url }));
-                toast.success("تم رفع الملف الصوتي بنجاح");
+                toast.success("Audio file uploaded successfully");
             } catch (error: any) {
                 console.error("Error uploading audio", error);
                 const errorMessage = error.response?.data || error.message;
                 if (typeof errorMessage === 'string' && errorMessage.includes('size')) {
-                    toast.error('عفواً، حجم الملف الصوتي كبير جداً. الحد الأقصى هو 10 ميجابايت');
+                    toast.error('Sorry, the audio file is too large. The maximum is 10 MB');
                 } else {
-                    toast.error("فشل رفع الملف الصوتي. حاول مرة أخرى.");
+                    toast.error("Audio upload failed. Please try again.");
                 }
                 e.target.value = ''; // Reset input so user can re-select if needed
             } finally {
@@ -435,10 +435,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
             }
 
             await teacherService.updateTeacherProfile(teacher.id, formData);
-            toast.success('تم حفظ البيانات الشخصية بنجاح');
+            toast.success('Personal information saved successfully');
             fetchProfile(true);
         } catch (error: any) {
-            toast.error(`خطأ في الحفظ: ${error.message || error}`);
+            toast.error(`Save error: ${error.message || error}`);
         } finally {
             setIsSaving(false);
         }
@@ -465,10 +465,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
             }
 
             await teacherService.updateTeacherProfile(teacher.id, formData);
-            toast.success('تم حفظ المؤهلات العلمية بنجاح');
+            toast.success('Qualifications saved successfully');
             fetchProfile(true);
         } catch (error: any) {
-            toast.error(`خطأ في الحفظ: ${error.message || error}`);
+            toast.error(`Save error: ${error.message || error}`);
         } finally {
             setIsSaving(false);
         }
@@ -491,10 +491,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
             }
 
             await teacherService.updateTeacherProfile(teacher.id, formData);
-            toast.success('تم حفظ الخبرة العملية بنجاح');
+            toast.success('Experience saved successfully');
             fetchProfile(true);
         } catch (error: any) {
-            toast.error(`خطأ في الحفظ: ${error.message || error}`);
+            toast.error(`Save error: ${error.message || error}`);
         } finally {
             setIsSaving(false);
         }
@@ -503,7 +503,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
     const handleSaveAudioSample = async () => {
         if (!teacher?.id) return;
         if (!profileData.audioSampleUrl) {
-            toast.error('يرجى رفع العينة الصوتية أولاً');
+            toast.error('Please upload the audio sample first');
             return;
         }
         setIsSaving(true);
@@ -513,10 +513,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
             formData.append('ShowAudioSample', profileData.showAudioSample ? 'true' : 'false');
 
             await teacherService.updateTeacherProfile(teacher.id, formData);
-            toast.success('تم حفظ العينة الصوتية بنجاح');
+            toast.success('Audio sample saved successfully');
             fetchProfile(true);
         } catch (error: any) {
-            toast.error(`خطأ في الحفظ: ${error.message || error}`);
+            toast.error(`Save error: ${error.message || error}`);
         } finally {
             setIsSaving(false);
         }
@@ -530,10 +530,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
             formData.append('SocialLinks', profileData.socialLinks);
 
             await teacherService.updateTeacherProfile(teacher.id, formData);
-            toast.success('تم حفظ الروابط بنجاح');
+            toast.success('Links saved successfully');
             fetchProfile(true);
         } catch (error: any) {
-            toast.error(`خطأ في الحفظ: ${error.message || error}`);
+            toast.error(`Save error: ${error.message || error}`);
         } finally {
             setIsSaving(false);
         }
@@ -546,39 +546,39 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
         // We ensure all mandatory fields (Nationality, DOB, Files) are present.
         // Experience Certificate is now mandatory for quality assurance.
         if (!profileData.fullName) {
-            toast.error('يرجى إدخال الاسم الكامل');
+            toast.error('Please enter your full name');
             return;
         }
         if (!profileData.nationalId || profileData.nationalId.length !== 14) {
-            toast.error('يرجى إدخال الرقم القومي الصحيح (14 رقم)');
+            toast.error('Please enter a valid national ID (14 digits)');
             return;
         }
         if (!profileData.dateOfBirth) {
-            toast.error('يرجى إدخال تاريخ الميلاد');
+            toast.error('Please enter your date of birth');
             return;
         }
         if (!profileData.nationalIdImage && !profileData.nationalIdImageUrl) {
-            toast.error('يرجى رفع صورة البطاقة الشخصية');
+            toast.error('Please upload your ID card photo');
             return;
         }
         if (profileData.hasIjaza === 'yes' && !profileData.ijazaCertificate && !profileData.ijazaCertificateUrl) {
-            toast.error('يرجى رفع صورة الإجازة');
+            toast.error('Please upload your Ijazah certificate');
             return;
         }
         if (profileData.degree && !profileData.qualificationCertificate && !profileData.qualificationCertificateUrl) {
-            toast.error('يرجى رفع صورة المؤهل الدراسي');
+            toast.error('Please upload your degree certificate');
             return;
         }
         if (!profileData.yearsExperience) {
-            toast.error('يرجى اختيار سنوات الخبرة');
+            toast.error('Please select your years of experience');
             return;
         }
         if (!profileData.experienceCertificate && !profileData.experienceCertificateUrl) {
-            toast.error('يرجى رفع شهادة الخبرة');
+            toast.error('Please upload your experience certificate');
             return;
         }
         if (!profileData.audioSampleUrl) {
-            toast.error('يرجى رفع العينة الصوتية');
+            toast.error('Please upload the audio sample');
             return;
         }
 
@@ -657,14 +657,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                 // (Though the user will likely have clicked 'Save' on sections)
                 // Actually, let's just show success that the profile is complete.
                 
-                toast.success('تم إرسال ملفك للمراجعة بنجاح! سيتم إخطارك عند التفعيل.');
+                toast.success('Your profile was submitted for review! You will be notified once activated.');
                 fetchProfile(true);
             } else {
-                toast.error("خطأ: لم يتم العثور على ملف المعلم (Missing ID)");
+                toast.error("Error: teacher profile not found (Missing ID)");
             }
         } catch (error: any) {
             console.error("Error submitting profile", error);
-            toast.error(`حدث خطأ أثناء الإرسال: ${error.message || error}`);
+            toast.error(`An error occurred while submitting: ${error.message || error}`);
         } finally {
             setIsSaving(false);
         }
@@ -673,11 +673,11 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
     const handlePasswordChange = async (e: React.FormEvent) => {
         e.preventDefault();
         if (passwordData.newPassword !== passwordData.confirmPassword) {
-            toast.error('كلمات المرور غير متطابقة');
+            toast.error('Passwords do not match');
             return;
         }
         if (passwordData.newPassword.length < 6) {
-            toast.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+            toast.error('Password must be at least 6 characters');
             return;
         }
 
@@ -686,12 +686,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                 currentPassword: passwordData.currentPassword,
                 newPassword: passwordData.newPassword
             });
-            toast.success('تم تغيير كلمة المرور بنجاح');
+            toast.success('Password changed successfully');
             setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
         } catch (error: any) {
             console.error('Password change error', error);
-            const msg = error.response?.data?.map ? error.response.data.map((e: any) => e.description).join('\n') : 'فشل تغيير كلمة المرور';
-            toast.error(msg || 'تأكد من كلمة المرور الحالية');
+            const msg = error.response?.data?.map ? error.response.data.map((e: any) => e.description).join('\n') : 'Failed to change password';
+            toast.error(msg || 'Check your current password');
         }
     };
 
@@ -746,7 +746,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
 
     }, [profileData]);
 
-    if (loading) return <div className="text-center py-10">جاري التحميل...</div>;
+    if (loading) return <div className="text-center py-10">Loading...</div>;
 
     const isApproved = teacher?.status === 'Approved';
 
@@ -755,9 +755,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
             {/* Header / Tabs */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">لوحة تحكم المعلم</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Teacher Dashboard</h1>
                     <p className="text-gray-600 dark:text-gray-400">
-                        {isApproved ? 'أهلاً بك! إليك ملخص نشاطك التعليمي.' : 'أكمل ملفك الشخصي للبدء في التدريس.'}
+                        {isApproved ? 'Welcome! Here is a summary of your teaching activity.' : 'Complete your profile to start teaching.'}
                     </p>
                 </div>
 
@@ -774,7 +774,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                             >
                                 <span className="flex items-center gap-2">
                                     <BanknotesIcon className="h-4 w-4" />
-                                    الإحصائيات
+                                    Statistics
                                 </span>
                             </button>
                             <button
@@ -786,7 +786,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                             >
                                 <span className="flex items-center gap-2">
                                     <CogIcon className="h-4 w-4" />
-                                    إعدادات الحساب
+                                    Account Settings
                                 </span>
                             </button>
                         </div>
@@ -804,15 +804,15 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                     <div className="stats-grid grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div className="card border-none shadow-sm flex flex-col justify-between">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-text-secondary text-sm">محفظتي</h3>
+                                <h3 className="text-text-secondary text-sm">My Wallet</h3>
                                 <BanknotesIcon className="h-8 w-8 text-success-text p-1.5 bg-success-bg rounded-lg" />
                             </div>
                             <div className="mb-2">
-                                <p className="text-sm text-gray-500">الرصيد المتاح</p>
+                                <p className="text-sm text-gray-500">Available Balance</p>
                                 <p className="text-3xl font-bold font-latin-heading text-primary-green">{walletBalance} <span className="text-sm font-normal text-text-secondary">EGP</span></p>
                             </div>
                             {/* <div className="flex justify-between items-center text-xs text-gray-500 mt-1">
-                                <span>معلّق: {100} EGP</span>
+                                <span>Pending: {100} EGP</span>
                             </div> */}
                             {/* Ideally fetch OnHold from backend. For now using earnings as available. */}
 
@@ -821,25 +821,25 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
 
                         <div className="card border-none shadow-sm flex flex-col justify-between">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-text-secondary text-sm">الطلاب النشطين</h3>
+                                <h3 className="text-text-secondary text-sm">Active Students</h3>
                                 <UsersIcon className="h-8 w-8 text-secondary-blue p-1.5 bg-blue-50 rounded-lg" />
                             </div>
                             <p className="text-3xl font-bold font-latin-heading text-primary-green">{stats.activeStudents}</p>
                         </div>
                         <div className="card border-none shadow-sm flex flex-col justify-between">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-text-secondary text-sm">إجمالي الحجوزات</h3>
+                                <h3 className="text-text-secondary text-sm">Total Bookings</h3>
                                 <CalendarIcon className="h-8 w-8 text-secondary-purple p-1.5 bg-purple-50 rounded-lg" />
                             </div>
                             <p className="text-3xl font-bold font-latin-heading text-primary-green">{stats.totalBookings}</p>
                         </div>
                         <div className="card border-none shadow-sm flex flex-col justify-between">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-text-secondary text-sm">طلبات جديدة</h3>
+                                <h3 className="text-text-secondary text-sm">New Requests</h3>
                                 <ClockIcon className="h-8 w-8 text-warning-text p-1.5 bg-warning-bg rounded-lg" />
                             </div>
                             <p className="text-3xl font-bold font-latin-heading text-primary-green">{stats.pendingBookings}</p>
-                            {stats.pendingBookings > 0 && <span className="text-xs text-warning-text mt-1">تحتاج اتخاذ إجراء</span>}
+                            {stats.pendingBookings > 0 && <span className="text-xs text-warning-text mt-1">Action needed</span>}
                         </div>
                     </div>
 
@@ -847,15 +847,15 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Link to="/teacher/packages" className="p-6 bg-gradient-to-r from-primary-gold to-primary-gold-light rounded-xl text-primary-green shadow-md hover:shadow-lg transition-all flex items-center justify-between group">
                             <div>
-                                <h3 className="font-bold text-lg font-heading">إدارة الباقات</h3>
-                                <p className="text-primary-green opacity-90 text-sm">أضف باقات جديدة أو عدل الأسعار</p>
+                                <h3 className="font-bold text-lg font-heading">Manage Packages</h3>
+                                <p className="text-primary-green opacity-90 text-sm">Add new packages or edit prices</p>
                             </div>
                             <BriefcaseIcon className="h-10 w-10 text-primary-green group-hover:scale-110 transition-transform" />
                         </Link>
                         <Link to="/teacher/schedule" className="card border-none hover:shadow-md transition-all flex items-center justify-between group">
                             <div>
-                                <h3 className="font-bold text-lg text-primary-green font-heading">جدول الحصص</h3>
-                                <p className="text-text-secondary text-sm">تابع مواعيدك القادمة (بتوقيتك المحلي)</p>
+                                <h3 className="font-bold text-lg text-primary-green font-heading">Session Schedule</h3>
+                                <p className="text-text-secondary text-sm">Track your upcoming sessions (in your local time)</p>
                             </div>
                             <CalendarIcon className="h-10 w-10 text-gray-400 group-hover:text-primary-green transition-colors" />
                         </Link>
@@ -864,17 +864,17 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                     {/* Recent Bookings */}
                     <div className="bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-700 overflow-hidden">
                         <div className="p-6 border-b dark:border-gray-700">
-                            <h3 className="font-bold text-gray-900 dark:text-white">أحدث الحجوزات</h3>
+                            <h3 className="font-bold text-gray-900 dark:text-white">Latest Bookings</h3>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th className="px-6 py-3 text-right">الطالب</th>
-                                        <th className="px-6 py-3 text-right">الباقة</th>
-                                        <th className="px-6 py-3 text-right">التاريخ</th>
-                                        <th className="px-6 py-3 text-right">الحالة</th>
-                                        <th className="px-6 py-3 text-right">المبلغ</th>
+                                        <th className="px-6 py-3 text-left">Student</th>
+                                        <th className="px-6 py-3 text-left">Package</th>
+                                        <th className="px-6 py-3 text-left">Date</th>
+                                        <th className="px-6 py-3 text-left">Status</th>
+                                        <th className="px-6 py-3 text-left">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -902,7 +902,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     {recentBookings.length === 0 && (
                                         <tr>
                                             <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                                                لا توجد حجوزات حتى الآن
+                                                No bookings yet
                                             </td>
                                         </tr>
                                     )}
@@ -926,18 +926,18 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                         </div>
                                         <div className="flex-1">
                                             <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                                                {teacher ? `حالة الحساب: ${translateStatus(teacher.status)}` : 'حالة الحساب: جديد'}
+                                                {teacher ? `Account status: ${translateStatus(teacher.status)}` : 'Account status: New'}
                                             </h2>
                                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                                 {teacher?.status === 'Pending'
-                                                    ? 'ملفك قيد المراجعة. سيتم الاتصال بك قريباً.'
-                                                    : 'أكمل البيانات التالية لإرسال ملفك للمراجعة.'}
+                                                    ? 'Your profile is under review. We will contact you soon.'
+                                                    : 'Complete the following information to submit your profile for review.'}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="mt-4">
                                         <div className="flex justify-between items-center mb-2">
-                                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">اكتمال الملف الشخصي</span>
+                                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Profile Completion</span>
                                             <span className="text-sm font-bold text-gold-600">{completionPercentage}%</span>
                                         </div>
                                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
@@ -956,13 +956,13 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700" data-tour="teacher-profile-personal">
                             <div className="flex items-center gap-3 mb-4">
                                 <UsersIcon className="h-6 w-6 text-gold-600" />
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">البيانات الشخصية</h3>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Personal Information</h3>
                             </div>
 
                             <div className="space-y-4">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">الصورة الشخصية</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Profile Photo</label>
                                         <div className="flex items-center gap-4">
                                             <div className="relative h-20 w-20 rounded-full overflow-hidden border border-gray-200 dark:border-gray-600">
                                                 {profileData.profilePicture ? (
@@ -993,13 +993,13 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                 className="hidden"
                                             />
                                             <label htmlFor="profile-upload" className="text-sm font-medium text-gold-600 cursor-pointer hover:text-gold-700">
-                                                تغيير الصورة الشخصية
+                                                Change Photo
                                             </label>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">الاسم الكامل</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 right-0 max-h-[42px] pr-3 flex items-center pointer-events-none">
                                                 <UserIcon className="h-5 w-5 text-gray-400" />
@@ -1009,12 +1009,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                 className="input-field pr-10"
                                                 value={profileData.fullName}
                                                 onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
-                                                placeholder="الاسم الثلاثي أو الرباعي"
+                                                placeholder="Your full name"
                                             />
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">رقم الهاتف</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 right-0 max-h-[42px] pr-3 flex items-center pointer-events-none">
                                                 <PhoneIcon className="h-5 w-5 text-gray-400" />
@@ -1024,42 +1024,42 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                 className="input-field pr-10"
                                                 value={profileData.phoneNumber}
                                                 onChange={(e) => setProfileData({ ...profileData, phoneNumber: e.target.value })}
-                                                placeholder="رقم الهاتف"
+                                                placeholder="Phone number"
                                             />
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">النوع (الجنس)</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Gender</label>
                                         <select
                                             value={profileData.gender}
                                             onChange={(e) => setProfileData({ ...profileData, gender: e.target.value })}
                                             className="input-field"
                                         >
-                                            <option value="" disabled>اختر النوع</option>
-                                            <option value="Male">ذكر</option>
-                                            <option value="Female">أنثى</option>
+                                            <option value="" disabled>Select gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div className="mt-4">
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">نبذة عنك</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">About You</label>
                                     <textarea
                                         className="input-field min-h-[100px]"
                                         value={profileData.bio}
                                         onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                                        placeholder="اكتب نبذة مختصرة عن خبراتك ومهاراتك..."
+                                        placeholder="Write a short bio about your experience and skills..."
                                     />
                                 </div>
 
                                 <div className="border-t border-gray-100 dark:border-gray-700 my-4 pt-4">
-                                    <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-4">بيانات الهوية</h4>
+                                    <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-4">Identity Information</h4>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">الرقم القومي</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">National ID Number</label>
                                     <input
                                         type="text"
                                         maxLength={14}
-                                        placeholder="أدخل الرقم القومي (14 رقم)"
+                                        placeholder="Enter national ID (14 digits)"
                                         className="input-field"
                                         value={profileData.nationalId}
                                         onChange={(e) => {
@@ -1071,7 +1071,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تاريخ الميلاد</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
                                         <DateInput
                                             value={profileData.dateOfBirth}
                                             onChange={(val) => {
@@ -1089,19 +1089,19 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">العمر</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Age</label>
                                         <input
                                             type="text"
                                             readOnly
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-300 cursor-not-allowed"
-                                            value={profileData.age ? `${profileData.age} سنة` : ''}
-                                            placeholder="يتم الحساب تلقائياً"
+                                            value={profileData.age ? `${profileData.age} years` : ''}
+                                            placeholder="Calculated automatically"
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">صورة البطاقة الشخصية</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ID Card Photo</label>
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -1113,10 +1113,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                         className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gold-50 file:text-gold-700 hover:file:bg-gold-100 dark:file:bg-gold-900/30 dark:file:text-gold-400"
                                     />
                                     {profileData.nationalIdImageUrl && !profileData.nationalIdImage && (
-                                        <p className="mt-1 text-xs text-green-600">تم رفع صورة البطاقة مسبقاً</p>
+                                        <p className="mt-1 text-xs text-green-600">ID photo already uploaded</p>
                                     )}
                                     {profileData.nationalIdImage && (
-                                        <p className="mt-1 text-xs text-blue-600">تم تحديد ملف جديد: {profileData.nationalIdImage.name}</p>
+                                        <p className="mt-1 text-xs text-blue-600">New file selected: {profileData.nationalIdImage.name}</p>
                                     )}
                                 </div>
                             </div>
@@ -1128,7 +1128,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     className="px-4 py-2 bg-gold-600 hover:bg-gold-700 text-white rounded-md text-sm font-bold transition-colors flex items-center gap-2"
                                 >
                                     <CheckCircleIcon className="h-4 w-4" />
-                                    حفظ البيانات الشخصية
+                                    Save Personal Information
                                 </button>
                             </div>
                         </div>
@@ -1137,26 +1137,26 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700" data-tour="teacher-profile-education">
                             <div className="flex items-center gap-3 mb-4">
                                 <AcademicCapIcon className="h-6 w-6 text-gold-600" />
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">المؤهلات العلمية</h3>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Academic Qualifications</h3>
                             </div>
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">المؤهل الدراسي</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Degree</label>
                                     <select
                                         className="input-field"
                                         value={profileData.degree}
                                         onChange={(e) => setProfileData({ ...profileData, degree: e.target.value })}
                                     >
-                                        <option value="">اختر المؤهل</option>
-                                        <option value="بكالوريوس">بكالوريوس</option>
-                                        <option value="ماجستير">ماجستير</option>
-                                        <option value="دكتوراه">دكتوراه</option>
+                                        <option value="">Select degree</option>
+                                        <option value="Bachelor">Bachelor</option>
+                                        <option value="Master">Master</option>
+                                        <option value="PhD">PhD</option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">هل أنت حافظ للقرآن الكريم؟</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Have you memorized the entire Quran?</label>
                                     <div className="flex gap-4">
                                         <label className="flex items-center gap-2">
                                             <input
@@ -1167,7 +1167,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                 onChange={(e) => setProfileData({ ...profileData, isHafiz: e.target.value })}
                                                 className="text-gold-600 focus:ring-gold-500"
                                             />
-                                            <span className="text-sm text-gray-700 dark:text-gray-300">نعم</span>
+                                            <span className="text-sm text-gray-700 dark:text-gray-300">Yes</span>
                                         </label>
                                         <label className="flex items-center gap-2">
                                             <input
@@ -1178,14 +1178,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                 onChange={(e) => setProfileData({ ...profileData, isHafiz: e.target.value })}
                                                 className="text-gold-600 focus:ring-gold-500"
                                             />
-                                            <span className="text-sm text-gray-700 dark:text-gray-300">لا</span>
+                                            <span className="text-sm text-gray-700 dark:text-gray-300">No</span>
                                         </label>
                                     </div>
                                 </div>
 
                                 {profileData.degree && (
                                     <div className="animate-fadeIn">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">صورة المؤهل الدراسي</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Degree Certificate Photo</label>
                                         <input
                                             type="file"
                                             accept="image/*"
@@ -1198,10 +1198,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                             className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gold-50 file:text-gold-700 hover:file:bg-gold-100 dark:file:bg-gold-900/30 dark:file:text-gold-400"
                                         />
                                         {profileData.qualificationCertificateUrl && !profileData.qualificationCertificate && (
-                                            <p className="mt-1 text-xs text-green-600">تم رفع الشهادة مسبقاً</p>
+                                            <p className="mt-1 text-xs text-green-600">Certificate already uploaded</p>
                                         )}
                                         {profileData.qualificationCertificate && (
-                                            <p className="mt-1 text-xs text-blue-600">تم تحديد ملف: {profileData.qualificationCertificate.name}</p>
+                                            <p className="mt-1 text-xs text-blue-600">File selected: {profileData.qualificationCertificate.name}</p>
                                         )}
                                         <div className="mt-2">
                                             <label className="flex items-center gap-2">
@@ -1211,14 +1211,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                     onChange={(e) => setProfileData({ ...profileData, showQualificationCertificate: e.target.checked })}
                                                     className="text-gold-600 focus:ring-gold-500 rounded"
                                                 />
-                                                <span className="text-sm text-gray-700 dark:text-gray-300">عرض صورة المؤهل في الملف الشخصي العام؟</span>
+                                                <span className="text-sm text-gray-700 dark:text-gray-300">Show degree certificate on your public profile?</span>
                                             </label>
                                         </div>
                                     </div>
                                 )}
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">هل لديك إجازة في القراءات؟</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Do you have an Ijazah in the Qiraat?</label>
                                     <div className="flex gap-4">
                                         <label className="flex items-center gap-2">
                                             <input
@@ -1229,7 +1229,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                 onChange={(e) => setProfileData({ ...profileData, hasIjaza: e.target.value })}
                                                 className="text-gold-600 focus:ring-gold-500"
                                             />
-                                            <span className="text-sm text-gray-700 dark:text-gray-300">نعم</span>
+                                            <span className="text-sm text-gray-700 dark:text-gray-300">Yes</span>
                                         </label>
                                         <label className="flex items-center gap-2">
                                             <input
@@ -1240,7 +1240,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                 onChange={(e) => setProfileData({ ...profileData, hasIjaza: e.target.value })}
                                                 className="text-gold-600 focus:ring-gold-500"
                                             />
-                                            <span className="text-sm text-gray-700 dark:text-gray-300">لا</span>
+                                            <span className="text-sm text-gray-700 dark:text-gray-300">No</span>
                                         </label>
                                     </div>
                                 </div>
@@ -1248,27 +1248,27 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                 {profileData.hasIjaza === 'yes' && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">نوع الإجازة</label>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ijazah Type</label>
                                             <input
                                                 type="text"
-                                                placeholder="حفص عن عاصم"
+                                                placeholder="Hafs an Asim"
                                                 className="input-field"
                                                 value={profileData.ijazaType}
                                                 onChange={(e) => setProfileData({ ...profileData, ijazaType: e.target.value })}
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">الجهة المانحة</label>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Issuing Authority</label>
                                             <input
                                                 type="text"
-                                                placeholder="اسم الشيخ أو المعهد"
+                                                placeholder="Name of the sheikh or institute"
                                                 className="input-field"
                                                 value={profileData.ijazaIssuer}
                                                 onChange={(e) => setProfileData({ ...profileData, ijazaIssuer: e.target.value })}
                                             />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">صورة الإجازة</label>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ijazah Certificate Photo</label>
                                             <input
                                                 type="file"
                                                 accept="image/*"
@@ -1281,10 +1281,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                 className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gold-50 file:text-gold-700 hover:file:bg-gold-100 dark:file:bg-gold-900/30 dark:file:text-gold-400"
                                             />
                                             {profileData.ijazaCertificateUrl && !profileData.ijazaCertificate && (
-                                                <p className="mt-1 text-xs text-green-600">تم رفع صورة الإجازة مسبقاً</p>
+                                                <p className="mt-1 text-xs text-green-600">Ijazah photo already uploaded</p>
                                             )}
                                             {profileData.ijazaCertificate && (
-                                                <p className="mt-1 text-xs text-blue-600">تم تحديد ملف جديد: {profileData.ijazaCertificate.name}</p>
+                                                <p className="mt-1 text-xs text-blue-600">New file selected: {profileData.ijazaCertificate.name}</p>
                                             )}
                                             <div className="mt-2">
                                                 <label className="flex items-center gap-2">
@@ -1294,7 +1294,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                         onChange={(e) => setProfileData({ ...profileData, showIjazaCertificate: e.target.checked })}
                                                         className="text-gold-600 focus:ring-gold-500 rounded"
                                                     />
-                                                    <span className="text-sm text-gray-700 dark:text-gray-300">عرض صورة الإجازة في الملف الشخصي العام؟</span>
+                                                    <span className="text-sm text-gray-700 dark:text-gray-300">Show Ijazah certificate on your public profile?</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -1309,7 +1309,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     className="px-4 py-2 bg-gold-600 hover:bg-gold-700 text-white rounded-md text-sm font-bold transition-colors flex items-center gap-2"
                                 >
                                     <CheckCircleIcon className="h-4 w-4" />
-                                    حفظ المؤهلات
+                                    Save Qualifications
                                 </button>
                             </div>
                         </div>
@@ -1318,28 +1318,28 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700" data-tour="teacher-profile-experience">
                             <div className="flex items-center gap-3 mb-4">
                                 <BriefcaseIcon className="h-6 w-6 text-gold-600" />
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">الخبرة العملية</h3>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Work Experience</h3>
                             </div>
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">سنوات الخبرة</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Years of Experience</label>
                                     <select
                                         className="input-field"
                                         value={profileData.yearsExperience}
                                         onChange={(e) => setProfileData({ ...profileData, yearsExperience: e.target.value })}
                                     >
-                                        <option value="">اختر المدة</option>
-                                        <option value="<1">أقل من سنة</option>
-                                        <option value="1-3">1-3 سنوات</option>
-                                        <option value="3-5">3-5 سنوات</option>
-                                        <option value="5-10">5-10 سنوات</option>
-                                        <option value="10+">أكثر من 10 سنوات</option>
+                                        <option value="">Select duration</option>
+                                        <option value="<1">Less than 1 year</option>
+                                        <option value="1-3">1-3 years</option>
+                                        <option value="3-5">3-5 years</option>
+                                        <option value="5-10">5-10 years</option>
+                                        <option value="10+">More than 10 years</option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">سعر الحصة (جنيه)</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Session Price (EGP)</label>
                                     <input
                                         type="number"
                                         min="0"
@@ -1347,15 +1347,15 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                         value={profileData.priceStart}
                                         disabled
                                         readOnly
-                                        placeholder="يتم تحديده تلقائياً"
+                                        placeholder="Set automatically"
                                     />
                                     <p className="mt-1 text-xs text-gray-500">
-                                        يتم تحديد هذا السعر تلقائياً بناءً على أقل سعر للحصة في باقاتك (الافتراضي 100 جنيه).
+                                        This price is set automatically from the lowest session price in your packages (default 100 EGP).
                                     </p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">التخصصات (اختر ما يناسبك)</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Specialties (choose what fits)</label>
                                     <div className="grid grid-cols-2 gap-2">
                                         {specialtiesOptions.map((specialty) => (
                                             <label key={specialty} className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
@@ -1371,7 +1371,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     </div>
 
                                     <div className="mt-4">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">شهادة الخبرة *</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Experience Certificate *</label>
                                         <input
                                             type="file"
                                             accept="image/*,application/pdf"
@@ -1383,7 +1383,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                             className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gold-50 file:text-gold-700 hover:file:bg-gold-100 dark:file:bg-gold-900/30 dark:file:text-gold-400"
                                         />
                                         {profileData.experienceCertificateUrl && !profileData.experienceCertificate && (
-                                            <p className="mt-1 text-xs text-green-600">تم رفع شهادة الخبرة مسبقاً</p>
+                                            <p className="mt-1 text-xs text-green-600">Experience certificate already uploaded</p>
                                         )}
                                         <div className="mt-2">
                                             <label className="flex items-center gap-2">
@@ -1393,11 +1393,11 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                     onChange={(e) => setProfileData({ ...profileData, showExperienceCertificate: e.target.checked })}
                                                     className="text-gold-600 focus:ring-gold-500 rounded"
                                                 />
-                                                <span className="text-sm text-gray-700 dark:text-gray-300">عرض شهادة الخبرة في الملف الشخصي العام؟</span>
+                                                <span className="text-sm text-gray-700 dark:text-gray-300">Show experience certificate on your public profile?</span>
                                             </label>
                                         </div>
                                         {profileData.experienceCertificate && (
-                                            <p className="mt-1 text-xs text-blue-600">تم تحديد ملف: {profileData.experienceCertificate.name}</p>
+                                            <p className="mt-1 text-xs text-blue-600">File selected: {profileData.experienceCertificate.name}</p>
                                         )}
                                     </div>
                                 </div>
@@ -1410,7 +1410,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     className="px-4 py-2 bg-gold-600 hover:bg-gold-700 text-white rounded-md text-sm font-bold transition-colors flex items-center gap-2"
                                 >
                                     <CheckCircleIcon className="h-4 w-4" />
-                                    حفظ الخبرة
+                                    Save Experience
                                 </button>
                             </div>
                         </div>
@@ -1419,12 +1419,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700" data-tour="teacher-profile-audio">
                             <div className="flex items-center gap-3 mb-4">
                                 <MicrophoneIcon className="h-6 w-6 text-gold-600" />
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">العينة الصوتية</h3>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Audio Sample</h3>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    ارفع تسجيل صوتي لسورة الفاتحة
+                                    Upload an audio recording of Surah Al-Fatiha
                                 </label>
                                 <input
                                     type="file"
@@ -1446,14 +1446,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                        جاري رفع الملف الصوتي...
+                                        Uploading audio file...
                                     </div>
                                 )}
                                 {profileData.audioSampleUrl && (
                                     <div className="mt-2 text-sm text-green-600 dark:text-green-400">
                                         <p className="flex items-center gap-2 mb-1">
                                             <CheckCircleIcon className="h-4 w-4" />
-                                            تم رفع الملف الصوتي
+                                            Audio file uploaded
                                         </p>
                                         <div className="mt-4">
                                             <CustomAudioPlayer
@@ -1473,7 +1473,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     className="px-4 py-2 bg-gold-600 hover:bg-gold-700 text-white rounded-md text-sm font-bold transition-colors flex items-center gap-2"
                                 >
                                     <CheckCircleIcon className="h-4 w-4" />
-                                    حفظ العينة الصوتية
+                                    Save Audio Sample
                                 </button>
                             </div>
                         </div>
@@ -1482,12 +1482,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700" data-tour="teacher-profile-links">
                             <div className="flex items-center gap-3 mb-4">
                                 <LinkIcon className="h-6 w-6 text-gold-600" />
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">روابط التواصل (اختياري)</h3>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Social Links (optional)</h3>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    رابط يوتيوب أو فيسبوك (إن وجد)
+                                    YouTube or Facebook link (if any)
                                 </label>
                                 <input
                                     type="url"
@@ -1505,7 +1505,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     className="px-4 py-2 bg-gold-600 hover:bg-gold-700 text-white rounded-md text-sm font-bold transition-colors flex items-center gap-2"
                                 >
                                     <CheckCircleIcon className="h-4 w-4" />
-                                    حفظ الروابط
+                                    Save Links
                                 </button>
                             </div>
                         </div>
@@ -1524,7 +1524,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     ) : (
                                         <CheckCircleIcon className="h-5 w-5" />
                                     )}
-                                    {isSaving ? 'جاري الحفظ...' : 'إرسال للمراجعة'}
+                                    {isSaving ? 'Saving...' : 'Submit for Review'}
                                 </button>
                             </div>
                         )}
@@ -1535,12 +1535,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                     <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700 mb-8" data-tour="teacher-security">
                         <div className="flex items-center gap-3 mb-4">
                             <LockClosedIcon className="h-6 w-6 text-gold-600" />
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">الأمان وكلمة المرور</h3>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Security and Password</h3>
                         </div>
 
                         <form onSubmit={handlePasswordChange} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">كلمة المرور الحالية</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Password</label>
                                 <div className="relative">
                                     <input
                                         type="password"
@@ -1553,7 +1553,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">كلمة المرور الجديدة</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Password</label>
                                     <input
                                         type="password"
                                         className="input-field"
@@ -1563,7 +1563,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تأكيد كلمة المرور</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Confirm Password</label>
                                     <input
                                         type="password"
                                         className="input-field"
@@ -1580,7 +1580,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                     className="px-6 py-2 bg-gray-900 hover:bg-black text-white font-bold rounded-lg shadow-md transition-all flex items-center gap-2"
                                 >
                                     <KeyIcon className="h-5 w-5" />
-                                    تغيير كلمة المرور
+                                    Change Password
                                 </button>
                             </div>
                         </form>

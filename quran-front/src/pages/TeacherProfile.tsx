@@ -118,7 +118,7 @@ const TeacherProfile: React.FC = () => {
                 }
             } catch (error) {
                 console.error('Error loading teacher data:', error);
-                toast.error('حدث خطأ أثناء تحميل بيانات المعلم');
+                toast.error('An error occurred while loading teacher data');
             } finally {
                 setLoading(false);
             }
@@ -144,7 +144,7 @@ const TeacherProfile: React.FC = () => {
                 toast.success(successMessage);
             } catch (err) {
                 console.error('Copy failed', err);
-                toast.error('فشل النسخ - المتصفح لا يدعم النسخ التلقائي');
+                toast.error('Copy failed - your browser does not support automatic copying');
             }
         }
     };
@@ -158,14 +158,14 @@ const TeacherProfile: React.FC = () => {
             try {
                 await navigator.share({
                     title: teacher.name,
-                    text: `تصفح ملف المعلم ${teacher.name} على منصة ${branding.nameAr}!`,
+                    text: `Check out teacher ${teacher.name} on ${branding.nameEn}!`,
                     url: url
                 });
             } catch (err) {
                 console.error('Share failed:', err);
             }
         } else {
-            copyToClipboard(url, 'تم نسخ رابط الملف الشخصي!');
+            copyToClipboard(url, 'Profile link copied!');
         }
     };
 
@@ -179,14 +179,14 @@ const TeacherProfile: React.FC = () => {
             try {
                 await navigator.share({
                     title: pkg.name,
-                    text: `تصفح هذه الباقة المميزة من المعلم ${teacher.name} على منصة ${branding.nameAr}!`,
+                    text: `Check out this great package from teacher ${teacher.name} on ${branding.nameEn}!`,
                     url: url
                 });
             } catch (err) {
                 console.error('Share failed:', err);
             }
         } else {
-            copyToClipboard(url, 'تم نسخ رابط الباقة!');
+            copyToClipboard(url, 'Package link copied!');
         }
     };
 
@@ -208,11 +208,11 @@ const TeacherProfile: React.FC = () => {
             await teacherService.updateTeacherProfile(teacher.id, {
                 profileSectionsOrder: sectionOrder
             });
-            toast.success('تم حفظ ترتيب الأقسام بنجاح');
+            toast.success('Section order saved');
             setIsEditMode(false);
         } catch (error) {
             console.error('Error saving order:', error);
-            toast.error('حدث خطأ أثناء حفظ الترتيب');
+            toast.error('An error occurred while saving the order');
         } finally {
             setIsSaving(false);
         }
@@ -229,10 +229,10 @@ const TeacherProfile: React.FC = () => {
             await teacherService.updateTeacherProfile(teacher.id, {
                 [field]: value
             });
-            toast.success('تم التحديث بنجاح');
+            toast.success('Updated successfully');
         } catch (error) {
             console.error(`Error updating ${field}:`, error);
-            toast.error('حدث خطأ أثناء التحديث');
+            toast.error('An error occurred while updating');
             setTeacher(oldTeacher); // Revert
         }
     };
@@ -242,10 +242,10 @@ const TeacherProfile: React.FC = () => {
         const formData = new FormData();
         formData.append(field, file);
 
-        const toastId = toast.loading('جاري تحميل الملف...');
+        const toastId = toast.loading('Loading file...');
         try {
             await teacherService.updateTeacherProfile(teacher.id, formData);
-            toast.success('تم تحميل الملف بنجاح', { id: toastId });
+            toast.success('File loaded', { id: toastId });
 
             // Refresh Profile to get new URL
             const updatedTeacher = await teacherService.getTeacherById(teacher.id);
@@ -253,7 +253,7 @@ const TeacherProfile: React.FC = () => {
 
         } catch (error) {
             console.error(`Error uploading ${field}:`, error);
-            toast.error('فشل تحميل الملف', { id: toastId });
+            toast.error('Failed to load file', { id: toastId });
         }
     };
 
@@ -265,10 +265,10 @@ const TeacherProfile: React.FC = () => {
 
         try {
             await teacherService.updateTeacherProfile(teacher.id, updates);
-            toast.success('تم حفظ التغييرات');
+            toast.success('Changes saved');
         } catch (error) {
             console.error('Error updating profile:', error);
-            toast.error('حدث خطأ أثناء الحفظ');
+            toast.error('An error occurred while saving');
             setTeacher(oldTeacher);
         }
     };
@@ -338,12 +338,12 @@ const TeacherProfile: React.FC = () => {
             setIsReadOnlyPreview(false);
         } else {
             // Admin or other roles? Default strict for now
-            toast.error('صلاحية غير معروفة');
+            toast.error('Unknown permission');
             return;
         }
 
         if (isPackageExpired(pkg)) {
-            toast.error('عذراً، هذه الباقة انتهت مدتها ولم تعد متاحة للحجز.');
+            toast.error('Sorry, this package has expired and is no longer available for booking.');
             return;
         }
 
@@ -375,7 +375,7 @@ const TeacherProfile: React.FC = () => {
             setMyBookedSlots(mySlots);
         } catch (error) {
             console.error('Error loading slots:', error);
-            toast.error('حدث خطأ أثناء تحميل المواعيد المتاحة');
+            toast.error('An error occurred while loading available slots');
         } finally {
             setSlotsLoading(false);
         }
@@ -471,7 +471,7 @@ const TeacherProfile: React.FC = () => {
             if (isLateJoin) {
                 // Allow partial booking but warn
                 if (proposedTimes.length === 0) {
-                    toast.error('يرجى اختيار موعد واحد على الأقل.');
+                    toast.error('Please select at least one time slot.');
                     return;
                 }
 
@@ -483,7 +483,7 @@ const TeacherProfile: React.FC = () => {
 
                 // If the user selected FEWER than the remaining future sessions, blocked.
                 if (proposedTimes.length < remainingRequired) {
-                    toast.error(`عفواً، يجب اختيار جميع الجلسات المتبقية (${remainingRequired} جلسات). لقد اخترت ${proposedTimes.length} فقط.`);
+                    toast.error(`You must select all remaining sessions (${remainingRequired}). You selected only ${proposedTimes.length}.`);
                     return;
                 }
                 // -------------------------------------------------------------
@@ -500,11 +500,11 @@ const TeacherProfile: React.FC = () => {
 
             } else {
                 // Not late join, enforce full count
-                toast.error(`يرجى اختيار ${selectedPackage.sessionsCount} مواعيد بالضبط`);
+                toast.error(`Please select exactly ${selectedPackage.sessionsCount} slots`);
                 return;
             }
         } else if (proposedTimes.length > selectedPackage.sessionsCount) {
-            toast.error(`لقد اخترت مواعيد أكثر من المطلوب (${selectedPackage.sessionsCount}).`);
+            toast.error(`You selected more slots than required (${selectedPackage.sessionsCount}).`);
             return;
         }
 
@@ -520,7 +520,7 @@ const TeacherProfile: React.FC = () => {
         const remainingRequired = selectedPackage.sessionsCount - elapsed;
         
         if (proposedTimes.length < remainingRequired) {
-            toast.error(`عفواً، يجب اختيار جميع الجلسات المتبقية (${remainingRequired} جلسات).`);
+            toast.error(`You must select all remaining sessions (${remainingRequired}).`);
             setShowLateJoinModal(false);
             return;
         }
@@ -536,7 +536,7 @@ const TeacherProfile: React.FC = () => {
                 timezoneId: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Cairo'
             });
 
-            toast.success('تم إرسال طلب الحجز بنجاح! سيتم التواصل معك قريباً');
+            toast.success('Booking request sent! We will contact you soon');
             setShowBookingModal(false);
             setShowLateJoinModal(false); // Close if open
             navigate('/student/dashboard');
@@ -544,15 +544,15 @@ const TeacherProfile: React.FC = () => {
             // Check for specific Insufficient Funds error
             const errorMsg = error.response?.data?.toString() || '';
             if (errorMsg.includes('Insufficient funds')) {
-                toast.error('عفواً، رصيد المحفظة غير كافي لإتمام الحجز. يرجى شحن الرصيد.', {
+                toast.error('Sorry, your wallet balance is not enough to complete the booking. Please top up.', {
                     duration: 5000,
                     icon: '💳'
                 });
             } else {
                 // Log only if it's not a known business error
                 console.error('Booking Error:', error);
-                const displayMsg = error.response?.data || error.message || 'حدث خطأ غير متوقع';
-                toast.error(`تعذر إتمام الحجز: ${displayMsg}`);
+                const displayMsg = error.response?.data || error.message || 'An unexpected error occurred';
+                toast.error(`Could not complete the booking: ${displayMsg}`);
             }
         } finally {
             setBookingLoading(false);
@@ -715,7 +715,7 @@ const TeacherProfile: React.FC = () => {
             });
 
             if (!isSelectedPattern) {
-                toast('تم اختيار الجلسات القادمة فقط لهذا الموعد (تعويض عن الفائت)', { icon: 'ℹ️' });
+                toast('Only the upcoming sessions were selected for this slot (make-up for missed ones)', { icon: 'ℹ️' });
             }
         }
 
@@ -726,7 +726,7 @@ const TeacherProfile: React.FC = () => {
         const isLateJoin = selectedPackage.startDate && new Date(selectedPackage.startDate) < new Date();
 
         if (!isLateJoin && finalSlotsToBook.length < requiredWeeks) {
-            toast.error(' عذراً، هذا الموعد غير متاح لجميع الأسابيع القادمة.');
+            toast.error(' Sorry, this slot is not available for all upcoming weeks.');
             return;
         }
 
@@ -738,7 +738,7 @@ const TeacherProfile: React.FC = () => {
                 return `${pd.getDay()}-${pd.getHours()}:${pd.getMinutes()}` === patternKey;
             });
             if (!isSelectedPattern) {
-                toast.error('عذراً، يجب ترك فاصل زمني كافٍ بين الجلسات كما حدده المعلم.');
+                toast.error('Sorry, you must leave enough break time between sessions as set by the teacher.');
                 return;
             }
         }
@@ -769,7 +769,7 @@ const TeacherProfile: React.FC = () => {
                 }));
 
                 if (currentPatterns.size >= selectedPackage.sessionsPerWeek) {
-                    toast.error(`يمكنك اختيار ${selectedPackage.sessionsPerWeek} مواعيد أسبوعية فقط`);
+                    toast.error(`You can only select ${selectedPackage.sessionsPerWeek} weekly slots`);
                     return;
                 }
             }
@@ -795,7 +795,7 @@ const TeacherProfile: React.FC = () => {
             });
 
             if (hasSameDaySelection) {
-                toast.error('لا يمكنك اختيار أكثر من جلسة في نفس اليوم (أو نفس يوم الأسبوع للباقات المتكررة).');
+                toast.error('You cannot select more than one session on the same day (or same weekday for recurring packages).');
                 return;
             }
 
@@ -823,7 +823,7 @@ const TeacherProfile: React.FC = () => {
     if (!teacher) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="text-xl text-gray-600 dark:text-gray-400">المعلم غير موجود</div>
+                <div className="text-xl text-gray-600 dark:text-gray-400">Teacher not found</div>
             </div>
         );
     }
@@ -837,7 +837,7 @@ const TeacherProfile: React.FC = () => {
                     to="/teachers-public"
                     className="inline-flex items-center gap-2 text-gold-600 hover:text-gold-700 mb-6"
                 >
-                    ← العودة للمعلمين
+                    → Back to Teachers
                 </Link>
 
                 {/* Header Section */}
@@ -850,7 +850,7 @@ const TeacherProfile: React.FC = () => {
                                 className="flex items-center gap-2 px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold shadow-md transition-all"
                             >
                                 {isSaving ? <ArrowPathIcon className="h-5 w-5 animate-spin" /> : <CheckIcon className="h-5 w-5" />}
-                                حفظ الترتيب
+                                Save Order
                             </button>
                         ) : (
                             <button
@@ -858,7 +858,7 @@ const TeacherProfile: React.FC = () => {
                                 className="flex items-center gap-2 px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-bold shadow-md transition-all"
                             >
                                 <PencilSquareIcon className="h-5 w-5" />
-                                تفعيل التعديل والترتيب
+                                Enable Editing and Ordering
                             </button>
                         )}
                     </div>
@@ -884,7 +884,7 @@ const TeacherProfile: React.FC = () => {
                                     <button
                                         onClick={handleShareProfile}
                                         className="text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
-                                        title="مشاركة الملف الشخصي"
+                                        title="Share Profile"
                                     >
                                         <ShareIcon className="h-6 w-6" />
                                     </button>
@@ -894,14 +894,14 @@ const TeacherProfile: React.FC = () => {
                                     <div className="flex items-center gap-1">
                                         <StarIcon className="h-5 w-5 text-yellow-300" />
                                         <span className="font-semibold">{teacher.rating.toFixed(1)}</span>
-                                        <span className="text-gold-100">({teacher.reviewCount} تقييم)</span>
+                                        <span className="text-gold-100">({teacher.reviewCount} reviews)</span>
                                     </div>
                                     <div className="flex items-center gap-1">
                                         <CurrencyDollarIcon className="h-5 w-5" />
                                         {packages.length > 0 ? (
-                                            <span>تبدأ الباقات من {Math.min(...packages.map(p => p.price))} {teacher.currency}</span>
+                                            <span>Packages from {Math.min(...packages.map(p => p.price))} {teacher.currency}</span>
                                         ) : (
-                                            <span>من {teacher.priceStart} {teacher.currency} / جلسة</span>
+                                            <span>From {teacher.priceStart} {teacher.currency} / session</span>
                                         )}
                                     </div>
                                 </div>
@@ -914,7 +914,7 @@ const TeacherProfile: React.FC = () => {
                             if (section === 'bio') {
                                 return (
                                     <DraggableSection key="bio" id="bio" index={index} onMove={moveSection} isEditing={isEditMode} className="mb-6">
-                                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">نبذة عن المعلم</h2>
+                                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">About the Teacher</h2>
                                         <EditableText
                                             value={teacher.bio}
                                             onSave={(val) => handleUpdateField('bio', val)}
@@ -935,18 +935,18 @@ const TeacherProfile: React.FC = () => {
                                                     <div className="p-2 bg-gold-50 dark:bg-gold-900/20 rounded-lg">
                                                         <DocumentTextIcon className="h-5 w-5 text-gold-600 dark:text-gold-400" />
                                                     </div>
-                                                    <h3 className="font-bold text-gray-900 dark:text-white text-lg">المؤهلات العلمية</h3>
+                                                    <h3 className="font-bold text-gray-900 dark:text-white text-lg">Academic Qualifications</h3>
                                                 </div>
 
                                                 <div className="space-y-4">
                                                     <div>
-                                                        <span className="block text-xs text-gray-400 mb-1">المؤهل</span>
+                                                        <span className="block text-xs text-gray-400 mb-1">Degree</span>
                                                         <EditableText
                                                             value={teacher.educationDegree}
                                                             onSave={(val) => handleUpdateField('educationDegree', val)}
                                                             isEditing={isEditMode}
                                                             className="text-gray-800 dark:text-gray-200 font-medium text-lg"
-                                                            label="المؤهل العلمي"
+                                                            label="Degree"
                                                         />
                                                     </div>
 
@@ -960,11 +960,11 @@ const TeacherProfile: React.FC = () => {
                                                                     onChange={(e) => handleUpdateProfile({ isHafiz: e.target.checked })}
                                                                     className="rounded text-gold-600 focus:ring-gold-500 w-4 h-4"
                                                                 />
-                                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">حافظ للقرآن الكريم</span>
+                                                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Memorized the entire Quran</span>
                                                             </label>
 
                                                             <div>
-                                                                <label className="block text-xs font-medium text-gray-500 mb-1">صورة المؤهل</label>
+                                                                <label className="block text-xs font-medium text-gray-500 mb-1">Degree Certificate</label>
                                                                 <div className="flex item-center gap-2">
                                                                     <input
                                                                         type="file"
@@ -972,7 +972,7 @@ const TeacherProfile: React.FC = () => {
                                                                         onChange={(e) => e.target.files?.[0] && handleFileUpload('QualificationCertificateImage', e.target.files[0])}
                                                                         className="text-sm text-gray-500 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-gray-100 file:text-xs"
                                                                     />
-                                                                    {teacher.qualificationCertificateUrl && <CheckCircleIcon className="h-5 w-5 text-green-500" title="تم الرفع" />}
+                                                                    {teacher.qualificationCertificateUrl && <CheckCircleIcon className="h-5 w-5 text-green-500" title="Uploaded" />}
                                                                 </div>
                                                                 <label className="flex items-center space-x-2 space-x-reverse cursor-pointer mt-2">
                                                                     <input
@@ -981,7 +981,7 @@ const TeacherProfile: React.FC = () => {
                                                                         onChange={(e) => handleUpdateProfile({ showQualificationCertificate: e.target.checked })}
                                                                         className="rounded text-gold-600 focus:ring-gold-500 w-3 h-3"
                                                                     />
-                                                                    <span className="text-xs text-gray-500">عرض للعامة</span>
+                                                                    <span className="text-xs text-gray-500">Public</span>
                                                                 </label>
                                                             </div>
 
@@ -993,20 +993,20 @@ const TeacherProfile: React.FC = () => {
                                                                         onChange={(e) => handleUpdateProfile({ hasIjaza: e.target.checked })}
                                                                         className="rounded text-gold-600 focus:ring-gold-500 w-4 h-4"
                                                                     />
-                                                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">لديه إجازة</span>
+                                                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Has Ijazah</span>
                                                                 </label>
 
                                                                 {teacher.hasIjaza && (
                                                                     <div className="space-y-2 animate-fadeIn">
                                                                         <input
                                                                             type="text"
-                                                                            placeholder="نوع الإجازة (مثال: حفص عن عاصم)"
+                                                                            placeholder="Ijazah type (e.g. Hafs an Asim)"
                                                                             value={teacher.ijazaType || ''}
                                                                             onChange={(e) => handleUpdateProfile({ ijazaType: e.target.value })}
                                                                             className="w-full text-sm p-2 border rounded dark:bg-gray-600 dark:border-gray-500 dark:text-white"
                                                                         />
                                                                         <div>
-                                                                            <label className="block text-xs font-medium text-gray-500 mb-1">صورة الإجازة</label>
+                                                                            <label className="block text-xs font-medium text-gray-500 mb-1">Ijazah Certificate</label>
                                                                             <div className="flex item-center gap-2">
                                                                                 <input
                                                                                     type="file"
@@ -1014,7 +1014,7 @@ const TeacherProfile: React.FC = () => {
                                                                                     onChange={(e) => e.target.files?.[0] && handleFileUpload('IjazaCertificateImage', e.target.files[0])}
                                                                                     className="text-sm text-gray-500 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-gray-100 file:text-xs"
                                                                                 />
-                                                                                {teacher.ijazaCertificateUrl && <CheckCircleIcon className="h-5 w-5 text-green-500" title="تم الرفع" />}
+                                                                                {teacher.ijazaCertificateUrl && <CheckCircleIcon className="h-5 w-5 text-green-500" title="Uploaded" />}
                                                                             </div>
                                                                             <label className="flex items-center space-x-2 space-x-reverse cursor-pointer mt-2">
                                                                                 <input
@@ -1023,7 +1023,7 @@ const TeacherProfile: React.FC = () => {
                                                                                     onChange={(e) => handleUpdateProfile({ showIjazaCertificate: e.target.checked })}
                                                                                     className="rounded text-gold-600 focus:ring-gold-500 w-3 h-3"
                                                                                 />
-                                                                                <span className="text-xs text-gray-500">عرض للعامة</span>
+                                                                                <span className="text-xs text-gray-500">Public</span>
                                                                             </label>
                                                                         </div>
                                                                     </div>
@@ -1035,14 +1035,14 @@ const TeacherProfile: React.FC = () => {
                                                     {!isEditMode && teacher.hasIjaza && (
                                                         <div className="flex items-center gap-3 bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-100 dark:border-green-800/30">
                                                             <CheckCircleIcon className="h-5 w-5 text-green-500" />
-                                                            <span className="text-green-700 dark:text-green-300 font-medium">إجازة في: {teacher.ijazaType}</span>
+                                                            <span className="text-green-700 dark:text-green-300 font-medium">Ijazah in: {teacher.ijazaType}</span>
                                                         </div>
                                                     )}
 
                                                     {!isEditMode && teacher.isHafiz && (
                                                         <div className="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-100 dark:border-blue-800/30">
                                                             <StarIcon className="h-5 w-5 text-blue-500" />
-                                                            <span className="text-blue-700 dark:text-blue-300 font-medium">حافظ للقرآن الكريم</span>
+                                                            <span className="text-blue-700 dark:text-blue-300 font-medium">Memorized the entire Quran</span>
                                                         </div>
                                                     )}
 
@@ -1051,20 +1051,20 @@ const TeacherProfile: React.FC = () => {
                                                         <div className="flex flex-col gap-2 pt-2">
                                                             {teacher.qualificationCertificateUrl && (teacher.showQualificationCertificate || isOwner || isAdmin) && (
                                                                     <button
-                                                                        onClick={() => setViewingDoc({ url: getFileUrl(teacher.qualificationCertificateUrl), title: 'شهادة المؤهل' })}
+                                                                        onClick={() => setViewingDoc({ url: getFileUrl(teacher.qualificationCertificateUrl), title: 'Degree Certificate' })}
                                                                         className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-gold-700 bg-gold-50 hover:bg-gold-100 dark:bg-gold-900/20 dark:text-gold-400 dark:hover:bg-gold-900/40 rounded-lg transition-colors border border-gold-200 dark:border-gold-800/50">
                                                                         <DocumentTextIcon className="h-4 w-4" />
-                                                                        <span>عرض شهادة المؤهل</span>
-                                                                        {(!teacher.showQualificationCertificate && isOwner) && <span className="text-xs text-red-500 mr-2">(مخفي عن العامة)</span>}
+                                                                        <span>View Degree Certificate</span>
+                                                                        {(!teacher.showQualificationCertificate && isOwner) && <span className="text-xs text-red-500 mr-2">(hidden from public)</span>}
                                                                     </button>
                                                             )}
                                                             {teacher.hasIjaza && teacher.ijazaCertificateUrl && (teacher.showIjazaCertificate || isOwner || isAdmin) && (
                                                                     <button
-                                                                        onClick={() => setViewingDoc({ url: getFileUrl(teacher.ijazaCertificateUrl), title: 'إجازة القرآن' })}
+                                                                        onClick={() => setViewingDoc({ url: getFileUrl(teacher.ijazaCertificateUrl), title: 'Quran Ijazah' })}
                                                                         className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400 dark:hover:bg-emerald-900/40 rounded-lg transition-colors border border-emerald-200 dark:border-emerald-800/50">
                                                                         <DocumentTextIcon className="h-4 w-4" />
-                                                                        <span>عرض إجازة القرآن</span>
-                                                                        {(!teacher.showIjazaCertificate && isOwner) && <span className="text-xs text-red-500 mr-2">(مخفي عن العامة)</span>}
+                                                                        <span>View Quran Ijazah</span>
+                                                                        {(!teacher.showIjazaCertificate && isOwner) && <span className="text-xs text-red-500 mr-2">(hidden from public)</span>}
                                                                     </button>
                                                             )}
                                                         </div>
@@ -1078,38 +1078,38 @@ const TeacherProfile: React.FC = () => {
                                                     <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                                                         <ClockIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                                                     </div>
-                                                    <h3 className="font-bold text-gray-900 dark:text-white text-lg">الخبرة العملية</h3>
+                                                    <h3 className="font-bold text-gray-900 dark:text-white text-lg">Work Experience</h3>
                                                 </div>
 
                                                 <div className="space-y-4">
                                                     <div>
-                                                        <span className="block text-xs text-gray-400 mb-1">سنوات الخبرة</span>
+                                                        <span className="block text-xs text-gray-400 mb-1">Years of Experience</span>
                                                         <div className="flex items-baseline gap-1">
                                                             <EditableText
                                                                 value={teacher.experienceYears}
                                                                 onSave={(val) => handleUpdateField('experienceYears', val)}
                                                                 isEditing={isEditMode}
                                                                 className="text-blue-600 dark:text-blue-400 font-bold text-2xl"
-                                                                label="سنوات الخبرة"
+                                                                label="Years of Experience"
                                                             />
-                                                            <span className="text-gray-500 font-medium">سنة</span>
+                                                            <span className="text-gray-500 font-medium">years</span>
                                                         </div>
                                                     </div>
                                                     {/* Certificate Link for Experience */}
                                                     {!isEditMode && teacher.experienceCertificateUrl && (teacher.showExperienceCertificate || isOwner || isAdmin) && (
                                                         <div className="pt-2">
                                                                 <button
-                                                                    onClick={() => setViewingDoc({ url: getFileUrl(teacher.experienceCertificateUrl), title: 'شهادة الخبرة' })}
+                                                                    onClick={() => setViewingDoc({ url: getFileUrl(teacher.experienceCertificateUrl), title: 'Experience Certificate' })}
                                                                     className="inline-flex items-center justify-center w-full gap-2 px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/40 rounded-lg transition-colors border border-blue-200 dark:border-blue-800/50">
                                                                     <DocumentTextIcon className="h-4 w-4" />
-                                                                    <span>عرض شهادة الخبرة</span>
-                                                                    {(!teacher.showExperienceCertificate && isOwner) && <span className="text-xs text-red-500 mr-2">(مخفي عن العامة)</span>}
+                                                                    <span>View Experience Certificate</span>
+                                                                    {(!teacher.showExperienceCertificate && isOwner) && <span className="text-xs text-red-500 mr-2">(hidden from public)</span>}
                                                                 </button>
                                                         </div>
                                                     )}
                                                     {isEditMode && (
                                                         <div className="mt-4 border-t pt-4 dark:border-gray-700">
-                                                            <label className="block text-xs font-medium text-gray-500 mb-1">شهادة الخبرة</label>
+                                                            <label className="block text-xs font-medium text-gray-500 mb-1">Experience Certificate</label>
                                                             <div className="flex item-center gap-2">
                                                                 <input
                                                                     type="file"
@@ -1117,7 +1117,7 @@ const TeacherProfile: React.FC = () => {
                                                                     onChange={(e) => e.target.files?.[0] && handleFileUpload('ExperienceCertificateImage', e.target.files[0])}
                                                                     className="text-sm text-gray-500 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-gray-100 file:text-xs"
                                                                 />
-                                                                {teacher.experienceCertificateUrl && <CheckCircleIcon className="h-5 w-5 text-green-500" title="تم الرفع" />}
+                                                                {teacher.experienceCertificateUrl && <CheckCircleIcon className="h-5 w-5 text-green-500" title="Uploaded" />}
                                                             </div>
                                                             <label className="flex items-center space-x-2 space-x-reverse cursor-pointer mt-2">
                                                                 <input
@@ -1126,7 +1126,7 @@ const TeacherProfile: React.FC = () => {
                                                                     onChange={(e) => handleUpdateProfile({ showExperienceCertificate: e.target.checked })}
                                                                     className="rounded text-gold-600 focus:ring-gold-500 w-3 h-3"
                                                                 />
-                                                                <span className="text-xs text-gray-500">عرض للعامة</span>
+                                                                <span className="text-xs text-gray-500">Public</span>
                                                             </label>
                                                         </div>
                                                     )}
@@ -1139,16 +1139,16 @@ const TeacherProfile: React.FC = () => {
                             if (section === 'subjects') {
                                 return (
                                     <DraggableSection key="subjects" id="subjects" index={index} onMove={moveSection} isEditing={isEditMode} className="mb-6">
-                                        <h3 className="font-semibold text-gray-900 dark:text-white mb-3">التخصصات</h3>
+                                        <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Specialties</h3>
                                         {isEditMode ? (
                                             <div className="space-y-2">
                                                 <EditableText
                                                     value={teacher.subjects.join(', ')}
                                                     onSave={(val) => handleUpdateField('subjects', val.split(',').map(s => s.trim()).filter(Boolean))}
                                                     isEditing={true}
-                                                    placeholder="أدخل التخصصات مفصولة بفاصلة (،)"
+                                                    placeholder="Enter specialties separated by commas"
                                                 />
-                                                <p className="text-xs text-gray-400">افصل بين التخصصات بفاصلة</p>
+                                                <p className="text-xs text-gray-400">Separate specialties with commas</p>
                                             </div>
                                         ) : (
                                             <div className="flex flex-wrap gap-2">
@@ -1178,11 +1178,11 @@ const TeacherProfile: React.FC = () => {
                                                         <PlayIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                                                     </div>
                                                     <h3 className="font-bold text-gray-900 dark:text-white text-lg">
-                                                        العينة الصوتية
+                                                        Audio Sample
                                                     </h3>
                                                 </div>
                                                 {(!teacher.showAudioSample && (isOwner || isAdmin) && !isEditMode) && (
-                                                    <span className="text-xs text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-full font-medium border border-red-100 dark:border-red-800">(مخفي عن العامة)</span>
+                                                    <span className="text-xs text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-full font-medium border border-red-100 dark:border-red-800">(hidden from public)</span>
                                                 )}
                                             </div>
                                             <div className="mt-4 flex justify-center w-full">
@@ -1200,7 +1200,7 @@ const TeacherProfile: React.FC = () => {
                                                             onChange={(e) => handleUpdateProfile({ showAudioSample: e.target.checked })}
                                                             className="rounded text-gold-600 focus:ring-gold-500 w-4 h-4"
                                                         />
-                                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">عرض العينة الصوتية في الملف الشخصي</span>
+                                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Show audio sample on public profile</span>
                                                     </label>
                                                 </div>
                                             )}
@@ -1211,11 +1211,11 @@ const TeacherProfile: React.FC = () => {
                             if (section === 'packages') {
                                 return (
                                     <DraggableSection key="packages" id="packages" index={index} onMove={moveSection} isEditing={isEditMode}>
-                                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">الباقات المتاحة</h2>
+                                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Available Packages</h2>
 
                                         {packages.length === 0 ? (
                                             <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center border-2 border-dashed border-gray-300 dark:border-gray-700">
-                                                <p className="text-gray-500 dark:text-gray-400">لا توجد باقات متاحة حالياً</p>
+                                                <p className="text-gray-500 dark:text-gray-400">No packages available right now</p>
                                             </div>
                                         ) : (
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1234,7 +1234,7 @@ const TeacherProfile: React.FC = () => {
                                                             <button
                                                                 onClick={(e) => handleSharePackage(e, pkg)}
                                                                 className="text-gray-400 hover:text-gold-600 dark:hover:text-gold-400 p-1"
-                                                                title="مشاركة الباقة"
+                                                                title="Share Package"
                                                             >
                                                                 <ShareIcon className="h-5 w-5" />
                                                             </button>
@@ -1244,17 +1244,17 @@ const TeacherProfile: React.FC = () => {
                                                         <div className="space-y-2 mb-6">
                                                             <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                                                                 <CheckCircleIcon className="h-5 w-5 text-green-500" />
-                                                                <span>{pkg.sessionsCount} جلسة</span>
+                                                                <span>{pkg.sessionsCount} sessions</span>
                                                             </div>
                                                             <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                                                                 <ClockIcon className="h-5 w-5 text-blue-500" />
-                                                                <span>{pkg.durationMinutes} دقيقة لكل جلسة</span>
+                                                                <span>{pkg.durationMinutes} min per session</span>
                                                             </div>
                                                             {pkg.allowedGender && pkg.allowedGender !== 'All' && (
                                                                 <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mt-2">
                                                                     <span className={`px-2 py-1 rounded-md text-xs font-bold ${pkg.allowedGender === 'Male' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'
                                                                         }`}>
-                                                                        مخصصة لـ: {pkg.allowedGender === 'Male' ? 'الذكور فقط' : 'الإناث فقط'}
+                                                                        For: {pkg.allowedGender === 'Male' ? 'Male only' : 'Female only'}
                                                                     </span>
                                                                 </div>
                                                             )}
@@ -1265,7 +1265,7 @@ const TeacherProfile: React.FC = () => {
                                                                 {pkg.price} <span className="text-lg">{pkg.currency === 'EGP' ? 'EGP' : 'EGP'}</span>
                                                             </div>
                                                             <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                                {(pkg.price / pkg.sessionsCount).toFixed(2)} {pkg.currency === 'EGP' ? 'EGP' : 'EGP'} للجلسة
+                                                                {(pkg.price / pkg.sessionsCount).toFixed(2)} EGP per session
                                                             </div>
                                                         </div>
 
@@ -1286,10 +1286,10 @@ const TeacherProfile: React.FC = () => {
                                                                         } ${pkg.currentUserBookingStatus === 'Confirmed' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800' : ''}`}
                                                                 >
                                                                     {user?.role === 'Teacher'
-                                                                        ? 'عرض المواعيد (للمعلم)'
+                                                                        ? 'View Slots (teacher)'
                                                                         : pkg.currentUserBookingStatus
-                                                                            ? (pkg.currentUserBookingStatus === 'Pending' ? 'طلبك قيد المراجعة' : 'أنت مشترك بالفعل')
-                                                                            : isFull ? 'مكتمل العدد' : expired ? 'لقد اكتملت هذه الباقة' : 'احجز الآن'}
+                                                                            ? (pkg.currentUserBookingStatus === 'Pending' ? 'Request under review' : 'Already enrolled')
+                                                                            : isFull ? 'Full' : expired ? 'This package has ended' : 'Book Now'}
                                                                 </button>
                                                             );
                                                         })()}
@@ -1312,14 +1312,14 @@ const TeacherProfile: React.FC = () => {
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 dark:border-gray-700 transform transition-all scale-100">
                             <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white text-center">
                                 <ExclamationTriangleIcon className="h-12 w-12 mx-auto mb-2 text-white/90" />
-                                <h3 className="text-xl font-bold">تنبيه: انضمام متأخر</h3>
+                                <h3 className="text-xl font-bold">Note: Late Enrollment</h3>
                             </div>
 
                             <div className="p-6 space-y-4">
                                 <p className="text-gray-600 dark:text-gray-300 text-center leading-relaxed">
-                                    هذه الباقة بدأت بالفعل وقد فاتتك
+                                    This package has already started and you missed
                                     <span className="font-bold text-orange-600 dark:text-orange-400 mx-1">{lateJoinData.missed}</span>
-                                    جلسات.
+                                    sessions.
                                 </p>
 
                                 <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 flex items-start gap-3">
@@ -1327,11 +1327,11 @@ const TeacherProfile: React.FC = () => {
                                         <CurrencyDollarIcon className="h-5 w-5 text-green-600 dark:text-green-300" />
                                     </div>
                                     <div>
-                                        <p className="font-bold text-gray-900 dark:text-white text-sm">سياسة التعويض التلقائي</p>
+                                        <p className="font-bold text-gray-900 dark:text-white text-sm">Automatic Compensation Policy</p>
                                         <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                                            سيتم استرجاع قيمة الجلسات الفائتة
+                                            The cost of missed sessions will be refunded
                                             (<span className="font-bold text-green-600 dark:text-green-400">{lateJoinData.refund}</span>)
-                                            إلى محفظتك تلقائياً بعد قبول المعلم للطلب.
+                                            to your wallet automatically once the teacher accepts your request.
                                         </p>
                                     </div>
                                 </div>
@@ -1342,13 +1342,13 @@ const TeacherProfile: React.FC = () => {
                                     onClick={() => setShowLateJoinModal(false)}
                                     className="flex-1 py-3 px-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl font-bold transition-colors"
                                 >
-                                    إلغاء
+                                    Cancel
                                 </button>
                                 <button
                                     onClick={processBooking}
                                     className="flex-1 py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold shadow-lg shadow-orange-500/30 transition-all hover:scale-[1.02]"
                                 >
-                                    متابعة الحجز
+                                    Continue Booking
                                 </button>
                             </div>
                         </div>
@@ -1360,7 +1360,7 @@ const TeacherProfile: React.FC = () => {
                 <Modal
                     isOpen={showGuestModal}
                     onClose={() => setShowGuestModal(false)}
-                    title="سجل دخولك لبدء التعلم"
+                    title="Sign in to start learning"
                     size="md"
                 >
                     <div className="space-y-6 py-4 text-center">
@@ -1369,8 +1369,8 @@ const TeacherProfile: React.FC = () => {
                         </div>
                         
                         <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
-                            للبدء في حجز جلساتك مع المعلم، يرجى تسجيل الدخول أولاً. 
-                            إذا لم يكن لديك حساب، يمكنك إنشاء حساب طالب جديد بسهولة.
+                            To start booking sessions with this teacher, please sign in first. 
+                            If you don't have an account, you can easily create a new student account.
                         </p>
 
                         <div className="flex flex-col gap-3 pt-4">
@@ -1379,20 +1379,20 @@ const TeacherProfile: React.FC = () => {
                                 className="w-full py-3.5 bg-tomato-500 hover:bg-tomato-600 text-white rounded-xl font-bold shadow-lg shadow-tomato-500/20 transition-all flex items-center justify-center gap-2"
                             >
                                 <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                                تسجيل الدخول
+                                Sign In
                             </button>
                             <button
                                 onClick={() => navigate('/register/student')}
                                 className="w-full py-3.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
                             >
                                 <UserPlusIcon className="h-5 w-5 text-primary-600" />
-                                إنشاء حساب طالب
+                                Create Student Account
                             </button>
                             <button
                                 onClick={() => setShowGuestModal(false)}
                                 className="w-full py-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-sm font-medium transition-colors"
                             >
-                                إلغاء
+                                Cancel
                             </button>
                         </div>
                     </div>
@@ -1403,22 +1403,22 @@ const TeacherProfile: React.FC = () => {
                         <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-4xl w-full max-h-[85vh] flex flex-col">
                             <div className="p-6 border-b dark:border-gray-700 flex justify-between items-center">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">اختر مواعيد الجلسات</h2>
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Choose Session Times</h2>
                                     <p className="text-gray-600 dark:text-gray-400 mt-1">
-                                        المطلوب: {selectedPackage.sessionsCount} جلسات | تم اختيار: {proposedTimes.length}
+                                        Required: {selectedPackage.sessionsCount} sessions | Selected: {proposedTimes.length}
                                     </p>
                                     <p className="text-xs text-yellow-600 mt-1">
                                         {selectedPackage.periodType
-                                            ? `* ${selectedPackage.periodType}: ${selectedPackage.sessionsPerWeek} جلسات/أسبوع`
+                                            ? `* ${selectedPackage.periodType}: ${selectedPackage.sessionsPerWeek} sessions/week`
                                             : selectedPackage.sessionsCount === 4
-                                                ? '* ينطبق نظام جلسة واحدة أسبوعياً'
+                                                ? '* One-session-per-week rule applies'
                                                 : ''}
                                         {selectedPackage.sessionBufferMinutes
-                                            ? ` | فاصل ${selectedPackage.sessionBufferMinutes} دقيقة`
+                                            ? ` | ${selectedPackage.sessionBufferMinutes} min break`
                                             : ''}
                                     </p>
                                     <p className="text-xs text-blue-600 mt-2 font-semibold">
-                                        🕒 المواعيد معروضة بتوقيتك المحلي ({Intl.DateTimeFormat().resolvedOptions().timeZone})
+                                        🕒 Times shown in your local timezone ({Intl.DateTimeFormat().resolvedOptions().timeZone})
                                     </p>
                                 </div>
                                 <button onClick={() => setShowBookingModal(false)} className="text-gray-500 hover:text-gray-700">
@@ -1430,11 +1430,11 @@ const TeacherProfile: React.FC = () => {
                                 {slotsLoading ? (
                                     <div className="text-center py-12">
                                         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gold-600"></div>
-                                        <p className="mt-2 text-gray-600">جاري تحميل المواعيد المتاحة...</p>
+                                        <p className="mt-2 text-gray-600">Loading available slots...</p>
                                     </div>
                                 ) : Object.keys(visibleSlots).length === 0 ? (
                                     <div className="text-center py-12 text-gray-500">
-                                        لا توجد مواعيد متاحة لهذه الباقة حالياً (قد تكون اكتملت أو نفذت المواعيد).
+                                        No slots available for this package right now (it may be full or finished).
                                     </div>
                                 ) : (
                                     <div className="space-y-6">
@@ -1466,7 +1466,7 @@ const TeacherProfile: React.FC = () => {
                                                                     className="px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-400 border border-gray-200 dark:bg-gray-800 dark:text-gray-600 dark:border-gray-700 flex flex-col items-center justify-center cursor-not-allowed opacity-60"
                                                                 >
                                                                     <span className="line-through">{time}</span>
-                                                                    <span className="text-[10px]">منتهي</span>
+                                                                    <span className="text-[10px]">Ended</span>
                                                                 </div>
                                                             );
                                                         }
@@ -1478,25 +1478,25 @@ const TeacherProfile: React.FC = () => {
                                                                     key={slot}
                                                                     onClick={() => toggleRecurringSlot(slot)}
                                                                     className="relative group px-3 py-2 rounded-lg text-sm font-medium bg-red-50 text-red-500 border border-red-200 dark:bg-red-900/10 dark:text-red-400 dark:border-red-900/30 flex flex-col items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors"
-                                                                    title="اضغط لاختيار المواعيد القادمة لهذا التوقيت"
+                                                                    title="Click to select upcoming sessions at this time"
                                                                 >
                                                                     <div
                                                                         onClick={(e) => {
                                                                             e.stopPropagation();
-                                                                            toast('توضيح هام:\n\nهذا الموعد قد فات بدايته بالفعل.\nعند اختيارك لهذا التوقيت، سيتم حجز الجلسات القادمة المتبقية فقط (في الأسابيع التالية).\n\nبخصوص الدفع: سيتم استرجاع قيمة الجلسات الفائتة التي لم تحضرها إلى محفظتك تلقائياً بعد قبول المعلم للطلب.', {
+                                                                            toast('Important:\n\nThis slot has already started.\nBy choosing it, only the remaining upcoming sessions (in the following weeks) will be booked.\n\nPayment: the cost of missed sessions will be refunded to your wallet automatically once the teacher accepts your request.', {
                                                                                 duration: 8000,
                                                                                 icon: 'ℹ️'
                                                                             });
                                                                         }}
                                                                         className="absolute -top-1 -right-1 bg-white dark:bg-gray-700 rounded-full text-blue-500 shadow-sm cursor-help hover:scale-110 transition-transform z-10"
-                                                                        title="ماذا يعني هذا؟"
+                                                                        title="What does this mean?"
                                                                     >
                                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                                                                         </svg>
                                                                     </div>
                                                                     <span className="line-through opacity-75">{time}</span>
-                                                                    <span className="text-[10px] font-bold">فائت (تعويض)</span>
+                                                                    <span className="text-[10px] font-bold">Missed (make-up)</span>
                                                                 </button>
                                                             );
                                                         }
@@ -1511,12 +1511,12 @@ const TeacherProfile: React.FC = () => {
                                                                 <div
                                                                     key={slot}
                                                                     className="px-3 py-2 rounded-lg text-sm font-medium bg-gold-50 text-gold-700 border border-gold-300 dark:bg-gold-900/20 dark:text-gold-400 dark:border-gold-800 flex flex-col items-center justify-center cursor-default shadow-sm"
-                                                                    title="هذا الموعد محجوز لك بالفعل"
+                                                                    title="You already booked this slot"
                                                                 >
                                                                     <span className="font-bold">{time}</span>
                                                                     <span className="text-[10px] items-center flex gap-1">
                                                                         <CheckCircleIcon className="h-3 w-3" />
-                                                                        حجزي
+                                                                        My Booking
                                                                     </span>
                                                                 </div>
                                                             );
@@ -1555,7 +1555,7 @@ const TeacherProfile: React.FC = () => {
                                 <div className="p-6 border-t dark:border-gray-700 flex gap-4 bg-gray-50 dark:bg-gray-900/50">
                                     <div className="flex-1">
                                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                                            * المواعيد المختارة نهائية وسيتم حجزها مباشرة.
+                                            * Selected times are final and will be booked directly.
                                         </p>
                                     </div>
                                     <button
@@ -1563,13 +1563,13 @@ const TeacherProfile: React.FC = () => {
                                         disabled={bookingLoading || proposedTimes.length === 0}
                                         className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                                     >
-                                        {bookingLoading ? 'جاري الحجز...' : 'تأكيد الحجز'}
+                                        {bookingLoading ? 'Booking...' : 'Confirm Booking'}
                                     </button>
                                 </div>
                             )}
                             {isReadOnlyPreview && (
                                 <div className="p-6 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-center">
-                                    <p className="text-gray-500 font-medium">وضع العرض فقط (للمعلمين)</p>
+                                    <p className="text-gray-500 font-medium">View-only mode (teachers)</p>
                                 </div>
                             )}
                         </div>
@@ -1605,7 +1605,7 @@ const TeacherProfile: React.FC = () => {
                                     rel="noopener noreferrer"
                                     className="text-gold-600 hover:text-gold-700 dark:text-gold-400 dark:hover:text-gold-300 font-medium flex items-center gap-2"
                                 >
-                                    <span>فتح في نافذة مستقلة</span>
+                                    <span>Open in New Window</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                     </svg>

@@ -40,23 +40,23 @@ const TeacherHome: React.FC = () => {
     const teacherSteps: OnboardingStep[] = [
         {
             id: 1,
-            title: 'أكمل ملفك الشخصي',
-            description: 'أضف معلوماتك ومؤهلاتك وفيديو تعريفي ليتمكن الطلاب من التعرف عليك.',
+            title: 'Complete Your Profile',
+            description: 'Add your information, qualifications, and an intro video so students can get to know you.',
             icon: UserCircleIcon,
             linkTo: '/teacher/profile',
             isCompleted: status !== 'Pending'
         },
         {
             id: 2,
-            title: 'انتظر الموافقة',
-            description: 'سيقوم فريق المشرفين بمراجعة ملفك وتفعيله في أقرب وقت.',
+            title: 'Wait for Approval',
+            description: 'Our review team will check your profile and activate it shortly.',
             icon: CheckCircleIcon,
             isCompleted: status === 'Approved'
         },
         {
             id: 3,
-            title: 'أنشئ باقاتك',
-            description: 'حدد الأسعار والباقات التي ترغب في تقديمها للطلاب.',
+            title: 'Create Your Packages',
+            description: 'Set the prices and packages you want to offer students.',
             icon: BanknotesIcon,
             linkTo: '/teacher/packages',
             isCompleted: hasPackages
@@ -70,17 +70,17 @@ const TeacherHome: React.FC = () => {
                 <div className="absolute top-0 left-0 w-full h-full bg-pattern opacity-10"></div>
                 <div className="relative z-10 max-w-2xl">
                     <h1 className="text-4xl font-bold font-heading mb-4">
-                        أهلاً بك يا معلم، {user?.fullName} 👋
+                        Welcome, teacher {user?.fullName} 👋
                     </h1>
                     <p className="text-xl text-blue-50 leading-relaxed mb-8">
-                        شكراً لانضمامك إلى كوكبة معلمي {branding.nameAr}. هنا نقطة انطلاقك لنشر العلم وتحفيظ كتاب الله.
+                        Thank you for joining the {branding.nameEn} teaching team. This is your launchpad for spreading knowledge and teaching the Quran.
                     </p>
                     <div className="flex gap-4">
                         <Link to="/teacher/profile" className="btn-gold px-8 py-3 font-bold text-gray-900 shadow-md transform hover:-translate-y-1 transition-transform">
-                            أكمل ملفك
+                            Complete Your Profile
                         </Link>
                         <Link to="/teacher/dashboard" className="btn-outline border-white text-white hover:bg-white hover:text-blue-900 px-8 py-3 font-bold">
-                            لوحة التحكم
+                            Dashboard
                         </Link>
                     </div>
                 </div>
@@ -88,10 +88,10 @@ const TeacherHome: React.FC = () => {
 
             {/* Quick Actions */}
             <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">خطواتك الأولى</h2>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Your First Steps</h2>
                 <OnboardingGuide
-                    title="رحلة المعلم"
-                    subtitle="خطوات الانضمام والبدء"
+                    title="The Teacher Journey"
+                    subtitle="Steps to join and get started"
                     role="Teacher"
                     steps={teacherSteps}
                 />

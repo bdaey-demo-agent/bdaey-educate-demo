@@ -29,7 +29,7 @@ const TeacherBookings: React.FC = () => {
             setBookings(data || []);
         } catch (error) {
             console.error('Error fetching bookings:', error);
-            toast.error('فشل تحميل الحجوزات');
+            toast.error('Failed to load bookings');
         } finally {
             setLoading(false);
         }
@@ -40,14 +40,14 @@ const TeacherBookings: React.FC = () => {
     }, []);
 
     const handleAccept = async (bookingId: number) => {
-        const toastId = toast.loading('جاري قبول الحجز...');
+        const toastId = toast.loading('Accepting booking...');
         try {
             await bookingsService.updateBookingStatus(bookingId, 'Confirmed');
-            toast.success('تم قبول الحجز بنجاح', { id: toastId });
+            toast.success('Booking accepted', { id: toastId });
             fetchBookings();
         } catch (error) {
             console.error('Error accepting booking:', error);
-            toast.error('حدث خطأ أثناء قبول الحجز', { id: toastId });
+            toast.error('An error occurred while accepting the booking', { id: toastId });
         }
     };
 
@@ -60,15 +60,15 @@ const TeacherBookings: React.FC = () => {
     const confirmReject = async () => {
         if (!bookingToReject) return;
 
-        const toastId = toast.loading('جاري رفض الحجز...');
+        const toastId = toast.loading('Declining booking...');
         try {
-            await bookingsService.updateBookingStatus(bookingToReject, 'Cancelled', rejectReason || 'رفض من قبل المعلم');
-            toast.success('تم رفض الحجز', { id: toastId });
+            await bookingsService.updateBookingStatus(bookingToReject, 'Cancelled', rejectReason || 'Declined by the teacher');
+            toast.success('Booking declined', { id: toastId });
             setShowRejectModal(false);
             fetchBookings();
         } catch (error) {
             console.error('Error rejecting booking:', error);
-            toast.error('حدث خطأ أثناء رفض الحجز', { id: toastId });
+            toast.error('An error occurred while declining the booking', { id: toastId });
         }
     };
 
@@ -91,10 +91,10 @@ const TeacherBookings: React.FC = () => {
         <div>
             <div className="mb-8">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                    طلبات الحجز
+                    Booking Requests
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">
-                    إدارة طلبات الحجز من الطلاب
+                    Manage booking requests from students
                 </p>
             </div>
 
@@ -107,7 +107,7 @@ const TeacherBookings: React.FC = () => {
                         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">طلبات جديدة</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">New Requests</p>
                                     <p className="text-2xl font-bold text-gray-900 dark:text-white">{pendingCount}</p>
                                 </div>
                                 <div className="p-3 rounded-full bg-yellow-500 text-white bg-opacity-90">
@@ -119,7 +119,7 @@ const TeacherBookings: React.FC = () => {
                         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">حجوزات مؤكدة</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Confirmed Bookings</p>
                                     <p className="text-2xl font-bold text-gray-900 dark:text-white">{confirmedCount}</p>
                                 </div>
                                 <div className="p-3 rounded-full bg-green-500 text-white bg-opacity-90">
@@ -131,7 +131,7 @@ const TeacherBookings: React.FC = () => {
                         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border dark:border-gray-700">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">إجمالي الطلبات</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Requests</p>
                                     <p className="text-2xl font-bold text-gray-900 dark:text-white">{bookings.length}</p>
                                 </div>
                                 <div className="p-3 rounded-full bg-blue-500 text-white bg-opacity-90">
@@ -150,7 +150,7 @@ const TeacherBookings: React.FC = () => {
                                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
                                 }`}
                         >
-                            الكل ({bookings.length})
+                            All ({bookings.length})
                         </button>
                         <button
                             onClick={() => setFilter('Pending')}
@@ -159,7 +159,7 @@ const TeacherBookings: React.FC = () => {
                                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
                                 }`}
                         >
-                            في الانتظار ({pendingCount})
+                            Pending ({pendingCount})
                         </button>
                         <button
                             onClick={() => setFilter('Confirmed')}
@@ -168,7 +168,7 @@ const TeacherBookings: React.FC = () => {
                                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
                                 }`}
                         >
-                            مؤكدة ({confirmedCount})
+                            Confirmed ({confirmedCount})
                         </button>
                     </div>
 
@@ -177,9 +177,9 @@ const TeacherBookings: React.FC = () => {
                         {filteredBookings.length === 0 ? (
                             <div className="p-8 text-center">
                                 <CalendarIcon className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">لا توجد طلبات</h4>
+                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No requests</h4>
                                 <p className="text-gray-600 dark:text-gray-400">
-                                    {filter === 'Pending' ? 'لا توجد طلبات في الانتظار' : filter === 'Confirmed' ? 'لا توجد حجوزات مؤكدة' : 'لا توجد أي طلبات حتى الآن'}
+                                    {filter === 'Pending' ? 'No pending requests' : filter === 'Confirmed' ? 'No confirmed bookings' : 'No requests yet'}
                                 </p>
                             </div>
                         ) : (
@@ -194,13 +194,13 @@ const TeacherBookings: React.FC = () => {
                                                     </div>
                                                     <div>
                                                         <h4 className="font-bold text-gray-900 dark:text-white">{booking.studentName}</h4>
-                                                        <p className="text-sm text-gray-600 dark:text-gray-400">الباقة: {booking.packageName}</p>
+                                                        <p className="text-sm text-gray-600 dark:text-gray-400">Package: {booking.packageName}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mt-2">
                                                     <span className="flex items-center gap-1">
                                                         <CalendarIcon className="h-4 w-4" />
-                                                        {booking.sessionsCount} جلسة
+                                                        {booking.sessionsCount} sessions
                                                     </span>
                                                     <span>
                                                         {booking.totalPrice} {booking.currency}
@@ -230,7 +230,7 @@ const TeacherBookings: React.FC = () => {
                                                         className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors mt-2"
                                                     >
                                                         <span className="h-4 w-4">💬</span> {/* Or use Icon */}
-                                                        محادثة
+                                                        Chat
                                                     </button>
                                                 )}
 
@@ -241,14 +241,14 @@ const TeacherBookings: React.FC = () => {
                                                             className="flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
                                                         >
                                                             <CheckCircleIcon className="h-4 w-4" />
-                                                            قبول
+                                                            Accept
                                                         </button>
                                                         <button
                                                             onClick={() => handleRejectClick(booking.id)}
                                                             className="flex-1 py-2 px-3 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1"
                                                         >
                                                             <XCircleIcon className="h-4 w-4" />
-                                                            رفض
+                                                            Decline
                                                         </button>
                                                     </div>
                                                 )}
@@ -269,22 +269,22 @@ const TeacherBookings: React.FC = () => {
                             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 mb-4">
                                 <XCircleIcon className="h-6 w-6 text-red-600 dark:text-red-400" />
                             </div>
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">رفض طلب الحجز</h3>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Decline Booking Request</h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                يرجى ذكر سبب الرفض (اختياري) ليتم إبلاغ الطالب
+                                Please provide a reason (optional) so the student can be informed
                             </p>
                         </div>
 
                         <div className="mb-6">
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                سبب الرفض
+                                Decline Reason
                             </label>
                             <textarea
                                 value={rejectReason}
                                 onChange={(e) => setRejectReason(e.target.value)}
                                 className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
                                 rows={3}
-                                placeholder="اكتب السبب هنا..."
+                                placeholder="Type the reason here..."
                             ></textarea>
                         </div>
 
@@ -293,13 +293,13 @@ const TeacherBookings: React.FC = () => {
                                 onClick={() => setShowRejectModal(false)}
                                 className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
                             >
-                                إلغاء
+                                Cancel
                             </button>
                             <button
                                 onClick={confirmReject}
                                 className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
                             >
-                                تأكيد الرفض
+                                Confirm Decline
                             </button>
                         </div>
                     </div>

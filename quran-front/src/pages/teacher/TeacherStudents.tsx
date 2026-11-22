@@ -22,7 +22,7 @@ const TeacherStudents: React.FC = () => {
         }
     };
 
-    if (loading) return <div className="p-8 text-center">جاري التحميل...</div>;
+    if (loading) return <div className="p-8 text-center">Loading...</div>;
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-2 md:p-6">
@@ -32,16 +32,16 @@ const TeacherStudents: React.FC = () => {
                         <UserGroupIcon className="h-6 w-6 md:h-8 md:w-8" />
                     </div>
                     <div>
-                        <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white">طلابي</h1>
-                        <p className="text-sm md:text-base text-gray-500">قائمة الطلاب الذين قاموا بالحجز معك</p>
+                        <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white">My Students</h1>
+                        <p className="text-sm md:text-base text-gray-500">Students who have booked with you</p>
                     </div>
                 </div>
 
                 {students.length === 0 ? (
                     <div className="bg-white dark:bg-gray-800 p-12 rounded-xl text-center shadow-sm">
                         <UserGroupIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">لا يوجد طلاب بعد</h3>
-                        <p className="text-gray-500">عندما يقوم الطلاب بحجز جلسات معك سيظهرون هنا.</p>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No students yet</h3>
+                        <p className="text-gray-500">Students will appear here once they book sessions with you.</p>
                     </div>
                 ) : (
                     <>
@@ -59,7 +59,7 @@ const TeacherStudents: React.FC = () => {
                                         </div>
                                     </div>
                                     <div className="text-xs text-gray-400 bg-gray-50 dark:bg-gray-900 px-2 py-1 rounded">
-                                        منذ {new Date(student.joinDate).toLocaleDateString('ar-EG')}
+                                        Since {new Date(student.joinDate).toLocaleDateString('en-GB')}
                                     </div>
                                 </div>
                             ))}
@@ -70,9 +70,9 @@ const TeacherStudents: React.FC = () => {
                             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead className="bg-gray-50 dark:bg-gray-900">
                                     <tr>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">اسم الطالب</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">البريد الإلكتروني</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">تاريخ الانضمام</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Student Name</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Join Date</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -90,7 +90,7 @@ const TeacherStudents: React.FC = () => {
                                                 {student.email}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
-                                                {new Date(student.joinDate).toLocaleDateString('ar-EG')}
+                                                {new Date(student.joinDate).toLocaleDateString('en-GB')}
                                             </td>
                                         </tr>
                                     ))}
