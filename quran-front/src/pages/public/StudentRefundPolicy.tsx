@@ -12,17 +12,17 @@ const StudentRefundPolicy: React.FC = () => {
     return (
         <>
             <Seo
-                title="سياسة الاسترجاع"
-                description={`سياسة استرجاع الرسوم والاستبدال في منصة ${branding.nameAr}: شرح كامل لآلية استرجاع الجلسات والاشتراكات.`}
+                title="Refund Policy"
+                description={`Refund and cancellation policy on ${branding.nameEn}: a full explanation of how session and subscription refunds work.`}
                 canonical="https://bdaey.com/refund-policy"
             />
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">سياسة استرجاع الأموال للطلاب</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Refund Policy for Students</h1>
                     <p className="text-gray-600 dark:text-gray-400 text-lg">
-                        حقوقك في استرداد الرسوم في حال إلغاء الحصص أو حدوث مشاكل تقنية.
+                        Your rights to a refund when sessions are cancelled or technical problems occur.
                     </p>
                 </div>
 
@@ -34,13 +34,13 @@ const StudentRefundPolicy: React.FC = () => {
                                 <ClockIcon className="h-8 w-8" />
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">شروط إلغاء الحجز</h2>
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Booking Cancellation Terms</h2>
                                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                                    يمكنك إلغاء طلب الحجز في أي وقت **قبل موافقة المعلم عليه** (عندما تكون الحالة "قيد الانتظار").
+                                    You can cancel a booking request at any time **before the teacher approves it** (while the status is "Pending").
                                 </p>
                                 <ul className="space-y-2 text-gray-600 dark:text-gray-400 list-disc list-inside">
-                                    <li><strong className="text-gray-900 dark:text-white">قبل الموافقة:</strong> استرداد كامل وتلقائي للمبلغ إلى محفظتك.</li>
-                                    <li><strong className="text-gray-900 dark:text-white">بعد الموافقة:</strong> لا يمكن إلغاء الحجز من طرف الطالب إلا بالتواصل مع الدعم الفني أو المعلم، وقد تطبق سياسات خاصة.</li>
+                                    <li><strong className="text-gray-900 dark:text-white">Before approval:</strong> full, automatic refund to your wallet.</li>
+                                    <li><strong className="text-gray-900 dark:text-white">After approval:</strong> a student can only cancel by contacting support or the teacher, and special policies may apply.</li>
                                 </ul>
                             </div>
                         </div>
@@ -53,14 +53,14 @@ const StudentRefundPolicy: React.FC = () => {
                                 <ExclamationTriangleIcon className="h-8 w-8" />
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">غياب المعلم (No Show)</h2>
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Teacher No-Show</h2>
                                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                                    نلتزم بحفظ حقك ووقتك. في حال تغيب المعلم عن موعد الحصة المحدد:
+                                    We are committed to protecting your rights and your time. If the teacher misses the scheduled session:
                                 </p>
                                 <ul className="space-y-2 text-gray-600 dark:text-gray-400 list-disc list-inside">
-                                    <li>يتم إلغاء الجلسة تلقائياً أو يدوياً من قبل الإدارة.</li>
-                                    <li>يتم <strong>استرداد كامل المبلغ</strong> وإضافته إلى رصيد محفظتك فوراً.</li>
-                                    <li>يمكنك استخدام الرصيد لحجز حصة أخرى مع نفس المعلم أو معلم آخر.</li>
+                                    <li>The session is cancelled automatically or manually by the administration.</li>
+                                    <li>The <strong>full amount is refunded</strong> to your wallet balance immediately.</li>
+                                    <li>You can use the balance to book another session with the same teacher or a different one.</li>
                                 </ul>
                             </div>
                         </div>
@@ -73,9 +73,9 @@ const StudentRefundPolicy: React.FC = () => {
                                 <CheckCircleIcon className="h-8 w-8" />
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">مشاكل تقنية</h2>
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Technical Issues</h2>
                                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                                    في حال حدوث مشكلة تقنية من جانب المنصة منعت عقد الجلسة، يرجى التواصل مع الدعم الفني فوراً. سيتم التحقق من المشكلة وتعويضك بإعادة جدولة الجلسة أو استرداد المبلغ كاملاً.
+                                    If a platform-side technical issue prevents the session from taking place, please contact support immediately. We will investigate and compensate you by rescheduling the session or refunding the full amount.
                                 </p>
                             </div>
                         </div>
@@ -88,9 +88,9 @@ const StudentRefundPolicy: React.FC = () => {
                                 <CurrencyDollarIcon className="h-8 w-8" />
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">آلية الاسترداد</h2>
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">How Refunds Work</h2>
                                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                                    يتم إعادة المبالغ المستردة كرصيد في <strong>المحفظة الإلكترونية</strong> الخاصة بك في المنصة. يمكنك استخدام هذا الرصيد لدفع رسوم باقات أو حصص جديدة في أي وقت.
+                                    Refunded amounts are returned as credit to your <strong>digital wallet</strong> on the platform. You can use this credit to pay for new packages or sessions at any time.
                                 </p>
                             </div>
                         </div>

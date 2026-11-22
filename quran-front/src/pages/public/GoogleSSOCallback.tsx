@@ -11,7 +11,7 @@ const GoogleSSOCallback: React.FC = () => {
 
     useEffect(() => {
         if (!targetOrigin) {
-            toast.error('لم يتم تحديد النطاق المستهدف.');
+            toast.error('Target scope was not specified.');
         }
     }, [targetOrigin]);
 
@@ -35,12 +35,12 @@ const GoogleSSOCallback: React.FC = () => {
             window.opener.postMessage(
                 {
                     type: 'GOOGLE_ID_TOKEN_ERROR',
-                    message: 'فشل تسجيل الدخول بواسطة جوجل'
+                    message: 'Google sign-in failed'
                 },
                 targetOrigin
             );
         }
-        toast.error('فشل تسجيل الدخول بواسطة جوجل');
+        toast.error('Google sign-in failed');
         setTimeout(() => {
             window.close();
         }, 1500);
@@ -48,7 +48,7 @@ const GoogleSSOCallback: React.FC = () => {
 
     return (
         <>
-            <Seo title={`تسجيل الدخول عبر Google`} description={`صفحة تسجيل الدخول الآمن عبر Google لمنصة ${branding.nameAr}.`} noIndex />
+            <Seo title={`Sign in with Google`} description={`Secure Google sign-in page for ${branding.nameEn}.`} noIndex />
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6" dir="ltr">
             <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 text-center">
                 {/* Logo or Premium Icon */}
@@ -58,9 +58,9 @@ const GoogleSSOCallback: React.FC = () => {
                     </svg>
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">اتصال آمن بـ Google</h2>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Secure Google Connection</h2>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mb-8 leading-relaxed">
-                    يرجى الضغط على الزر أدناه لإتمام تسجيل الدخول بأمان عبر حساب جوجل الخاص بك.
+                    Please click the button below to complete sign-in securely with your Google account.
                 </p>
 
                 <div className="flex justify-center w-full google-btn-container">
@@ -87,7 +87,7 @@ const GoogleSSOCallback: React.FC = () => {
                 `}</style>
 
                 <p className="text-xs text-gray-400 mt-8">
-                    سيتم إغلاق هذه النافذة تلقائياً بعد نجاح تسجيل الدخول.
+                    This window will close automatically after a successful sign-in.
                 </p>
             </div>
         </div>

@@ -12,13 +12,13 @@ import GuestBanner from '../components/common/GuestBanner';
 const Teachers: React.FC = () => {
     const { isAuthenticated } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('الكل');
+    const [selectedCategory, setSelectedCategory] = useState('All');
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     // Advanced Filtering & Sorting State
-    const [gender, setGender] = useState('الكل');
+    const [gender, setGender] = useState('All');
     const [isOnline, setIsOnline] = useState(false);
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]); // min, max
     const [minRating, setMinRating] = useState<number>(0);
@@ -73,7 +73,7 @@ const Teachers: React.FC = () => {
 
     const handleToggleFavorite = async (id: number) => {
         if (!isAuthenticated) {
-            toast.error('يجب تسجيل الدخول لإضافة المعلم للمفضلة');
+            toast.error('You must sign in to add a teacher to favorites');
             return;
         }
 
@@ -90,7 +90,7 @@ const Teachers: React.FC = () => {
         } catch (error) {
             // Revert on failure
             setFavoriteIds(prev => !isFav ? prev.filter(fId => fId !== id) : [...prev, id]);
-            toast.error('حدث خطأ أثناء تحديث المفضلة');
+            toast.error('An error occurred while updating favorites');
         }
     };
 
@@ -124,7 +124,7 @@ const Teachers: React.FC = () => {
                 setError(null);
             } catch (err) {
                 console.error('Failed to fetch teachers:', err);
-                setError('فشل في تحميل قائمة المعلمين. يرجى المحاولة مرة أخرى.');
+                setError('Failed to load the teachers list. Please try again.');
             } finally {
                 setLoading(false);
             }
@@ -135,7 +135,7 @@ const Teachers: React.FC = () => {
     }, [currentPage, pageSize, debouncedSearch, selectedCategory, gender, priceRange, isOnline, minRating, sortBy, showFavoritesOnly, refreshKey]);
 
     // Define standard categories to map dynamic API data or fallback
-    const staticCategories = ['الكل', 'تحفيظ القرآن الكريم', 'مراجعة المحفوظ', 'تعليم التجويد النظري', 'تطبيق التجويد العملي', 'تفسير القرآن', 'القراءات العشر', 'تعليم الكبار', 'تعليم الأطفال'];
+    const staticCategories = ['All', 'Quran Memorization', 'Memorization Review', 'Theoretical Tajweed', 'Practical Tajweed', 'Quran Tafsir', 'The Ten Qiraat', 'Adult Education', 'Children Education'];
     // In the future, this can be hydrated dynamically from backend if needed.
     const categories = staticCategories;
 
@@ -177,7 +177,7 @@ const Teachers: React.FC = () => {
                     disabled={currentPage === 1}
                     className="px-4 py-2 mx-1 rounded-md text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
                 >
-                    السابق
+                    Previous
                 </button>
 
                 {startPage > 1 && (
@@ -201,7 +201,7 @@ const Teachers: React.FC = () => {
                     disabled={currentPage === totalPages}
                     className="px-4 py-2 mx-1 rounded-md text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700"
                 >
-                    التالي
+                    Next
                 </button>
             </div>
         );
@@ -216,10 +216,10 @@ const Teachers: React.FC = () => {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="max-w-3xl mx-auto text-center">
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                            نخبة من <span className="text-gold-500">أهل القران والعلم</span>
+                            An elite of <span className="text-gold-500">Quran and knowledge scholars</span>
                         </h1>
                         <p className="text-gray-600 dark:text-gray-300 mb-8">
-                            اختر المعلم المناسب لك وابدأ رحلتك في حفظ كتاب الله وتعلم العلوم الشرعية.
+                            Choose the right teacher for you and start your journey memorizing the Quran and learning Islamic sciences.
                         </p>
 
                         {/* Search Bar */}
@@ -227,7 +227,7 @@ const Teachers: React.FC = () => {
                             <input
                                 id="search-input"
                                 type="text"
-                                placeholder="ابحث باسم المعلم أو المادة (مثال: تجويد، فقه)..."
+                                placeholder="Search by teacher name or subject (e.g. Tajweed, Fiqh)..."
                                 className="w-full py-4 pr-12 pl-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all shadow-sm"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -262,13 +262,13 @@ const Teachers: React.FC = () => {
 
                     {/* Filter Sidebar Toggle (Mobile) */}
                     <div className="lg:hidden flex justify-between items-center mb-4">
-                        <span className="font-bold text-gray-900 dark:text-white">النتائج ({totalCount})</span>
+                        <span className="font-bold text-gray-900 dark:text-white">Results ({totalCount})</span>
                         <button
                             onClick={() => setShowMobileFilters(!showMobileFilters)}
                             className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium"
                         >
                             <FunnelIcon className="h-5 w-5" />
-                            فلاتر متقدمة
+                            Advanced Filters
                         </button>
                     </div>
 
@@ -277,20 +277,20 @@ const Teachers: React.FC = () => {
                         <div className="flex items-center justify-between border-b pb-4 border-gray-100 dark:border-gray-700">
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                 <FunnelIcon className="h-5 w-5 text-primary-600" />
-                                الفلترة وتخصيص البحث
+                                Filter and customize your search
                             </h2>
                             <button
                                 onClick={() => {
-                                    setGender('الكل');
+                                    setGender('All');
                                     setIsOnline(false);
                                     setPriceRange([0, 1000]);
-                                    setSelectedCategory('الكل');
+                                    setSelectedCategory('All');
                                     setMinRating(0);
                                     setShowFavoritesOnly(false);
                                 }}
                                 className="text-xs text-primary-600 hover:underline font-medium"
                             >
-                                تفريغ
+                                Clear
                             </button>
                         </div>
 
@@ -299,7 +299,7 @@ const Teachers: React.FC = () => {
                             <label className="flex items-center justify-between cursor-pointer group bg-red-50 dark:bg-red-900/10 p-3 rounded-xl border border-red-100 dark:border-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors">
                                 <span className="text-sm font-bold text-red-700 dark:text-red-400 flex items-center gap-2">
                                     <HeartIcon className="h-5 w-5" />
-                                    المعلمين المفضلين
+                                    Favorite Teachers
                                 </span>
                                 <div className="relative">
                                     <input
@@ -308,7 +308,7 @@ const Teachers: React.FC = () => {
                                         checked={showFavoritesOnly}
                                         onChange={(e) => {
                                             if (!isAuthenticated && e.target.checked) {
-                                                toast.error('يجب تسجيل الدخول لعرض قائمة المفضلين');
+                                                toast.error('You must sign in to view your favorites');
                                                 return;
                                             }
                                             setShowFavoritesOnly(e.target.checked);
@@ -322,9 +322,9 @@ const Teachers: React.FC = () => {
 
                         {/* Gender Filter */}
                         <div>
-                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3">نوع المعلم</h3>
+                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3">Teacher Gender</h3>
                             <div className="space-y-2">
-                                {['الكل', 'Male', 'Female'].map(g => (
+                                {['All', 'Male', 'Female'].map(g => (
                                     <label key={g} className="flex items-center gap-3 cursor-pointer">
                                         <input
                                             type="radio"
@@ -334,7 +334,7 @@ const Teachers: React.FC = () => {
                                             className="w-4 h-4 text-primary-600 focus:ring-primary-500 border-gray-300"
                                         />
                                         <span className="text-sm text-gray-700 dark:text-gray-300">
-                                            {g === 'الكل' ? 'أي نوع' : g === 'Male' ? 'معلمين (رجال)' : 'معلمات (إناث)'}
+                                            {g === 'All' ? 'Any' : g === 'Male' ? 'Male teachers' : 'Female teachers'}
                                         </span>
                                     </label>
                                 ))}
@@ -343,7 +343,7 @@ const Teachers: React.FC = () => {
 
                         {/* Online Status */}
                         <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3">التواجد </h3>
+                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3">Availability</h3>
                             <label className="flex items-center gap-3 cursor-pointer">
                                 <input
                                     type="checkbox"
@@ -353,20 +353,20 @@ const Teachers: React.FC = () => {
                                 />
                                 <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
                                     <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-                                    متواجد الآن
+                                    Online now
                                 </span>
                             </label>
                         </div>
 
                         {/* Rating Filter */}
                         <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3">التقييم</h3>
+                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3">Rating</h3>
                             <div className="space-y-2">
                                 {[
-                                    { value: 0, label: 'الكل' },
-                                    { value: 5, label: '5 نجوم' },
-                                    { value: 4, label: '4 نجوم وأكثر' },
-                                    { value: 3, label: '3 نجوم وأكثر' },
+                                    { value: 0, label: 'All' },
+                                    { value: 5, label: '5 stars' },
+                                    { value: 4, label: '4+ stars' },
+                                    { value: 3, label: '3+ stars' },
                                 ].map((ratingOption) => (
                                     <label key={ratingOption.value} className="flex items-center gap-3 cursor-pointer">
                                         <input
@@ -391,10 +391,10 @@ const Teachers: React.FC = () => {
 
                         {/* Price Range Filter */}
                         <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4">سعر الحصة (جنيه)</h3>
+                            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4">Session Price (EGP)</h3>
                             <div className="flex gap-4">
                                 <div className="flex-1">
-                                    <label className="text-xs text-gray-500 mb-1 block">من</label>
+                                    <label className="text-xs text-gray-500 mb-1 block">From</label>
                                     <input
                                         type="number"
                                         min="0"
@@ -404,7 +404,7 @@ const Teachers: React.FC = () => {
                                     />
                                 </div>
                                 <div className="flex-1">
-                                    <label className="text-xs text-gray-500 mb-1 block">إلى</label>
+                                    <label className="text-xs text-gray-500 mb-1 block">To</label>
                                     <input
                                         type="number"
                                         min="0"
@@ -422,20 +422,20 @@ const Teachers: React.FC = () => {
                         {/* Header Details (Sort + Results Count) */}
                         <div className="hidden lg:flex justify-between items-center mb-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
                             <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">
-                                وجدنا <span className="text-primary-600 font-bold">{totalCount}</span> معلماً مميزاً يناسب طلبك
+                                We found <span className="text-primary-600 font-bold">{totalCount}</span> teachers matching your request
                             </span>
 
                             <div className="flex items-center gap-2">
-                                <label className="text-sm text-gray-500 font-medium whitespace-nowrap">الترتيب حسب:</label>
+                                <label className="text-sm text-gray-500 font-medium whitespace-nowrap">Sort by:</label>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
                                     className="border-none bg-gray-50 dark:bg-gray-900 text-sm rounded-lg focus:ring-0 py-2 pl-8 pr-3 font-semibold text-gray-700 dark:text-gray-200"
                                 >
-                                    <option value="rating">الأعلى تقييماً</option>
-                                    <option value="price_asc">الأقل سعراً</option>
-                                    <option value="price_desc">الأعلى سعراً</option>
-                                    <option value="requests">الأكثر خبرة وطلباً</option>
+                                    <option value="rating">Highest rated</option>
+                                    <option value="price_asc">Lowest price</option>
+                                    <option value="price_desc">Highest price</option>
+                                    <option value="requests">Most experienced</option>
                                 </select>
                             </div>
                         </div>
@@ -459,7 +459,7 @@ const Teachers: React.FC = () => {
                                     onClick={() => window.location.reload()}
                                     className="mt-4 px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                                 >
-                                    إعادة المحاولة
+                                    Try Again
                                 </button>
                             </div>
                         ) : teachers.length > 0 ? (
@@ -484,18 +484,18 @@ const Teachers: React.FC = () => {
                                 <div className="bg-gray-100 dark:bg-gray-800 rounded-full h-20 w-20 flex items-center justify-center mx-auto mb-4">
                                     <FunnelIcon className="h-10 w-10 text-gray-400" />
                                 </div>
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">لا توجد نتائج مطابقة</h3>
-                                <p className="text-gray-500 dark:text-gray-400 mt-2">جرب البحث بكلمات مختلفة أو قم بإزالة بعض الفلاتر.</p>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">No matching results</h3>
+                                <p className="text-gray-500 dark:text-gray-400 mt-2">Try different keywords or remove some filters.</p>
 
-                                {(searchTerm || selectedCategory !== 'الكل') && (
+                                {(searchTerm || selectedCategory !== 'All') && (
                                     <button
                                         onClick={() => {
                                             setSearchTerm('');
-                                            setSelectedCategory('الكل');
+                                            setSelectedCategory('All');
                                         }}
                                         className="mt-6 px-6 py-2 bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400 font-semibold rounded-lg hover:bg-primary-100 transition-colors"
                                     >
-                                        عرض جميع المعلمين
+                                        View All Teachers
                                     </button>
                                 )}
                             </div>

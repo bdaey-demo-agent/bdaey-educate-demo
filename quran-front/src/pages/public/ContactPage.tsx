@@ -9,8 +9,8 @@ const ContactPage: React.FC = () => {
     return (
         <>
             <Seo
-                title="اتصل بنا"
-                description={`تواصل مع فريق منصة ${branding.nameAr}. استفسارات، اقتراحات، أو دعم فني — نحن هنا لمساعدتك.`}
+                title="Contact Us"
+                description={`Contact the ${branding.nameEn} team. Questions, suggestions, or technical support, we are here to help.`}
                 canonical="https://bdaey.com/contact"
             />
             <ContactForm />
@@ -38,15 +38,15 @@ function ContactForm() {
 
             await messageService.sendMessage({
                 ...data,
-                subject: data.reason === 'Suspension' ? 'اعتراض على تعليق حساب' : 'رسالة من نموذج التواصل'
+                subject: data.reason === 'Suspension' ? 'Account suspension appeal' : 'Message from the contact form'
             });
 
             setSubmitted(true);
-            toast.success('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
+            toast.success('Your message was sent! We will get back to you soon.');
             form.reset();
         } catch (error) {
             console.error(error);
-            toast.error('حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقاً.');
+            toast.error('An error occurred while sending. Please try again later.');
         }
     };
 
@@ -56,14 +56,14 @@ function ContactForm() {
                 <div className="md:flex">
 
                     <div className="p-8 w-full">
-                        <div className="uppercase tracking-wide text-sm text-blue-500 font-semibold mb-1">الدعم الفني</div>
-                        <h1 className="block mt-1 text-lg leading-tight font-medium text-gray-900 dark:text-white">تواصل معنا</h1>
-                        <p className="mt-2 text-gray-500">نحن هنا لمساعدتك. املأ النموذج وسنرد عليك في أقرب وقت.</p>
+                        <div className="uppercase tracking-wide text-sm text-blue-500 font-semibold mb-1">Support</div>
+                        <h1 className="block mt-1 text-lg leading-tight font-medium text-gray-900 dark:text-white">Contact Us</h1>
+                        <p className="mt-2 text-gray-500">We are here to help. Fill out the form and we will reply as soon as possible.</p>
 
                         {/* WhatsApp Contact */}
                         <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/10 border border-green-100 rounded-lg flex items-center justify-between">
                             <div>
-                                <p className="font-semibold text-green-800 dark:text-green-400">تواصل سريع عبر واتساب</p>
+                                <p className="font-semibold text-green-800 dark:text-green-400">Quick contact via WhatsApp</p>
                             </div>
                             <a
                                 href="https://wa.me/12048009763"
@@ -78,7 +78,7 @@ function ContactForm() {
                         {!submitted ? (
                             <form onSubmit={handleSubmit} className="mt-6 grid grid-cols-1 gap-y-6">
                                 <div>
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">الاسم</label>
+                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
                                     <input
                                         type="text"
                                         name="name"
@@ -88,16 +88,16 @@ function ContactForm() {
                                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600" />
                                 </div>
                                 <div>
-                                    <label htmlFor="reason" className="block text-sm font-medium text-gray-700 dark:text-gray-300">سبب التواصل</label>
+                                    <label htmlFor="reason" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Reason</label>
                                     <select name="reason" id="reason" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600">
-                                        <option value="General">استفسار عام</option>
-                                        <option value="Suspension">تعليق الحساب</option>
-                                        <option value="Suggestion">اقتراح</option>
-                                        <option value="Complaint">شكوى</option>
+                                        <option value="General">General inquiry</option>
+                                        <option value="Suspension">Account suspension</option>
+                                        <option value="Suggestion">Suggestion</option>
+                                        <option value="Complaint">Complaint</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">البريد الإلكتروني</label>
+                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
                                     <input
                                         type="email"
                                         name="email"
@@ -109,18 +109,18 @@ function ContactForm() {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300">الرسالة</label>
+                                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
                                     <textarea id="message" name="message" rows={4} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600"></textarea>
                                 </div>
                                 <div>
                                     <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                        إرسال
+                                        Send
                                     </button>
                                 </div>
                             </form>
                         ) : (
                             <div className="mt-6 text-center py-10 bg-green-50 rounded-lg">
-                                <p className="text-green-800 font-medium">شكراً لك! تم استلام رسالتك بنجاح.</p>
+                                <p className="text-green-800 font-medium">Thank you! Your message has been received.</p>
                             </div>
                         )}
 

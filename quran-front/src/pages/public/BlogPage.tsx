@@ -6,8 +6,8 @@ const BlogPage: React.FC = () => {
     return (
         <>
             <Seo
-                title="المدونة"
-                description={`مدونة ${branding.nameAr}: مقالات ونصائح عن تحفيظ القرآن الكريم، التجويد، القراءات العشر، وأفضل ممارسات التعليم عن بُعد.`}
+                title="Blog"
+                description={`The ${branding.nameEn} blog: articles and tips on Quran memorization, Tajweed, the Ten Qiraat, and best practices for online learning.`}
                 canonical="https://bdaey.com/blog"
             />
             <BlogContent />
@@ -19,27 +19,27 @@ function BlogContent() {
     const posts = [
         {
             id: 1,
-            title: "كيف تبدأ حفظ القرآن الكريم؟",
-            excerpt: "نصائح عملية وخطوات منهجية للمبتدئين في رحلة حفظ كتاب الله...",
+            title: "How to Start Memorizing the Quran?",
+            excerpt: "Practical tips and structured steps for beginners on the journey of memorizing the Quran...",
             date: "2024-01-15",
-            author: "الشيخ أحمد",
-            category: "نصائح تعليمية"
+            author: "Sheikh Ahmed",
+            category: "Learning Tips"
         },
         {
             id: 2,
-            title: "أهمية التجويد في القراءة الصحيحة",
-            excerpt: "لماذا يعتبر التجويد ركيزة أساسية، وكيف تتقن مخارج الحروف...",
+            title: "The Importance of Tajweed for Correct Recitation",
+            excerpt: "Why Tajweed is a core pillar, and how to master the articulation points of letters...",
             date: "2024-01-10",
-            author: "أ. فاطمة",
-            category: "علوم القرآن"
+            author: "Ms. Fatima",
+            category: "Quran Sciences"
         },
         {
             id: 3,
-            title: `تحديثات منصة ${branding.nameAr} الجديدة`,
-            excerpt: "تعرف على أحدث المميزات التي أضفناها لتسهيل رحلتك التعليمية...",
+            title: `New ${branding.nameEn} Platform Updates`,
+            excerpt: "Discover the latest features we added to make your learning journey easier...",
             date: "2024-01-05",
-            author: "فريق المنصة",
-            category: "أخبار المنصة"
+            author: "Platform Team",
+            category: "Platform News"
         }
     ];
 
@@ -47,9 +47,9 @@ function BlogContent() {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-12">
-                    <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">المدونة</h1>
+                    <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">Blog</h1>
                     <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
-                        مقالات، نصائح، وأخبار تهم كل طالب ومعلم قرآن.
+                        Articles, tips, and news for every Quran student and teacher.
                     </p>
                 </div>
 

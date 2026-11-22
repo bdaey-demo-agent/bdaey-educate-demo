@@ -109,7 +109,7 @@ const OnboardingGuide: React.FC<OnboardingGuideProps> = ({
                                     className="text-xs font-bold text-gold-600 hover:text-gold-700 dark:text-gold-400 inline-flex items-center gap-1 group"
                                 >
                                     {step.linkText || 'Get Started'}
-                                    <span className="group-hover:-translate-x-1 transition-transform">←</span>
+                                    <span className="group-hover:-translate-x-1 transition-transform">→</span>
                                 </Link>
                             )}
                         </div>

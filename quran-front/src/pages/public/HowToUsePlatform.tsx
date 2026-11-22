@@ -17,134 +17,134 @@ type Scenario = {
 const HowToUsePlatform: React.FC = () => {
     const studentSteps: Step[] = [
         {
-            title: "إنشاء حساب وتسجيل الدخول",
-            youDo: "سجّل كطالب ثم ادخل لحسابك.",
+            title: "Create an Account and Sign In",
+            youDo: "Sign up as a student, then log into your account.",
             systemDoes:
-                "يجهّز لك لوحة تحكم الطالب ويعرض لك الباقات والمعلمين المتاحين.",
+                "Sets up your student dashboard and shows you the available packages and teachers.",
         },
         {
-            title: "تصفح المعلمين والباقات",
-            youDo: "اختار معلم وباقة تناسبك (السعر/عدد الجلسات/المدة/التوفر).",
+            title: "Browse Teachers and Packages",
+            youDo: "Pick a teacher and a package that suits you (price / number of sessions / duration / availability).",
             systemDoes:
-                "يعرض تفاصيل الباقة وتوفر المواعيد ويجهز تجربة الحجز بشكل واضح.",
+                "Shows package details and slot availability, and makes booking clear and simple.",
         },
         {
-            title: "شحن المحفظة قبل الحجز",
-            youDo: "اشحن محفظتك لو الرصيد غير كافي.",
+            title: "Top Up Your Wallet Before Booking",
+            youDo: "Top up your wallet if your balance is not enough.",
             systemDoes:
-                "يمنع إتمام الحجز تلقائيًا لو الرصيد غير كافي ويظهر لك السبب بوضوح.",
+                "Automatically blocks the booking if the balance is insufficient and shows you the reason clearly.",
         },
         {
-            title: "عمل حجز للباقة",
-            youDo: "اختار الباقة وحدد المواعيد المقترحة المناسبة لك.",
+            title: "Book a Package",
+            youDo: "Choose the package and pick the suggested times that suit you.",
             systemDoes:
-                "يتحقق من التعارضات، ينشئ الحجز (قيد الانتظار)، ويولّد جلسات تلقائيًا بحسب الباقة.",
+                "Checks for conflicts, creates the booking (Pending), and automatically generates sessions based on the package.",
         },
         {
-            title: "متابعة حالة الحجز",
-            youDo: "تابع حالة الحجز من لوحة التحكم.",
+            title: "Track Your Booking Status",
+            youDo: "Track the booking status from your dashboard.",
             systemDoes:
-                "الحجز يظل (قيد الانتظار) حتى يقبله المعلم. عند القبول يتحول (مؤكد).",
+                "The booking stays (Pending) until the teacher accepts it. Once accepted, it becomes (Confirmed).",
         },
         {
-            title: "حضور الجلسات داخل القاعة",
-            youDo: "ادخل من جدولك للقاعة في وقت الجلسة.",
+            title: "Attend Sessions in the Classroom",
+            youDo: "Enter the classroom from your schedule at session time.",
             systemDoes:
-                "يشغّل القاعة المباشرة ويعرض حالة الجلسة (مجدولة / جارية / مكتملة).",
+                "Runs the live classroom and shows the session status (Scheduled / In Progress / Completed).",
         },
         {
-            title: "تقييم الجلسة بعد الانتهاء",
-            youDo: "قيّم الجلسة بعد ما تنتهي.",
+            title: "Rate the Session After It Ends",
+            youDo: "Rate the session once it is finished.",
             systemDoes:
-                "يسجل تقييمك ضمن تقييمات المعلم ويحدّث متوسط التقييمات.",
+                "Records your rating with the teacher's ratings and updates the average.",
         },
     ];
 
     const teacherSteps: Step[] = [
         {
-            title: "إنشاء حساب وتأكيد البريد",
-            youDo: "سجّل كمعلم وفعّل البريد من رابط التحقق.",
+            title: "Create an Account and Verify Your Email",
+            youDo: "Sign up as a teacher and verify your email via the verification link.",
             systemDoes:
-                "يمنع تسجيل الدخول قبل تأكيد البريد لضمان الأمان وجودة الحسابات.",
+                "Blocks sign-in before email verification to ensure account security and quality.",
         },
         {
-            title: "إنشاء باقات تعليمية",
+            title: "Create Teaching Packages",
             youDo:
-                "حدد السعر، مدة الجلسة، عدد الجلسات، وأيام/ساعات التوفر.",
+                "Set the price, session duration, number of sessions, and your available days/hours.",
             systemDoes:
-                "يبني باقة واضحة للطلاب ويحسب التوفر بناءً على إعداداتك.",
+                "Builds a clear package for students and computes availability from your settings.",
         },
         {
-            title: "استقبال الحجوزات وقبول/رفض",
-            youDo: "راجع الحجوزات الجديدة ثم اقبل أو ارفض مع سبب.",
+            title: "Receive Bookings and Accept/Decline",
+            youDo: "Review new bookings, then accept or decline with a reason.",
             systemDoes:
-                "عند القبول يتحول الحجز (مؤكد)، وعند الرفض يتحول (ملغى) ويتم رد المبلغ للطالب حسب النظام.",
+                "On acceptance the booking becomes (Confirmed); on decline it becomes (Cancelled) and the student is refunded per policy.",
         },
         {
-            title: "إدارة جدول الجلسات",
-            youDo: "تابع جدولك وجهز للجلسات القادمة.",
+            title: "Manage Your Session Schedule",
+            youDo: "Follow your schedule and prepare for upcoming sessions.",
             systemDoes:
-                "يعرض حالات الجلسات ويمنع التعارض ويظهر كل شيء منظم داخل لوحة المعلم.",
+                "Shows session statuses, prevents conflicts, and keeps everything organized in the teacher dashboard.",
         },
         {
-            title: "بدء الجلسة في الوقت الصحيح",
-            youDo: "ابدأ الجلسة من صفحة الجلسة وقتها.",
+            title: "Start the Session at the Right Time",
+            youDo: "Start the session from the session page when it is time.",
             systemDoes:
-                "يمنع بدء الجلسة مبكرًا بشكل زائد (أكثر من 15 دقيقة قبل الموعد).",
+                "Prevents starting a session too early (more than 15 minutes before its time).",
         },
         {
-            title: "إكمال الجلسة وإنهائها",
-            youDo: "انهِ الجلسة بعد الانتهاء.",
+            title: "Complete and End the Session",
+            youDo: "End the session when you are done.",
             systemDoes:
-                "يحوّل الجلسة (مكتملة) ويجهزها للتقييم وتحديث السجلات.",
+                "Marks the session (Completed) and prepares it for rating and record updates.",
         },
         {
-            title: "تنبيه مهم: حذف باقة",
-            youDo: "احذف الباقة فقط عند الضرورة.",
+            title: "Important Note: Deleting a Package",
+            youDo: "Delete a package only when necessary.",
             systemDoes:
-                "قد يلغي الحجوزات المرتبطة ويسترد الطلاب أموالهم، وقد تُطبق غرامة وفق سياسات المنصة.",
+                "This may cancel related bookings, refund students, and a penalty may apply under platform policies.",
         },
     ];
 
     const scenarios: Scenario[] = [
         {
-            q: "لو حاولت أحجز والرصيد غير كافي؟",
-            a: "لن يكتمل الحجز، وستظهر رسالة أن الرصيد غير كافي. اشحن المحفظة ثم أعد المحاولة.",
+            q: "What if I try to book with insufficient balance?",
+            a: "The booking will not complete, and you will see an insufficient-balance message. Top up your wallet and try again.",
         },
         {
-            q: "لو المواعيد المقترحة فيها تعارض؟",
-            a: "النظام يمنع الحجز ويطلب منك اختيار مواعيد أخرى بدون تعارض.",
+            q: "What if the suggested times conflict?",
+            a: "The system blocks the booking and asks you to choose conflict-free times.",
         },
         {
-            q: "لو المعلم رفض الحجز؟",
-            a: "الحجز يتحول إلى (ملغى) ويتم التعامل مع الاسترداد حسب سياسات المنصة.",
+            q: "What if the teacher declines the booking?",
+            a: "The booking becomes (Cancelled) and the refund is handled per platform policies.",
         },
         {
-            q: "لو المعلم حاول يبدأ الجلسة بدري؟",
-            a: "النظام يرفض بدء الجلسة قبل الوقت المسموح (مثلاً قبل 15 دقيقة من الموعد).",
+            q: "What if the teacher tries to start the session early?",
+            a: "The system refuses to start the session before the allowed time (e.g. earlier than 15 minutes before the slot).",
         },
         {
-            q: "لو حصل معاك اي مشكله ",
-            a: "يمكنك التواصل معنا عبر صفحة 'اتصل بنا'.",
+            q: "What if I run into any problem?",
+            a: "You can reach us through the Contact Us page.",
         },
         {
-            q: "لو المعلم لم يحضر الجلسه ",
-            a: "يمكنك الإبلاغ عن المشكلة، وسيتم مراجعة الأمر وإعادة حقك بالكامل.",
+            q: "What if the teacher does not show up?",
+            a: "You can report the issue; it will be reviewed and you will be fully refunded.",
         },
     ];
 
     const faqs: Scenario[] = [
         {
-            q: "هل أقدر أحجز مع معلم من دولة مختلفة؟",
-            a: "نعم. المنصة تعرض المواعيد بشكل منظم حسب إعدادات التوقيت لضمان وضوح الموعد لكل طرف.",
+            q: "Can I book with a teacher in a different country?",
+            a: "Yes. The platform presents times clearly according to timezone settings so the schedule is unambiguous for both sides.",
         },
         {
-            q: "هل أقدر ألغي الحجز؟",
-            a: "المنصة توفر الإلغاء وفق حالات محددة (مثل قيد الانتظار) وسياسات الاسترداد المطبقة.",
+            q: "Can I cancel a booking?",
+            a: "Cancellation is available in specific states (such as Pending) under the applicable refund policies.",
         },
         {
-            q: "هل المعلم يقدر يغير الباقة بعد ما الطلب اتعمل؟",
-            a: "يمكن تعديل/إدارة الباقات من لوحة المعلم، لكن الحجوزات القائمة تتأثر حسب سياسات المنصة.",
+            q: "Can the teacher change the package after a request is made?",
+            a: "Packages can be edited from the teacher dashboard, but existing bookings are affected according to platform policies.",
         },
     ];
 
@@ -189,11 +189,11 @@ const HowToUsePlatform: React.FC = () => {
                                     </h3>
                                     <div className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-200">
                                         <p>
-                                            <span className="font-semibold">أنت تعمل:</span>{" "}
+                                            <span className="font-semibold">You do:</span>{" "}
                                             {s.youDo}
                                         </p>
                                         <p>
-                                            <span className="font-semibold">المنصة تعمل:</span>{" "}
+                                            <span className="font-semibold">The platform does:</span>{" "}
                                             {s.systemDoes}
                                         </p>
                                     </div>
@@ -209,8 +209,8 @@ const HowToUsePlatform: React.FC = () => {
     return (
         <>
             <Seo
-                title={`دليل استخدام منصة ${branding.nameAr}`}
-                description={`دليل شامل لاستخدام منصة ${branding.nameAr}: شرح وافي للطلاب والمعلمين حول كيفية تصفح المعلمين، حجز الجلسات، وإدارة الباقات.`}
+                title={`${branding.nameEn} User Guide`}
+                description={`A complete guide to using ${branding.nameEn}: detailed instructions for students and teachers on browsing teachers, booking sessions, and managing packages.`}
                 canonical="https://bdaey.com/how-to-use"
             />
             <div className="font-body bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -219,11 +219,11 @@ const HowToUsePlatform: React.FC = () => {
                 <div className="max-w-6xl mx-auto px-4">
                     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl p-8 md:p-10 shadow-sm">
                         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">
-                            كيفية استخدام المنصة
+                            How to Use the Platform
                         </h1>
                         <p className="mt-3 text-gray-600 dark:text-gray-300 max-w-2xl">
-                            دليل خطوة بخطوة للطلاب والمعلمين: من إنشاء الحساب، إلى الحجز،
-                            ثم حضور الجلسات داخل القاعة المباشرة.
+                            A step-by-step guide for students and teachers: from creating an account, to booking,
+                            to attending sessions in the live classroom.
                         </p>
 
                         <div className="mt-6 flex flex-wrap gap-3">
@@ -231,13 +231,13 @@ const HowToUsePlatform: React.FC = () => {
                                 onClick={() => scrollTo("student")}
                                 className="px-5 py-3 rounded-2xl bg-gray-900 text-white hover:opacity-90"
                             >
-                                ابدأ كطالب
+                                Start as a Student
                             </button>
                             <button
                                 onClick={() => scrollTo("teacher")}
                                 className="px-5 py-3 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 hover:opacity-90"
                             >
-                                ابدأ كمعلم
+                                Start as a Teacher
                             </button>
 
                             <div className="flex-1" />
@@ -246,7 +246,7 @@ const HowToUsePlatform: React.FC = () => {
                                 to="/teachers-public"
                                 className="px-5 py-3 rounded-2xl bg-blue-600 text-white hover:opacity-90"
                             >
-                                تصفح المعلمين
+                                Browse Teachers
                             </Link>
                         </div>
                     </div>
@@ -255,16 +255,16 @@ const HowToUsePlatform: React.FC = () => {
                     <div className="grid md:grid-cols-3 gap-5 mt-6">
                         {[
                             {
-                                t: "1) اختر باقة مناسبة",
-                                d: "تصفح المعلمين واختر باقة حسب السعر والمدة والتوفر.",
+                                t: "1) Choose a suitable package",
+                                d: "Browse teachers and pick a package by price, duration, and availability.",
                             },
                             {
-                                t: "2) احجز وتابع الحالة",
-                                d: "حدد مواعيدك المقترحة وتابع قبول المعلم للحجز.",
+                                t: "2) Book and track the status",
+                                d: "Pick your suggested times and track the teacher's acceptance.",
                             },
                             {
-                                t: "3) احضر وقيّم",
-                                d: "ادخل القاعة في الموعد، ثم قيّم الجلسة بعد الانتهاء.",
+                                t: "3) Attend and rate",
+                                d: "Enter the classroom on time, then rate the session afterwards.",
                             },
                         ].map((x, i) => (
                             <div
@@ -286,16 +286,16 @@ const HowToUsePlatform: React.FC = () => {
             {/* Student */}
             <StepsSection
                 id="student"
-                title="كيفية استخدام المنصة كطالب"
-                subtitle="مسار الطالب من أول التسجيل لحد حضور الجلسات وتقييمها."
+                title="How to Use the Platform as a Student"
+                subtitle="The student journey from signing up to attending and rating sessions."
                 steps={studentSteps}
             />
 
             {/* Teacher */}
             <StepsSection
                 id="teacher"
-                title="كيفية استخدام المنصة كمعلم"
-                subtitle="مسار المعلم لإنشاء الباقات واستقبال الحجوزات وإدارة الجلسات."
+                title="How to Use the Platform as a Teacher"
+                subtitle="The teacher journey: creating packages, receiving bookings, and managing sessions."
                 steps={teacherSteps}
             />
 
@@ -303,10 +303,10 @@ const HowToUsePlatform: React.FC = () => {
             <section className="py-12">
                 <div className="max-w-6xl mx-auto px-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
-                        لو حصل كذا… يحصل كذا
+                        If This Happens... That Happens
                     </h2>
                     <p className="mt-2 text-gray-600 dark:text-gray-300">
-                        سيناريوهات سريعة لتوضيح سلوك المنصة في الحالات الشائعة.
+                        Quick scenarios explaining how the platform behaves in common cases.
                     </p>
 
                     <div className="grid md:grid-cols-2 gap-5 mt-6">
@@ -331,7 +331,7 @@ const HowToUsePlatform: React.FC = () => {
             <section className="py-12">
                 <div className="max-w-6xl mx-auto px-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
-                        الأسئلة الشائعة
+                        Frequently Asked Questions
                     </h2>
 
                     <div className="mt-6 space-y-3">
@@ -353,10 +353,10 @@ const HowToUsePlatform: React.FC = () => {
                     <div className="mt-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl p-6 flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
                         <div>
                             <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                                جاهز تبدأ؟
+                                Ready to Start?
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-300">
-                                أنشئ حسابك أو تصفح المعلمين وابدأ أول جلسة.
+                                Create your account or browse teachers and start your first session.
                             </p>
                         </div>
                         <div className="flex gap-3 flex-wrap">
@@ -364,13 +364,13 @@ const HowToUsePlatform: React.FC = () => {
                                 to="/register/student"
                                 className="px-5 py-3 rounded-2xl bg-gray-900 text-white hover:opacity-90"
                             >
-                                تسجيل طالب
+                                Student Sign Up
                             </Link>
                             <Link
                                 to="/register/teacher"
                                 className="px-5 py-3 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 hover:opacity-90"
                             >
-                                تسجيل معلم
+                                Teacher Sign Up
                             </Link>
                         </div>
                     </div>

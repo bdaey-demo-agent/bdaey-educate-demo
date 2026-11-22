@@ -21,7 +21,7 @@ const LandingPage: React.FC = () => {
 
 
     if (isLoading) {
-        return <div className="min-h-screen flex items-center justify-center">جاري التحميل...</div>;
+        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
     }
 
     if (isAuthenticated && user) {
@@ -33,8 +33,8 @@ const LandingPage: React.FC = () => {
     return (
         <>
             <Seo
-                title={`${branding.nameAr} - منصة تحفيظ القرآن الكريم أونلاين`}
-                description={`منصة ${branding.nameAr}: تعلم القرآن الكريم والتجويد والقراءات العشر مع نخبة من المعلمين المعتمدين والمجازين. جلسات فردية مباشرة، جدول مرن، وأسعار تنافسية.`}
+                title={`${branding.nameEn} - Online Quran Memorization Platform`}
+                description={`${branding.nameEn}: learn Quran, Tajweed and the Ten Qiraat with certified, Ijazah-holding teachers. Live one-on-one sessions, flexible scheduling, and competitive prices.`}
                 canonical="https://bdaey.com"
             />
             <OrganizationSchema />
@@ -43,7 +43,7 @@ const LandingPage: React.FC = () => {
             <section className="relative overflow-hidden">
                 <div className="absolute inset-0">
                     <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
-                    {/* لو عندك صورة خلفية في CSS للـ landing-hero خليه، وإلا ده هيشتغل من غيرها */}
+                    {/* If you have a landing-hero background image in CSS keep it, otherwise this works without one */}
                     <div className="landing-hero h-full w-full" />
                 </div>
 
@@ -51,15 +51,15 @@ const LandingPage: React.FC = () => {
                     <div className="mx-auto max-w-3xl text-center">
                         <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm text-white ring-1 ring-white/20">
                             <CheckBadgeIcon className="h-4 w-4" />
-                            معلمون موثقون • جلسات مباشرة • محفظة آمنة
+                            Certified teachers • Live sessions • Secure wallet
                         </span>
 
                         <h1 className="mt-6 text-4xl md:text-6xl font-bold leading-tight text-white">
-                            منصة <span className="text-gold">{branding.nameAr}</span> لتعليم القرآن
+                            <span className="text-gold">{branding.nameEn}</span> Quran Learning Platform
                         </h1>
 
                         <p className="mt-5 text-lg md:text-xl text-white/90 leading-relaxed">
-                            تعلّم مع معلمين مجازين عبر جلسات فردية مباشرة، بمرونة في المواعيد وخطة تناسب مستواك.
+                            Learn with Ijazah-holding teachers in live one-on-one sessions, with flexible scheduling and a plan that fits your level.
                         </p>
 
                         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -68,20 +68,20 @@ const LandingPage: React.FC = () => {
                                 data-tour="cta-register-student"
                                 className="w-full sm:w-auto rounded-xl bg-gold px-7 py-3 text-base font-semibold text-gray-900 hover:opacity-95 transition"
                             >
-                                ابدأ كطالب
+                                Start as a Student
                             </Link>
                             <Link
                                 to="/teachers-public"
                                 data-tour="cta-browse-teachers"
                                 className="w-full sm:w-auto rounded-xl bg-white/10 px-7 py-3 text-base font-semibold text-white ring-1 ring-white/25 hover:bg-white/15 transition"
                             >
-                                تصفّح المعلمين
+                                Browse Teachers
                             </Link>
                             <Link
                                 to="/how-it-works"
                                 className="w-full sm:w-auto rounded-xl px-7 py-3 text-base font-semibold text-white/90 hover:text-white transition"
                             >
-                                كيف تعمل المنصة؟
+                                How It Works
                             </Link>
                         </div>
 
@@ -90,23 +90,23 @@ const LandingPage: React.FC = () => {
                             <div className="rounded-xl bg-white/10 ring-1 ring-white/15 p-4">
                                 <div className="flex items-center justify-center gap-2">
                                     <ShieldCheckIcon className="h-5 w-5" />
-                                    <span className="font-semibold">دفع آمن</span>
+                                    <span className="font-semibold">Secure Payment</span>
                                 </div>
-                                <p className="mt-1 text-sm text-white/75">محفظة إلكترونية ومعاملات موثقة.</p>
+                                <p className="mt-1 text-sm text-white/75">Digital wallet and verified transactions.</p>
                             </div>
                             <div className="rounded-xl bg-white/10 ring-1 ring-white/15 p-4">
                                 <div className="flex items-center justify-center gap-2">
                                     <VideoCameraIcon className="h-5 w-5" />
-                                    <span className="font-semibold">جلسات فردية</span>
+                                    <span className="font-semibold">One-on-One Sessions</span>
                                 </div>
-                                <p className="mt-1 text-sm text-white/75">تركيز كامل وسرعة في التحسن.</p>
+                                <p className="mt-1 text-sm text-white/75">Full focus and faster progress.</p>
                             </div>
                             <div className="rounded-xl bg-white/10 ring-1 ring-white/15 p-4">
                                 <div className="flex items-center justify-center gap-2">
                                     <CalendarDaysIcon className="h-5 w-5" />
-                                    <span className="font-semibold">مرونة المواعيد</span>
+                                    <span className="font-semibold">Flexible Scheduling</span>
                                 </div>
-                                <p className="mt-1 text-sm text-white/75">اختر الوقت المناسب من أي مكان.</p>
+                                <p className="mt-1 text-sm text-white/75">Pick the right time from anywhere.</p>
                             </div>
                         </div>
                     </div>
@@ -118,10 +118,10 @@ const LandingPage: React.FC = () => {
             <section className="container mx-auto px-4 py-24 relative">
                 <div className="text-center max-w-3xl mx-auto mb-20">
                     <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl font-heading">
-                        ابدأ رحلتك في 3 خطوات
+                        Start Your Journey in 3 Steps
                     </h2>
                     <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                        تجربة تعليمية ميسرة تبدأ بخطوات بسيطة
+                        A simple learning experience that starts with a few steps
                     </p>
                 </div>
 
@@ -131,9 +131,9 @@ const LandingPage: React.FC = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                         {[
-                            { title: 'سجّل حسابك', desc: 'أنشئ حسابك كطالب مجاناً وبسهولة تامة.', icon: UserIcon },
-                            { title: 'اختر المعلم', desc: 'تصفح ملفات المعلمين واستمع لتلاواتهم لتختار الأنسب.', icon: MagnifyingGlassIcon },
-                            { title: 'ابدأ جلستك', desc: 'احجز موعدك وادخل الفصل الافتراضي بجودة عالية.', icon: VideoCameraIcon },
+                            { title: 'Create Your Account', desc: 'Sign up as a student for free in seconds.', icon: UserIcon },
+                            { title: 'Choose Your Teacher', desc: 'Browse teacher profiles and listen to their recitations to pick the best fit.', icon: MagnifyingGlassIcon },
+                            { title: 'Start Your Session', desc: 'Book your slot and enter the high-quality virtual classroom.', icon: VideoCameraIcon },
                         ].map((item, idx) => (
                             <div key={idx} className="relative flex flex-col items-center text-center group">
                                 {/* Icon Circle */}
@@ -164,16 +164,16 @@ const LandingPage: React.FC = () => {
                     <div className="flex flex-col lg:flex-row items-start justify-between gap-12 lg:gap-20">
                         {/* Left Column: text */}
                         <div className="w-full lg:w-1/2">
-                            <h2 className="text-base font-semibold leading-7 text-primary-green">لمن هذه المنصة؟</h2>
+                            <h2 className="text-base font-semibold leading-7 text-primary-green">Who is this platform for?</h2>
                             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl font-heading leading-tight">
-                                بيئة تعليمية شاملة للجميع
+                                A Complete Learning Environment for Everyone
                             </p>
                             <p className="mt-6 text-lg leading-relaxed text-gray-600 dark:text-gray-300">
-                                صممنا مناهجنا وأدواتنا لتناسب جميع الأعمار والمستويات، من التأسيس وحتى الإجازة. سواء كنت مبتدئاً أو متقدمًا، ستجد مساراً يناسب طموحك.
+                                We designed our curricula and tools for all ages and levels, from foundation to Ijazah. Whether you are a beginner or advanced, you will find a path that fits your ambition.
                             </p>
                             <div className="mt-8 flex gap-4">
                                 <Link to="/register/student" className="text-sm font-semibold leading-6 text-gold hover:text-yellow-500 transition-colors flex items-center gap-2">
-                                    ابدأ رحلتك الآن <span aria-hidden="true">&larr;</span>
+                                    Start Your Journey Now <span aria-hidden="true">&rarr;</span>
                                 </Link>
                             </div>
                         </div>
@@ -189,12 +189,12 @@ const LandingPage: React.FC = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">مسارات متنوعة</h3>
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Diverse Tracks</h3>
                                         <p className="mt-2 text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-                                            تشمل الحفظ، المراجعة، تصحيح التلاوة، والتأسيس (القاعدة النورانية) للأطفال والكبار.
+                                            Covering memorization, review, recitation correction, and foundation (Noorani Qaida) for children and adults.
                                         </p>
                                         <div className="mt-3 flex flex-wrap gap-2">
-                                            {['تلاوة', 'حفظ', 'تجويد', 'نورانية'].map(tag => (
+                                            {['Recitation', 'Memorization', 'Tajweed', 'Noorani'].map(tag => (
                                                 <span key={tag} className="inline-flex items-center rounded-md bg-gray-50 dark:bg-white/5 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 ring-1 ring-inset ring-gray-500/10">{tag}</span>
                                             ))}
                                         </div>
@@ -211,9 +211,9 @@ const LandingPage: React.FC = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">مرونة تامة</h3>
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Full Flexibility</h3>
                                         <p className="mt-2 text-base text-gray-600 dark:text-gray-400 leading-relaxed">
-                                            تعلم في الوقت الذي يناسبك ومن أي مكان في العالم. لا التزام بجداول صارمة، أنت من يحدد موعد حصتك.
+                                            Learn at the time that suits you, from anywhere in the world. No rigid schedules, you set your own session times.
                                         </p>
                                     </div>
                                 </div>
@@ -233,10 +233,10 @@ const LandingPage: React.FC = () => {
 
                         <div className="relative z-10 mx-auto max-w-md text-center lg:mx-0 lg:flex-auto lg:py-0 lg:text-right">
                             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl font-heading">
-                                هل أنت معلم قرآن؟
+                                Are You a Quran Teacher?
                             </h2>
                             <p className="mt-6 text-lg leading-8 text-gray-100">
-                                انضم إلى نخبة المعلمين في منصة "{branding.nameAr}". شارك علمك، وكُن جزءاً من مجتمع تعليمي عالمي يربطك بطلاب من كل مكان.
+                                Join the elite teachers on "{branding.nameEn}". Share your knowledge and be part of a global learning community connecting you with students everywhere.
                             </p>
                             <div className="mt-10 flex items-center justify-center lg:justify-start gap-x-6">
                                 <Link
@@ -244,10 +244,10 @@ const LandingPage: React.FC = () => {
                                     data-tour="cta-register-teacher"
                                     className="rounded-xl bg-gold px-8 py-3.5 text-lg font-bold text-gray-900 shadow-lg hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-all transform hover:-translate-y-1"
                                 >
-                                    انضم لفريق المعلمين
+                                    Join the Teaching Team
                                 </Link>
                                 <Link to="/how-it-works" className="text-base font-semibold leading-6 text-white hover:text-gold transition">
-                                    اعرف المزيد <span aria-hidden="true">←</span>
+                                    Learn More <span aria-hidden="true">→</span>
                                 </Link>
                             </div>
                         </div>

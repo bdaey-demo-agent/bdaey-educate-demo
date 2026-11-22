@@ -17,10 +17,10 @@ const Home: React.FC = () => {
                         transition={{ duration: 0.8 }}
                     >
                         <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl mb-6">
-                            تعلم وحفظ القرآن والعلوم الشرعية مع <span className="text-gold-500">أفضل المشايخ</span>
+                            Learn and memorize Quran and Islamic sciences with <span className="text-gold-500">the best sheikhs</span>
                         </h1>
                         <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-                            منصتك المتخصصة لحفظ كتاب الله وتعلم العلوم الشرعية على يد نخبة من المعلمين المعتمدين عبر الإنترنت.
+                            Your dedicated platform for memorizing the Quran and learning Islamic sciences online with certified teachers.
                         </p>
                     </motion.div>
 
@@ -34,7 +34,7 @@ const Home: React.FC = () => {
                             to="/teachers-public"
                             className="rounded-md bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 transition-all hover:scale-105 transform duration-200"
                         >
-                            ابحث عن محفظ
+                            Find a Teacher
                         </Link>
                         <Link
                             to="/register/teacher"
@@ -44,9 +44,9 @@ const Home: React.FC = () => {
                                 animate={{ x: [0, 5, 0] }}
                                 transition={{ repeat: Infinity, duration: 1.5 }}
                             >
-                                انضم كمعلم
+                                Join as a Teacher
                             </motion.span>
-                            <span aria-hidden="true" className="group-hover:translate-x-1 transition-transform">←</span>
+                            <span aria-hidden="true" className="group-hover:translate-x-1 transition-transform">→</span>
                         </Link>
                     </motion.div>
                 </div>
@@ -56,7 +56,7 @@ const Home: React.FC = () => {
             <div className="bg-white dark:bg-gray-800 py-16 sm:py-24 transition-colors duration-300">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <div className="mx-auto max-w-2xl text-center mb-12">
-                        <h2 className="text-base font-semibold leading-7 text-gold-500">لماذا {branding.nameAr}؟</h2>
+                        <h2 className="text-base font-semibold leading-7 text-gold-500">Why {branding.nameEn}?</h2>
                         <motion.p
                             className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl"
                             initial={{ opacity: 0 }}
@@ -64,7 +64,7 @@ const Home: React.FC = () => {
                             viewport={{ once: true }}
                             transition={{ duration: 0.8 }}
                         >
-                            بيئة إيمانية تعليمية متميزة
+                            A Distinguished Faith-Based Learning Environment
                         </motion.p>
                     </div>
                     <div className="mx-auto max-w-2xl lg:max-w-none">
@@ -72,18 +72,18 @@ const Home: React.FC = () => {
                             {[
                                 {
                                     icon: MagnifyingGlassIcon,
-                                    title: 'نخبة من الحفاظ',
-                                    desc: 'جميع المعلمين لدينا مجازون وحافظون لكتاب الله ومؤهلون لتدريس العلوم الشرعية.'
+                                    title: 'Elite Memorizers',
+                                    desc: 'All our teachers hold Ijazah, have memorized the Quran, and are qualified to teach Islamic sciences.'
                                 },
                                 {
                                     icon: AcademicCapIcon,
-                                    title: 'مناهج معتمدة',
-                                    desc: 'نعتمد مسارات تعليمية منهجية للتلاوة، الحفظ، التجويد، والعقيدة والفقه.'
+                                    title: 'Certified Curricula',
+                                    desc: 'We follow structured learning paths for recitation, memorization, Tajweed, Aqeedah and Fiqh.'
                                 },
                                 {
                                     icon: UserGroupIcon,
-                                    title: 'حلقات ذكر افتراضية',
-                                    desc: 'أجواء روحانية تفاعلية عبر فصولنا الافتراضية، تحاكي حلقات التحفيظ في المساجد.'
+                                    title: 'Virtual Study Circles',
+                                    desc: 'Interactive spiritual atmosphere in our virtual classrooms, mirroring mosque memorization circles.'
                                 }
                             ].map((feature, index) => (
                                 <motion.div
