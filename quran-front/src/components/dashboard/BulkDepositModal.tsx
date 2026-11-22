@@ -143,7 +143,7 @@ const BulkDepositModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) => {
                         >
                             <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 text-right align-middle shadow-xl transition-all">
                                 <Dialog.Title as="h3" className="text-xl font-bold leading-6 text-gray-900 dark:text-white flex justify-between items-center mb-4">
-                                    <span>إيداع مجمع للمعلمين</span>
+                                    <span>Bulk Deposit for Teachers</span>
                                     <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
                                         <XMarkIcon className="h-6 w-6" />
                                     </button>
@@ -161,14 +161,14 @@ const BulkDepositModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) => {
                                                     onChange={(e) => handleSelectAll(e.target.checked)}
                                                     className="h-4 w-4 text-brand-600 rounded border-gray-300 dark:border-gray-600 focus:ring-brand-500 bg-white dark:bg-gray-700"
                                                 />
-                                                <label htmlFor="selectAll" className="text-sm font-medium text-gray-700 dark:text-gray-300">تحديد الكل ({teachers.length})</label>
+                                                <label htmlFor="selectAll" className="text-sm font-medium text-gray-700 dark:text-gray-300">Select All ({teachers.length})</label>
                                             </div>
 
                                             <div className="relative">
                                                 <MagnifyingGlassIcon className="h-4 w-4 absolute right-2 top-2 text-gray-400" />
                                                 <input
                                                     type="text"
-                                                    placeholder="بحث باسم المعلم..."
+                                                    placeholder="Search by teacher name..."
                                                     className="pr-8 pl-2 py-1 text-sm border-gray-300 dark:border-gray-600 rounded-md focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                                                     value={searchQuery}
                                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -178,9 +178,9 @@ const BulkDepositModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) => {
 
                                         <div className="overflow-y-auto flex-1 pr-1">
                                             {loading ? (
-                                                <div className="text-center py-4 text-gray-500">جاري التحميل...</div>
+                                                <div className="text-center py-4 text-gray-500">Loading...</div>
                                             ) : filteredTeachers.length === 0 ? (
-                                                <div className="text-center py-4 text-gray-500">لا يوجد معلمين مطابقين.</div>
+                                                <div className="text-center py-4 text-gray-500">No matching teachers.</div>
                                             ) : (
                                                 <div className="space-y-2">
                                                     {filteredTeachers.map(teacher => (
@@ -205,7 +205,7 @@ const BulkDepositModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) => {
                                     {/* Amount & Description */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">المبلغ (للمعلم الواحد)</label>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Amount (per teacher)</label>
                                             <div className="relative rounded-md shadow-sm">
                                                 <input
                                                     type="number"
@@ -223,22 +223,22 @@ const BulkDepositModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) => {
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الوصف (يظهر في المعاملات)</label>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (shown in transactions)</label>
                                             <input
                                                 type="text"
                                                 value={description}
                                                 onChange={(e) => setDescription(e.target.value)}
                                                 className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-brand-500 focus:ring-brand-500 sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                                                placeholder="مكافأة شهرية..."
+                                                placeholder="Monthly bonus..."
                                             />
                                         </div>
                                     </div>
 
                                     {/* Summary */}
                                     <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-md text-sm text-blue-800 dark:text-blue-300">
-                                        سيتم إيداع مبلغ <strong>{amount || 0} EGP</strong> في محافظ <strong>{isAllSelected ? teachers.length : selectedIds.length}</strong> معلمين.
+                                        Deposit <strong>{amount || 0} EGP</strong> into the wallets of <strong>{isAllSelected ? teachers.length : selectedIds.length}</strong> teachers.
                                         <br />
-                                        الإجمالي التقديري: <strong>{((Number(amount) || 0) * (isAllSelected ? teachers.length : selectedIds.length)).toLocaleString()} EGP</strong>
+                                        Estimated total: <strong>{((Number(amount) || 0) * (isAllSelected ? teachers.length : selectedIds.length)).toLocaleString()} EGP</strong>
                                     </div>
 
                                     {error && (
@@ -254,14 +254,14 @@ const BulkDepositModal: React.FC<Props> = ({ isOpen, onClose, onSuccess }) => {
                                             onClick={onClose}
                                             disabled={submitting}
                                         >
-                                            إلغاء
+                                            Cancel
                                         </button>
                                         <button
                                             type="submit"
                                             className="inline-flex justify-center rounded-md border border-transparent bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:opacity-50"
                                             disabled={submitting || loading}
                                         >
-                                            {submitting ? 'جاري التنفيذ...' : 'تأكيد الإيداع'}
+                                            {submitting ? 'Processing...' : 'Confirm Deposit'}
                                         </button>
                                     </div>
                                 </form>

@@ -92,11 +92,11 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
 
         const numAmount = Number(amount);
         if (numAmount < 500) {
-            toast.error('الحد الأدنى للسحب 500 جنيه');
+            toast.error('Minimum withdrawal is 500 EGP');
             return;
         }
         if (numAmount > availableBalance) {
-            toast.error('رصيدك غير كافي');
+            toast.error('Insufficient balance');
             return;
         }
 
@@ -115,7 +115,7 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                 methodName: methodName
             });
 
-            toast.success('تم إرسال طلب السحب بنجاح');
+            toast.success('Withdrawal request submitted');
             onSuccess();
             onClose();
             setAmount('');
@@ -124,8 +124,8 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
             setMethodName('');
             setSelectedSavedMethodId(null);
         } catch (error: any) {
-            const msg = error.response?.data || error.message || 'حدث خطأ ما';
-            toast.error(typeof msg === 'string' ? msg : 'حدث خطأ ما');
+            const msg = error.response?.data || error.message || 'Something went wrong';
+            toast.error(typeof msg === 'string' ? msg : 'Something went wrong');
         } finally {
             setIsLoading(false);
         }
@@ -137,7 +137,7 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
             <div className="fixed inset-0 flex items-center justify-center p-4">
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 text-right align-middle shadow-xl transition-all max-h-[90vh] overflow-y-auto">
                     <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 dark:text-white flex justify-between items-center mb-4">
-                        <span>طلب سحب رصيد</span>
+                        <span>Withdraw Funds</span>
                         <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
                             <XMarkIcon className="h-6 w-6" />
                         </button>
@@ -145,7 +145,7 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">المبلغ المطلوب (جنيه)</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (EGP)</label>
                             <input
                                 type="number"
                                 required
@@ -154,21 +154,21 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                                 value={amount}
                                 onChange={(e) => setAmount(Number(e.target.value))}
                                 className="mt-1 input-field w-full"
-                                placeholder={`متاح لك: ${availableBalance}`}
+                                placeholder={`Available: ${availableBalance}`}
                             />
-                            <p className="text-xs text-gray-500 mt-1">الحد الأدنى 500 جنيه</p>
+                            <p className="text-xs text-gray-500 mt-1">Minimum 500 EGP</p>
                         </div>
 
                         {/* Saved Methods Dropdown */}
                         {savedMethods.length > 0 && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">اختر طريقة محفوظة</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Choose a saved method</label>
                                 <select
                                     className="input-field w-full"
                                     onChange={(e) => handleSelectSavedMethod(Number(e.target.value))}
                                     value={selectedSavedMethodId || -1}
                                 >
-                                    <option value={-1}>طريقة جديدة...</option>
+                                    <option value={-1}>New method...</option>
                                     {savedMethods.map(m => (
                                         <option key={m.id} value={m.id}>
                                             {m.nickname || `${m.methodType} - ${m.id}`}
@@ -181,7 +181,7 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                         {/* Method Selection (Only if New) */}
                         <div className={selectedSavedMethodId ? 'opacity-50 pointer-events-none' : ''}>
                             <div className="mb-3">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">طريقة السحب</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Withdrawal Method</label>
                                 <div className="grid grid-cols-2 gap-3">
                                     <button
                                         type="button"
@@ -192,7 +192,7 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                                             }`}
                                     >
                                         <BanknotesIcon className="h-5 w-5" />
-                                        <span>محفظة إلكترونية</span>
+                                        <span>E-Wallet</span>
                                     </button>
                                     <button
                                         type="button"
@@ -203,14 +203,14 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                                             }`}
                                     >
                                         <BuildingLibraryIcon className="h-5 w-5" />
-                                        <span>تحويل بنكي</span>
+                                        <span>Bank Transfer</span>
                                     </button>
                                 </div>
                             </div>
 
                             {methodType === 'Wallet' ? (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">رقم المحفظة</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Wallet Number</label>
                                     <input
                                         type="text"
                                         required
@@ -224,7 +224,7 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                             ) : (
                                 <div className="space-y-3">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">اسم البنك</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Bank Name</label>
                                         <input
                                             type="text"
                                             required
@@ -235,7 +235,7 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">اسم صاحب الحساب</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Account Holder Name</label>
                                         <input
                                             type="text"
                                             required
@@ -246,7 +246,7 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">رقم الحساب / IBAN</label>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Account Number / IBAN</label>
                                         <input
                                             type="text"
                                             required
@@ -271,14 +271,14 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                                         onChange={(e) => setSaveMethod(e.target.checked)}
                                         className="rounded text-green-600 focus:ring-green-500"
                                     />
-                                    <label htmlFor="saveMethod" className="text-sm font-medium text-gray-700 dark:text-gray-300">حفظ طريقة السحب هذه للمستقبل</label>
+                                    <label htmlFor="saveMethod" className="text-sm font-medium text-gray-700 dark:text-gray-300">Save this method for later</label>
                                 </div>
                                 {saveMethod && (
                                     <input
                                         type="text"
                                         value={methodName}
                                         onChange={(e) => setMethodName(e.target.value)}
-                                        placeholder="اسم مختصر (مثلاً: محفظتي الشخصية)"
+                                        placeholder="Short name (e.g. My personal wallet)"
                                         className="input-field w-full text-sm"
                                         required
                                     />
@@ -292,14 +292,14 @@ const WithdrawalModal: React.FC<WithdrawalModalProps> = ({ isOpen, onClose, avai
                                 onClick={onClose}
                                 className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                             >
-                                إلغاء
+                                Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={isLoading}
                                 className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 flex justify-center items-center"
                             >
-                                {isLoading ? 'جاري الإرسال...' : 'تأكيد السحب'}
+                                {isLoading ? 'Sending...' : 'Confirm Withdrawal'}
                             </button>
                         </div>
                     </form>

@@ -125,7 +125,7 @@ const ChatWindow: React.FC = () => {
             setNewMessage('');
         } catch (error) {
             console.error('Failed to send message', error);
-            toast.error('لم يتم إرسال الرسالة. تأكد من وجود حجز مؤكد.');
+            toast.error('Message not sent. Make sure you have a confirmed booking.');
         }
     };
 
@@ -134,11 +134,11 @@ const ChatWindow: React.FC = () => {
             {/* Sidebar - Conversations */}
             <div className={`w-full md:w-1/3 border-l border-gray-200 dark:border-gray-700 flex flex-col ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-                    <h2 className="font-bold text-gray-800 dark:text-white">المحادثات</h2>
+                    <h2 className="font-bold text-gray-800 dark:text-white">Conversations</h2>
                 </div>
                 <div className="flex-1 overflow-y-auto">
                     {conversations.length === 0 ? (
-                        <div className="p-4 text-center text-gray-500 text-sm">لا يوجد لديك أي جهات اتصال مصرحة (حجوزات مؤكدة).</div>
+                        <div className="p-4 text-center text-gray-500 text-sm">You have no authorized contacts (confirmed bookings).</div>
                     ) : (
                         conversations.map(u => (
                             <div
@@ -170,7 +170,7 @@ const ChatWindow: React.FC = () => {
             <div className={`flex-1 flex flex-col w-full md:w-auto ${!selectedUser ? 'hidden md:flex' : 'flex'}`}>
                 {!selectedUser ? (
                     <div className="flex-1 flex items-center justify-center text-gray-500">
-                        اختر محادثة للبدء
+                        Choose a conversation to start
                     </div>
                 ) : (
                     <>
@@ -201,7 +201,7 @@ const ChatWindow: React.FC = () => {
                             <div className="bg-blue-50 dark:bg-blue-900/30 border-b border-blue-100 dark:border-blue-800 px-4 py-2 flex items-center justify-between">
                                 <span className="text-sm text-blue-800 dark:text-blue-300 font-medium flex items-center gap-2">
                                     <CalendarIcon className="h-4 w-4" />
-                                    موعد الجلسة القادمة: {new Date(selectedUser.nextSessionDate).toLocaleString('ar-EG')}
+                                    Next session: {new Date(selectedUser.nextSessionDate).toLocaleString('en-GB')}
                                 </span>
                                 {/* Optional: "Join" button if close to time? */}
                             </div>
@@ -222,7 +222,7 @@ const ChatWindow: React.FC = () => {
                                     </div>
                                 </div>
                             ) : messages.length === 0 ? (
-                                <div className="text-center text-gray-400 text-sm">لا توجد رسائل سابقة. ابدأ المحادثة!</div>
+                                <div className="text-center text-gray-400 text-sm">No messages yet. Start the conversation!</div>
                             ) : (
                                 messages.map((msg) => (
                                     <div key={msg.id} className={`flex ${msg.isMe ? 'justify-end' : 'justify-start'} `}>
@@ -247,7 +247,7 @@ const ChatWindow: React.FC = () => {
                                 type="text"
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
-                                placeholder="اكتب رسالتك..."
+                                placeholder="Type your message..."
                                 className="flex-1 px-4 py-2 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded-full dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <button
