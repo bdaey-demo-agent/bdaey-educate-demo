@@ -22,12 +22,12 @@ const ResetPassword: React.FC = () => {
         setMessage('');
 
         if (newPassword.length < 6) {
-            setError('يجب أن تكون كلمة المرور 6 أحرف على الأقل.');
+            setError('Password must be at least 6 characters.');
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            setError('كلمات المرور غير متطابقة.');
+            setError('Passwords do not match.');
             return;
         }
 
@@ -35,7 +35,7 @@ const ResetPassword: React.FC = () => {
 
         try {
             await authService.resetPassword({ email, token, newPassword });
-            setMessage('تم تغيير كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول.');
+            setMessage('Password changed successfully. You can now sign in.');
             setTimeout(() => {
                 navigate('/login');
             }, 3000);
@@ -50,9 +50,9 @@ const ResetPassword: React.FC = () => {
         return (
             <div className="min-h-[calc(100vh-140px)] flex items-center justify-center bg-light py-10">
                 <div className="card shadow-lg border-0 bg-white p-8 text-center text-red-600">
-                    رابط غير صالح. يرجى التأكد من الرابط أو طلب إعادة تعيين جديدة.
+                    Invalid link. Please check the link or request a new reset.
                     <br />
-                    <Link to="/forgot-password" className="text-primary-green underline mt-4 block">طلب رابط جديد</Link>
+                    <Link to="/forgot-password" className="text-primary-green underline mt-4 block">Request a new link</Link>
                 </div>
             </div>
         );
@@ -63,8 +63,8 @@ const ResetPassword: React.FC = () => {
             <div className="container max-w-md w-full">
                 <div className="card shadow-lg border-0 bg-white p-8">
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl font-bold font-heading text-primary-green mb-2">تعيين كلمة مرور جديدة</h2>
-                        <p className="text-gray-500">للحساب: {email}</p>
+                        <h2 className="text-2xl font-bold font-heading text-primary-green mb-2">Set a New Password</h2>
+                        <p className="text-gray-500">For account: {email}</p>
                     </div>
 
                     {message && (
@@ -81,7 +81,7 @@ const ResetPassword: React.FC = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label className="input-label" htmlFor="newPassword">كلمة المرور الجديدة</label>
+                            <label className="input-label" htmlFor="newPassword">New Password</label>
                             <input
                                 id="newPassword"
                                 type="password"
@@ -93,7 +93,7 @@ const ResetPassword: React.FC = () => {
                         </div>
 
                         <div className="mb-6">
-                            <label className="input-label" htmlFor="confirmPassword">تأكيد كلمة المرور</label>
+                            <label className="input-label" htmlFor="confirmPassword">Confirm Password</label>
                             <input
                                 id="confirmPassword"
                                 type="password"
@@ -109,7 +109,7 @@ const ResetPassword: React.FC = () => {
                             disabled={loading}
                             className="btn-primary w-full text-lg justify-center py-3 disabled:opacity-70"
                         >
-                            {loading ? 'جاري التحديث...' : 'حفظ كلمة المرور'}
+                            {loading ? 'Updating...' : 'Save Password'}
                         </button>
                     </form>
                 </div>

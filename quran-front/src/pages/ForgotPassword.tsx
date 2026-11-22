@@ -29,8 +29,8 @@ const ForgotPassword: React.FC = () => {
             <div className="container max-w-md w-full">
                 <div className="card shadow-lg border-0 bg-white p-8">
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl font-bold font-heading text-primary-green mb-2">استعادة كلمة المرور</h2>
-                        <p className="text-gray-500">أدخل بريدك الإلكتروني لاستلام رابط إعادة التعيين</p>
+                        <h2 className="text-2xl font-bold font-heading text-primary-green mb-2">Reset Password</h2>
+                        <p className="text-gray-500">Enter your email to receive a reset link</p>
                     </div>
 
                     {message && (
@@ -47,7 +47,7 @@ const ForgotPassword: React.FC = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="mb-6">
-                            <label className="input-label" htmlFor="email">البريد الإلكتروني</label>
+                            <label className="input-label" htmlFor="email">Email</label>
                             <input
                                 id="email"
                                 type="email"
@@ -64,15 +64,15 @@ const ForgotPassword: React.FC = () => {
                             disabled={loading}
                             className="btn-primary w-full text-lg justify-center py-3 disabled:opacity-70"
                         >
-                            {loading ? 'جاري الإرسال...' : 'إرسال الرابط'}
+                            {loading ? 'Sending...' : 'Send Link'}
                         </button>
                     </form>
 
                     <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                         <p className="text-gray-600">
-                            تذكرت كلمة المرور؟{' '}
+                            Remembered your password?{' '}
                             <Link to="/login" className="font-bold text-primary-green hover:underline">
-                                تسجيل الدخول
+                                Sign In
                             </Link>
                         </p>
                     </div>

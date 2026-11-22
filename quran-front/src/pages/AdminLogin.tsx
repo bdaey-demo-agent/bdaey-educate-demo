@@ -30,7 +30,7 @@ const AdminLogin: React.FC = () => {
             const { token, fullName, email: userEmail, emailConfirmed, refreshToken } = response.data;
             login(token, { email: userEmail, fullName, role: 'Admin', emailConfirmed }, refreshToken);
 
-            toast.success('مرحباً بك في لوحة التحكم');
+            toast.success('Welcome to the dashboard');
             navigate(from, { replace: true });
         } catch (err: any) {
             handleAuthError(err, navigate, setError);
@@ -45,10 +45,10 @@ const AdminLogin: React.FC = () => {
                         <ShieldCheckIcon className="h-10 w-10 text-red-500" />
                     </div>
                     <h2 className="text-3xl font-extrabold text-white">
-                        بوابة الإدارة
+                        Admin Portal
                     </h2>
                     <p className="mt-2 text-sm text-slate-400">
-                        منطقة محظورة - للمسؤولين فقط
+                        Restricted area - administrators only
                     </p>
                 </div>
 
@@ -57,7 +57,7 @@ const AdminLogin: React.FC = () => {
                     <div className="rounded-md shadow-sm space-y-4">
                         <div>
                             <label htmlFor="email-address" className="block text-sm font-medium text-slate-300 mb-1">
-                                البريد الإلكتروني
+                                Email
                             </label>
                             <input
                                 id="email-address"
@@ -73,7 +73,7 @@ const AdminLogin: React.FC = () => {
                         </div>
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-1">
-                                كلمة المرور
+                                Password
                             </label>
                             <div className="relative">
                                 <input
@@ -113,7 +113,7 @@ const AdminLogin: React.FC = () => {
                             type="submit"
                             className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
                         >
-                            تسجيل الدخول
+                            Sign In
                         </button>
                     </div>
                 </form>

@@ -42,8 +42,8 @@ const LoginStudent: React.FC = () => {
         <div className="min-h-[calc(100vh-140px)] flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
             <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-primary-500/10 dark:border-gray-700">
                 <div className="text-center">
-                    <h2 className="text-3xl font-extrabold text-primary-600 dark:text-white font-heading mb-2">تسجيل دخول الطلاب</h2>
-                    <p className="text-gray-600 dark:text-gray-400">مرحباً بك في رحلة العلم</p>
+                    <h2 className="text-3xl font-extrabold text-primary-600 dark:text-white font-heading mb-2">Student Sign In</h2>
+                    <p className="text-gray-600 dark:text-gray-400">Welcome to your learning journey</p>
                 </div>
 
                 {error && (
@@ -55,7 +55,7 @@ const LoginStudent: React.FC = () => {
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="space-y-4">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">البريد الإلكتروني</label>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                             <input
                                 id="email"
                                 type="email"
@@ -68,7 +68,7 @@ const LoginStudent: React.FC = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">كلمة المرور</label>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
                             <div className="relative">
                                 <input
                                     id="password"
@@ -88,7 +88,7 @@ const LoginStudent: React.FC = () => {
                                 </button>
                             </div>
                             <div className="mt-2 text-right">
-                                <Link to="/forgot-password" className="text-sm font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">هل نسيت كلمة المرور؟</Link>
+                                <Link to="/forgot-password" className="text-sm font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">Forgot your password?</Link>
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@ const LoginStudent: React.FC = () => {
                         type="submit"
                         className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-lg font-bold rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
                     >
-                        دخول
+                        Sign In
                     </button>
                 </form>
 
@@ -106,7 +106,7 @@ const LoginStudent: React.FC = () => {
                         <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                        <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">أو</span>
+                        <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">or</span>
                     </div>
                 </div>
 
@@ -115,11 +115,11 @@ const LoginStudent: React.FC = () => {
                 <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
                     <div className="text-center space-y-4">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                            ليس لديك حساب طالب؟{' '}
-                            <Link to="/register/student" className="font-bold text-primary-600 hover:text-primary-700 hover:underline">أنشئ حساباً جديداً</Link>
+                            Don't have a student account?{' '}
+                            <Link to="/register/student" className="font-bold text-primary-600 hover:text-primary-700 hover:underline">Create a new account</Link>
                         </p>
                         <p>
-                            <Link to="/teacher/login" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">هل أنت معلم؟ تسجيل دخول المعلمين</Link>
+                            <Link to="/teacher/login" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">Are you a teacher? Teacher sign in</Link>
                         </p>
                     </div>
                 </div>

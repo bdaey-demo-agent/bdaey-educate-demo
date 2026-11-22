@@ -47,8 +47,8 @@ const LoginTeacher: React.FC = () => {
             const data = err.response?.data;
             const message = data?.message || data;
             
-            if (data?.code === 'EmailNotVerified' || (typeof message === 'string' && message.includes('تفعيل بريدك'))) {
-                setError(typeof message === 'string' ? `${message} (إذا لم تجد الرسالة، يرجى التحقق من قسم Spam).` : 'يرجى تفعيل بريدك الإلكتروني قبل تسجيل الدخول (تحقق أيضاً من قسم Spam).');
+            if (data?.code === 'EmailNotVerified' || (typeof message === 'string' && message.includes('verify your email') || message.includes('تفعيل بريدك'))) {
+                setError(typeof message === 'string' ? `${message} (If you can't find the email, please check your Spam folder).` : 'Please verify your email address before signing in (also check your Spam folder).');
                 setErrorCode('EmailNotVerified');
             } else {
                 handleAuthError(err, navigate, setError);
@@ -62,11 +62,11 @@ const LoginTeacher: React.FC = () => {
         setError('');
         try {
             await axios.post(`${API_BASE_URL}/Auth/resend-verification-anonymous`, { email });
-            setResendSuccess('تم إرسال رابط التحقق بنجاح. يرجى مراجعة بريدك الإلكتروني (وتفقد قسم Spam إذا لم تجدها).');
+            setResendSuccess('Verification link sent. Please check your inbox (and Spam folder if you do not see it).');
             setErrorCode('');
             setResendCooldown(60);
         } catch (err: any) {
-            setError('فشل إرسال رابط التحقق. يرجى المحاولة لاحقاً.');
+            setError('Failed to send the verification link. Please try again later.');
         } finally {
             setIsResending(false);
         }
@@ -76,8 +76,8 @@ const LoginTeacher: React.FC = () => {
         <div className="min-h-[calc(100vh-140px)] flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
             <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gold-500/10 dark:border-gray-700">
                 <div className="text-center">
-                    <h2 className="text-3xl font-extrabold text-gold-600 dark:text-gold-500 font-heading mb-2">تسجيل دخول المعلمين</h2>
-                    <p className="text-gray-600 dark:text-gray-400">أهلاً بك يا صانع الأجيال</p>
+                    <h2 className="text-3xl font-extrabold text-gold-600 dark:text-gold-500 font-heading mb-2">Teacher Sign In</h2>
+                    <p className="text-gray-600 dark:text-gray-400">Welcome, shaper of generations</p>
                 </div>
 
                 {error && (
@@ -90,10 +90,10 @@ const LoginTeacher: React.FC = () => {
                                 className={`text-sm font-bold text-right w-full hover:underline ${resendCooldown > 0 || isResending ? 'text-gray-400 cursor-not-allowed' : 'text-gold-600 dark:text-gold-400'}`}
                             >
                                 {isResending 
-                                    ? 'جاري الإرسال...' 
+                                    ? 'Sending...' 
                                     : resendCooldown > 0 
-                                        ? `يمكنك إعادة الإرسال بعد (${resendCooldown}) ثانية` 
-                                        : 'إرسال رابط التحقق مرة أخرى'}
+                                        ? `You can resend in (${resendCooldown})s` 
+                                        : 'Resend verification link'}
                             </button>
                         )}
                     </div>
@@ -108,7 +108,7 @@ const LoginTeacher: React.FC = () => {
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="space-y-4">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">البريد الإلكتروني</label>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                             <input
                                 id="email"
                                 type="email"
@@ -121,7 +121,7 @@ const LoginTeacher: React.FC = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">كلمة المرور</label>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
                             <div className="relative">
                                 <input
                                     id="password"
@@ -141,7 +141,7 @@ const LoginTeacher: React.FC = () => {
                                 </button>
                             </div>
                             <div className="mt-2 text-right">
-                                <Link to="/forgot-password" className="text-sm font-medium text-gold-600 hover:text-gold-500 dark:text-gold-400">هل نسيت كلمة المرور؟</Link>
+                                <Link to="/forgot-password" className="text-sm font-medium text-gold-600 hover:text-gold-500 dark:text-gold-400">Forgot your password?</Link>
                             </div>
                         </div>
                     </div>
@@ -150,7 +150,7 @@ const LoginTeacher: React.FC = () => {
                         type="submit"
                         className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-lg font-bold rounded-md text-white bg-gold-500 hover:bg-gold-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-500 transition-colors"
                     >
-                        دخول المعلمين
+                        Teacher Sign In
                     </button>
                 </form>
 
@@ -159,7 +159,7 @@ const LoginTeacher: React.FC = () => {
                         <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                        <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">أو</span>
+                        <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">or</span>
                     </div>
                 </div>
 
@@ -168,10 +168,10 @@ const LoginTeacher: React.FC = () => {
                 <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
                     <div className="text-center space-y-4">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                            ليس لديك حساب معلم؟ <Link to="/register/teacher" className="font-bold text-gold-600 hover:text-gold-500 hover:underline">انضم إلينا كمعلم</Link>
+                            Don't have a teacher account? <Link to="/register/teacher" className="font-bold text-gold-600 hover:text-gold-500 hover:underline">Join us as a teacher</Link>
                         </p>
                         <p>
-                            <Link to="/student/login" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">هل أنت طالب؟ تسجيل دخول الطلاب</Link>
+                            <Link to="/student/login" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">Are you a student? Student sign in</Link>
                         </p>
                     </div>
                 </div>

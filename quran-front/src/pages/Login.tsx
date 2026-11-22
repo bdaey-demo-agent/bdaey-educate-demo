@@ -50,8 +50,8 @@ const Login: React.FC = () => {
             const data = err.response?.data;
             const message = data?.message || data;
             
-            if (data?.code === 'EmailNotVerified' || (typeof message === 'string' && message.includes('تفعيل بريدك'))) {
-                setError(typeof message === 'string' ? `${message} (إذا لم تجد الرسالة، يرجى التحقق من قسم Spam).` : 'يرجى تفعيل بريدك الإلكتروني قبل تسجيل الدخول (تحقق أيضاً من قسم Spam).');
+            if (data?.code === 'EmailNotVerified' || (typeof message === 'string' && message.includes('verify your email') || message.includes('تفعيل بريدك'))) {
+                setError(typeof message === 'string' ? `${message} (If you can't find the email, please check your Spam folder).` : 'Please verify your email address before signing in (also check your Spam folder).');
                 setErrorCode('EmailNotVerified');
             } else {
                 handleAuthError(err, navigate, setError);
@@ -65,11 +65,11 @@ const Login: React.FC = () => {
         setError('');
         try {
             await axios.post(`${API_BASE_URL}/Auth/resend-verification-anonymous`, { email });
-            setResendSuccess('تم إرسال رابط التحقق بنجاح. يرجى مراجعة بريدك الإلكتروني (وتفقد قسم Spam إذا لم تجدها).');
+            setResendSuccess('Verification link sent. Please check your inbox (and Spam folder if you do not see it).');
             setErrorCode('');
             setResendCooldown(60);
         } catch (err: any) {
-            setError('فشل إرسال رابط التحقق. يرجى المحاولة لاحقاً.');
+            setError('Failed to send the verification link. Please try again later.');
         } finally {
             setIsResending(false);
         }
@@ -80,8 +80,8 @@ const Login: React.FC = () => {
             <div className="container max-w-md w-full">
                 <div className="card shadow-lg border-0 bg-white p-8">
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl font-bold font-heading text-primary-green mb-2">تسجيل الدخول</h2>
-                        <p className="text-gray-500">أهلاً بك مجدداً في {branding.nameAr}</p>
+                        <h2 className="text-2xl font-bold font-heading text-primary-green mb-2">Sign In</h2>
+                        <p className="text-gray-500">Welcome back to {branding.nameEn}</p>
                     </div>
 
                     {error && (
@@ -94,10 +94,10 @@ const Login: React.FC = () => {
                                     className={`font-bold hover:underline text-right w-full ${resendCooldown > 0 || isResending ? 'text-gray-400 cursor-not-allowed' : 'text-primary-green'}`}
                                 >
                                     {isResending 
-                                        ? 'جاري الإرسال...' 
+                                        ? 'Sending...' 
                                         : resendCooldown > 0 
-                                            ? `يمكنك إعادة الإرسال بعد (${resendCooldown}) ثانية` 
-                                            : 'إرسال رابط التحقق مرة أخرى'}
+                                            ? `You can resend in (${resendCooldown})s` 
+                                            : 'Resend verification link'}
                                 </button>
                             )}
                         </div>
@@ -111,7 +111,7 @@ const Login: React.FC = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="mb-4">
-                            <label className="input-label" htmlFor="email">البريد الإلكتروني</label>
+                            <label className="input-label" htmlFor="email">Email</label>
                             <input
                                 id="email"
                                 type="email"
@@ -124,7 +124,7 @@ const Login: React.FC = () => {
                         </div>
 
                         <div className="mb-6">
-                            <label className="input-label" htmlFor="password">كلمة المرور</label>
+                            <label className="input-label" htmlFor="password">Password</label>
                             <div className="relative">
                                 <input
                                     id="password"
@@ -144,7 +144,7 @@ const Login: React.FC = () => {
                                 </button>
                             </div>
                             <div className="mt-2 text-right">
-                                <Link to="/forgot-password" className="text-sm font-bold text-primary-green hover:underline">هل نسيت كلمة المرور؟</Link>
+                                <Link to="/forgot-password" className="text-sm font-bold text-primary-green hover:underline">Forgot your password?</Link>
                             </div>
                         </div>
 
@@ -152,7 +152,7 @@ const Login: React.FC = () => {
                             type="submit"
                             className="btn-primary w-full text-lg justify-center py-3"
                         >
-                            دخول
+                            Sign In
                         </button>
                     </form>
 
@@ -161,7 +161,7 @@ const Login: React.FC = () => {
                             <div className="w-full border-t border-gray-200"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-white text-gray-500">أو</span>
+                            <span className="px-2 bg-white text-gray-500">or</span>
                         </div>
                     </div>
 
@@ -171,9 +171,9 @@ const Login: React.FC = () => {
 
                     <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                         <p className="text-gray-600">
-                            ليس لديك حساب؟{' '}
+                            Don't have an account?{' '}
                             <Link to="/register/student" className="font-bold text-primary-green hover:underline">
-                                أنشئ حساباً جديداً
+                                Create a new account
                             </Link>
                         </p>
                     </div>

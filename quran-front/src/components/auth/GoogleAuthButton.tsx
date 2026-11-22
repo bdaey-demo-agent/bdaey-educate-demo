@@ -24,7 +24,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
 
     const handleGoogleAuth = async (idToken: string, createIfNotExists: boolean, targetedRole?: string) => {
         const activeRole = targetedRole || role;
-        const loadingToast = !createIfNotExists ? toast.loading('جاري التحقق...') : toast.loading('جاري إنشاء الحساب...');
+        const loadingToast = !createIfNotExists ? toast.loading('Verifying...') : toast.loading('Creating account...');
         try {
             const response = await axios.post(`${API_BASE_URL}/Auth/google`, {
                 idToken,
@@ -36,7 +36,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
             login(token, { id, email: userEmail, fullName, role: userRole, emailConfirmed }, refreshToken);
 
             toast.dismiss(loadingToast);
-            toast.success('تم تسجيل الدخول بنجاح');
+            toast.success('Signed in successfully');
             setPromptState('none');
 
             if (userRole === 'Student') navigate('/student/dashboard');
@@ -51,8 +51,8 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
                 else if (role === 'Teacher') setPromptState('confirm_teacher');
                 else setPromptState('general_choice');
             } else {
-                const errorMsg = err.response?.data?.message || err.response?.data || 'حدث خطأ أثناء تسجيل الدخول بواسطة جوجل';
-                toast.error(typeof errorMsg === 'string' ? errorMsg : 'حدث خطأ أثناء تسجيل الدخول بواسطة جوجل');
+                const errorMsg = err.response?.data?.message || err.response?.data || 'An error occurred during Google sign-in';
+                toast.error(typeof errorMsg === 'string' ? errorMsg : 'An error occurred during Google sign-in');
                 console.error(err);
             }
         }
@@ -71,7 +71,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
         );
 
         if (!popup) {
-            toast.error('يرجى السماح بفتح النوافذ المنبثقة (Popups) لتسجيل الدخول بجوجل.');
+            toast.error('Please allow popups to sign in with Google.');
             return;
         }
 
@@ -84,7 +84,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
                 handleGoogleAuth(idToken, false);
                 window.removeEventListener('message', handleMessage);
             } else if (event.data?.type === 'GOOGLE_ID_TOKEN_ERROR') {
-                toast.error(event.data.message || 'فشل تسجيل الدخول بواسطة جوجل');
+                toast.error(event.data.message || 'Google sign-in failed');
                 window.removeEventListener('message', handleMessage);
             }
         };
@@ -110,20 +110,20 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
                     </div>
                     {promptState === 'confirm_student' && (
                         <>
-                            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">إنشاء حساب طالب الجديد</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">أنت على وشك إضافة حساب طالب. هل تود الاستمرار كطالب أم تفضل أن تكون معلماً؟</p>
+                            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Create New Student Account</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">You are about to add a student account. Continue as a student, or would you rather be a teacher?</p>
                         </>
                     )}
                     {promptState === 'confirm_teacher' && (
                         <>
-                            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">إنشاء حساب معلم جديد</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">أنت على وشك إضافة حساب معلم. هل تود الاستمرار كمعلم أم تفضل أن تكون طالباً؟</p>
+                            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Create New Teacher Account</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">You are about to add a teacher account. Continue as a teacher, or would you rather be a student?</p>
                         </>
                     )}
                     {promptState === 'general_choice' && (
                         <>
-                            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">أهلاً بك في {branding.nameAr}</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">هذا الحساب غير مسجل لدينا. يرجى اختيار نوع الحساب الذي تود البدء به:</p>
+                            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Welcome to {branding.nameEn}</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">This account is not registered with us. Please choose the account type to start with:</p>
                         </>
                     )}
                 </div>
@@ -131,23 +131,23 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
                 <div className="flex flex-col gap-3">
                     {promptState === 'confirm_student' && (
                         <>
-                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Student')} className="w-full py-3.5 bg-primary-600 text-white rounded-2xl font-bold hover:bg-primary-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">استمرار كطالب</button>
-                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Teacher')} className="w-full py-3.5 border-2 border-gold-500 text-gold-600 dark:text-gold-400 rounded-2xl font-bold hover:bg-gold-50 dark:hover:bg-gold-900/20 transition-all active:scale-[0.98]">أريد أن أكون معلماً</button>
+                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Student')} className="w-full py-3.5 bg-primary-600 text-white rounded-2xl font-bold hover:bg-primary-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">Continue as Student</button>
+                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Teacher')} className="w-full py-3.5 border-2 border-gold-500 text-gold-600 dark:text-gold-400 rounded-2xl font-bold hover:bg-gold-50 dark:hover:bg-gold-900/20 transition-all active:scale-[0.98]">I want to be a Teacher</button>
                         </>
                     )}
                     {promptState === 'confirm_teacher' && (
                         <>
-                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Teacher')} className="w-full py-3.5 bg-gold-500 text-white rounded-2xl font-bold hover:bg-gold-600 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">استمرار كمعلم</button>
-                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Student')} className="w-full py-3.5 border-2 border-primary-600 text-primary-600 dark:text-primary-400 rounded-2xl font-bold hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-[0.98]">أريد أن أكون طالباً</button>
+                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Teacher')} className="w-full py-3.5 bg-gold-500 text-white rounded-2xl font-bold hover:bg-gold-600 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">Continue as Teacher</button>
+                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Student')} className="w-full py-3.5 border-2 border-primary-600 text-primary-600 dark:text-primary-400 rounded-2xl font-bold hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all active:scale-[0.98]">I want to be a Student</button>
                         </>
                     )}
                     {promptState === 'general_choice' && (
                         <>
-                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Student')} className="w-full py-3.5 bg-primary-600 text-white rounded-2xl font-bold hover:bg-primary-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">إنشاء حساب طالب</button>
-                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Teacher')} className="w-full py-3.5 bg-gold-500 text-white rounded-2xl font-bold hover:bg-gold-600 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">إنشاء حساب معلم</button>
+                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Student')} className="w-full py-3.5 bg-primary-600 text-white rounded-2xl font-bold hover:bg-primary-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">Create Student Account</button>
+                            <button onClick={() => handleGoogleAuth(tempIdToken, true, 'Teacher')} className="w-full py-3.5 bg-gold-500 text-white rounded-2xl font-bold hover:bg-gold-600 transition-all shadow-md hover:shadow-lg active:scale-[0.98]">Create Teacher Account</button>
                         </>
                     )}
-                    <button onClick={() => setPromptState('none')} className="mt-4 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 underline underline-offset-4 decoration-dotted">إلغاء العملية</button>
+                    <button onClick={() => setPromptState('none')} className="mt-4 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 underline underline-offset-4 decoration-dotted">Cancel</button>
                 </div>
             </div>
         );
@@ -166,7 +166,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.62-.62-1.07-1.39-1.38-2.22z"/>
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
                 </svg>
-                <span>تسجيل الدخول بواسطة Google</span>
+                <span>Sign in with Google</span>
             </button>
         );
     }
@@ -180,7 +180,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
                     }
                 }}
                 onError={() => {
-                    toast.error('فشل تسجيل الدخول بواسطة جوجل');
+                    toast.error('Google sign-in failed');
                 }}
                 useOneTap
                 theme="outline"
