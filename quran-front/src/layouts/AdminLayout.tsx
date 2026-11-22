@@ -97,7 +97,7 @@ const AdminLayout = () => {
                     <div className="p-4 border-t border-gray-100 dark:border-slate-700">
                         <div className="flex items-center mb-4 px-2">
                             <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-gold-500/10 flex items-center justify-center text-primary dark:text-gold-500 font-bold">
-                                {user?.fullName?.[0] || 'م'}
+                                {user?.fullName?.[0] || 'U'}
                             </div>
                             <div className="mr-3 overflow-hidden">
                                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{user?.fullName}</p>
@@ -135,7 +135,7 @@ const AdminLayout = () => {
                         <Menu className="h-6 w-6" />
                     </button>
                     <h1 className="text-xl font-semibold text-gray-800 dark:text-white mr-4 lg:mr-0">
-                        لوحة التحكم
+                        Dashboard
                     </h1>
                 </header>
 
