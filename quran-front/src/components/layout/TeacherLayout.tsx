@@ -23,6 +23,9 @@ const TeacherLayout: React.FC = () => {
                     setStatus('Pending');
                 } else {
                     console.error("Failed to fetch profile status", error);
+                    // Fail closed: when the status cannot be verified, keep the
+                    // navigation lock on instead of silently disabling it.
+                    setStatus('Unknown');
                 }
             } finally {
                 setLoading(false);
@@ -31,7 +34,9 @@ const TeacherLayout: React.FC = () => {
         fetchStatus();
     }, []);
 
-    const isPending = status === 'Pending' || status === 'Rejected';
+    const showPendingBanner = status === 'Pending' || status === 'Rejected';
+    // Lock every non-approved teacher to the profile-completion (dashboard) page.
+    const isPending = status !== 'Approved';
     const isProfilePage = location.pathname.includes('/teacher/profile');
 
     if (loading) return <div className="p-10 text-center">Loading...</div>;
@@ -49,7 +54,7 @@ const TeacherLayout: React.FC = () => {
             {/* Main Content Area (Pushed Left on Desktop) */}
             <div className="flex flex-col min-h-screen transition-all duration-300 mr-0 md:mr-[280px] pt-20">
                 <main className="flex-1 p-6 dashboard-grid">
-                    {isPending && (
+                    {showPendingBanner && (
                         <div className="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md shadow-sm">
                             <div className="flex">
                                 <div className="flex-shrink-0">
@@ -63,6 +68,14 @@ const TeacherLayout: React.FC = () => {
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                    )}
+
+                    {status === 'Unknown' && (
+                        <div className="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md shadow-sm">
+                            <p className="text-sm text-yellow-700 font-bold">
+                                We could not verify your account status. Some pages are temporarily restricted; please try again in a moment.
+                            </p>
                         </div>
                     )}
 
