@@ -91,15 +91,15 @@ public class BookingsController : ControllerBase
         {
             var isMaleRestricted = string.Equals(package.AllowedGender, "Male", StringComparison.OrdinalIgnoreCase);
             var msg = isMaleRestricted 
-                ? "هذه الباقة مخصصة للذكور فقط ولا يمكنك حجزها." 
-                : "هذه الباقة مخصصة للإناث فقط ولا يمكنك حجزها.";
+                ? "This package is for males only and you cannot book it." 
+                : "This package is for females only and you cannot book it.";
             return BadRequest(msg);
         }
 
         // 1. Check Wallet Balance
         if (!await _walletService.HasSufficientFundsAsync(userId, package.Price))
         {
-            return BadRequest("رصيد المحفظة غير كافٍ. يرجى الشحن للمتابعة.");
+            return BadRequest("Insufficient wallet balance. Please top up to continue.");
         }
 
         // 2. Prevent Duplicate Booking
@@ -150,7 +150,7 @@ public class BookingsController : ControllerBase
 
         if (dto.ProposedTimes.Count > package.SessionsCount)
         {
-            return BadRequest($"لقد اخترت مواعيد أكثر من المسموح ({package.SessionsCount}).");
+            return BadRequest($"You selected more slots than allowed ({package.SessionsCount}).");
         }
 
         // We should ideally block if too few sessions are selected, unless it's a late join.
@@ -160,7 +160,7 @@ public class BookingsController : ControllerBase
 
         if (sessionsToCreate == 0)
         {
-             return BadRequest("يجب اختيار موعد واحد على الأقل.");
+             return BadRequest("Please select at least one slot.");
         }
 
         var existingStudentSessions = await _context.Sessions
@@ -186,7 +186,7 @@ public class BookingsController : ControllerBase
             {
                 if (slot.Start < newEndUtc && newStartUtc < slot.End)
                 {
-                    return BadRequest($"يوجد تعارض في الموعد المقترح ({newStart.ToLocalTime():yyyy-MM-dd HH:mm}) مع جلسة أخرى موجودة في جدولك أو تم اختيارها في هذا الحجز. يرجى اختيار موعد آخر.");
+                    return BadRequest($"The proposed time ({newStart.ToLocalTime():yyyy-MM-dd HH:mm}) conflicts with another session in your schedule or this booking. Please choose another time.");
                 }
             }
             
@@ -252,11 +252,11 @@ public class BookingsController : ControllerBase
             await _context.SaveChangesAsync();
             
             // Notify Teacher (DB)
-            var notifMessage = $"طلب حجز جديد من طالب، الباقة: {package.Name}";
+            var notifMessage = $"New booking request from a student. Package: {package.Name}";
             _context.Notifications.Add(new Notification
             {
                 UserId = teacherUserId,
-                Title = "طلب حجز جديد",
+                Title = "New Booking Request",
                 Message = notifMessage,
                 Type = "Booking",
                 RelatedEntityId = booking.Id.ToString()
@@ -334,11 +334,11 @@ public class BookingsController : ControllerBase
             {
                 booking.ConfirmedAt = DateTime.UtcNow;
                 
-                var msg = "تم تأكيد طلب الحجز الخاص بك!";
+                var msg = "Your booking request has been confirmed!";
                 _context.Notifications.Add(new Notification
                 {
                      UserId = booking.StudentId,
-                     Title = "تم تأكيد الحجز",
+                     Title = "Booking Confirmed",
                      Message = msg,
                      Type = "Booking",
                      RelatedEntityId = booking.Id.ToString()
@@ -370,11 +370,11 @@ public class BookingsController : ControllerBase
                         );
                         
                         // Notify student about refund
-                        var refundMsg = $"تم استرداد مبلغ {refundAmount} {booking.Currency} إلى محفظتك عن الجلسات الفائتة.";
+                        var refundMsg = $"{refundAmount} {booking.Currency} was refunded to your wallet for the missed sessions.";
                         _context.Notifications.Add(new Notification
                         {
                              UserId = booking.StudentId,
-                             Title = "استرداد جزئي",
+                             Title = "Partial Refund",
                              Message = refundMsg,
                              Type = "Wallet",
                              RelatedEntityId = booking.Id.ToString()
@@ -419,11 +419,11 @@ public class BookingsController : ControllerBase
                 }
                 
                 var targetUserId = isTeacher ? booking.StudentId : booking.TeacherProfile!.UserId;
-                var cancelMsg = $"تم إلغاء الحجز #{booking.Id}.";
+                var cancelMsg = $"Booking #{booking.Id} has been cancelled.";
                  _context.Notifications.Add(new Notification
                 {
                      UserId = targetUserId,
-                     Title = "إلغاء حجز",
+                     Title = "Booking Cancelled",
                      Message = cancelMsg,
                      Type = "Booking",
                      RelatedEntityId = booking.Id.ToString()

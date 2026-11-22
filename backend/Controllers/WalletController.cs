@@ -110,7 +110,7 @@ public class WalletController : ControllerBase
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
-        if (string.IsNullOrWhiteSpace(dto.Code)) return BadRequest(new { message = "كود الخصم مطلوب." });
+        if (string.IsNullOrWhiteSpace(dto.Code)) return BadRequest(new { message = "Coupon code is required." });
 
         var normalizedCode = dto.Code.Trim().ToUpperInvariant();
         await using var dbTransaction = await _context.Database.BeginTransactionAsync();
@@ -121,23 +121,23 @@ public class WalletController : ControllerBase
                 .FirstOrDefaultAsync(p => p.Code == normalizedCode);
 
             if (promoCode == null || !promoCode.IsActive)
-                return BadRequest(new { message = "هذا الكوبون غير موجود أو تم إيقافه." });
+                return BadRequest(new { message = "This coupon does not exist or has been disabled." });
 
             await _context.Database.ExecuteSqlInterpolatedAsync(
                 $"SELECT 1 FROM quran.\"PromoCodes\" WHERE \"Id\" = {promoCode.Id} FOR UPDATE;");
             await _context.Entry(promoCode).ReloadAsync();
 
             if (!promoCode.IsActive)
-                return BadRequest(new { message = "هذا الكوبون غير موجود أو تم إيقافه." });
+                return BadRequest(new { message = "This coupon does not exist or has been disabled." });
             if (promoCode.ExpiryDate.HasValue && promoCode.ExpiryDate.Value < DateTime.UtcNow)
-                return BadRequest(new { message = "لقد انتهت صلاحية هذا الكوبون." });
+                return BadRequest(new { message = "This coupon has expired." });
             if (promoCode.MaxUses > 0 && promoCode.CurrentUses >= promoCode.MaxUses)
-                return BadRequest(new { message = "لقد تم استخدام هذا الكوبون للحد الأقصى المسموح به." });
+                return BadRequest(new { message = "This coupon has reached its maximum usage." });
 
             var alreadyUsed = await _context.PromoCodeUsages.AnyAsync(u =>
                 u.PromoCodeId == promoCode.Id && u.UserId == userId);
             if (alreadyUsed)
-                return BadRequest(new { message = "لقد قمت باستخدام هذا الكوبون مسبقاً." });
+                return BadRequest(new { message = "You have already used this coupon." });
 
             var startOfMonth = new DateTime(
                 DateTime.UtcNow.Year,
@@ -156,7 +156,7 @@ public class WalletController : ControllerBase
             {
                 return BadRequest(new
                 {
-                    message = $"لقد تجاوزت الحد الأقصى لشحن الكوبونات شهرياً. يمكنك استرداد ما يصل إلى {monthlyLimit} ج.م في الشهر. لقد استرددت بالفعل {totalRedeemedThisMonth} ج.م هذا الشهر."
+                    message = $"You have exceeded the monthly coupon top-up limit. You can redeem up to {monthlyLimit} EGP per month and have already redeemed {totalRedeemedThisMonth} EGP this month."
                 });
             }
 
@@ -182,19 +182,19 @@ public class WalletController : ControllerBase
                 providerTransactionId: $"promo:{promoCode.Id}:{userId}");
 
             await dbTransaction.CommitAsync();
-            return Ok(new { message = "تم شحن المحفظة بالكوبون بنجاح.", amount = promoCode.Amount });
+            return Ok(new { message = "Wallet topped up with the coupon.", amount = promoCode.Amount });
         }
         catch (DbUpdateException ex)
         {
             await dbTransaction.RollbackAsync();
             _logger.LogWarning(ex, "Duplicate or conflicting promo redemption for user {UserId}, code {Code}", userId, normalizedCode);
-            return Conflict(new { message = "تم استخدام هذا الكوبون بالفعل أو حدث تعارض، يرجى تحديث الصفحة." });
+            return Conflict(new { message = "This coupon was already used or a conflict occurred. Please refresh the page." });
         }
         catch (Exception ex)
         {
             await dbTransaction.RollbackAsync();
             _logger.LogError(ex, "Promo redemption failed for user {UserId}, code {Code}", userId, normalizedCode);
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "تعذر استخدام الكوبون حالياً." });
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "The coupon cannot be redeemed right now." });
         }
     }
 
