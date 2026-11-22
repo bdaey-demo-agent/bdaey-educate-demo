@@ -23,7 +23,7 @@ const HowItWorks: React.FC = () => {
                 description={`تعرف على كيفية عمل منصة ${branding.nameAr}: ابحث عن معلم، اختر باقة، احجز جلسات، وابدأ رحلتك في تعلم القرآن الكريم.`}
                 canonical="https://bdaey.com/how-it-works"
             />
-            <div className="bg-gray-50 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-white transition-colors duration-300 font-body" dir="rtl">
+            <div className="bg-gray-50 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-white transition-colors duration-300 font-body" dir="ltr">
 
             {/* Header / Hero */}
             <div className="bg-primary-green dark:bg-slate-900 text-white py-16 text-center">

@@ -101,7 +101,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
 
     if (promptState !== 'none') {
         return (
-            <div className="p-6 border-2 border-primary-50 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-3xl shadow-xl text-center transform transition-all duration-300 scale-100" dir="rtl">
+            <div className="p-6 border-2 border-primary-50 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-3xl shadow-xl text-center transform transition-all duration-300 scale-100" dir="ltr">
                 <div className="mb-6">
                     <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg className="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

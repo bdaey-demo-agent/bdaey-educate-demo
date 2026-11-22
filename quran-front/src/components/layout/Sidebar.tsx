@@ -13,13 +13,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     const { logout } = useAuth();
 
     const navigation = [
-        { name: 'لوحة التحكم', href: '/student/dashboard', icon: HomeIcon },
-        { name: 'جدولي', href: '/student/schedule', icon: CalendarIcon },
-        { name: 'الرسائل', href: '/student/chat', icon: ChatBubbleLeftRightIcon },
-        { name: 'سجلي التعليمي', href: '/student/progress', icon: ChartBarIcon },
-        { name: 'لوحة الشرف', href: '/student/leaderboard', icon: TrophyIcon },
-        { name: 'المحفظة', href: '/student/wallet', icon: WalletIcon },
-        { name: 'الملف الشخصي', href: '/student/profile', icon: UserIcon },
+        { name: 'Dashboard', href: '/student/dashboard', icon: HomeIcon },
+        { name: 'My Schedule', href: '/student/schedule', icon: CalendarIcon },
+        { name: 'Messages', href: '/student/chat', icon: ChatBubbleLeftRightIcon },
+        { name: 'My Learning Record', href: '/student/progress', icon: ChartBarIcon },
+        { name: 'Leaderboard', href: '/student/leaderboard', icon: TrophyIcon },
+        { name: 'Wallet', href: '/student/wallet', icon: WalletIcon },
+        { name: 'Profile', href: '/student/profile', icon: UserIcon },
     ];
 
     const isActive = (path: string) => location.pathname === path;
@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 <div className="sidebar-logo p-6 border-b dark:border-gray-700 flex justify-between items-center">
                     <Link to="/" className="flex items-center gap-2 text-decoration-none">
                         {/* Placeholder Logo if needed */}
-                        <h2 className="text-xl font-bold text-primary-green dark:text-white font-heading m-0">قائمة الطالب</h2>
+                        <h2 className="text-xl font-bold text-primary-green dark:text-white font-heading m-0">Student Menu</h2>
                     </Link>
                     <button onClick={onClose} className="md:hidden text-gray-500 hover:text-red-500">
                         <XMarkIcon className="h-6 w-6" />
@@ -76,7 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                         className="menu-item w-full text-danger hover:bg-red-50 dark:hover:bg-red-900/10 justify-start"
                     >
                         <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                        <span className="font-body">تسجيل الخروج</span>
+                        <span className="font-body">Sign Out</span>
                     </button>
                 </div>
             </div>

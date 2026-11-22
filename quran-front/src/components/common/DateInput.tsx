@@ -43,18 +43,18 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange, label, className
 
     const days = Array.from({ length: 31 }, (_, i) => i + 1);
     const months = [
-        { value: 1, label: 'يناير' },
-        { value: 2, label: 'فبراير' },
-        { value: 3, label: 'مارس' },
-        { value: 4, label: 'أبريل' },
-        { value: 5, label: 'مايو' },
-        { value: 6, label: 'يونيو' },
-        { value: 7, label: 'يوليو' },
-        { value: 8, label: 'أغسطس' },
-        { value: 9, label: 'سبتمبر' },
-        { value: 10, label: 'أكتوبر' },
-        { value: 11, label: 'نوفمبر' },
-        { value: 12, label: 'ديسمبر' },
+        { value: 1, label: 'January' },
+        { value: 2, label: 'February' },
+        { value: 3, label: 'March' },
+        { value: 4, label: 'April' },
+        { value: 5, label: 'May' },
+        { value: 6, label: 'June' },
+        { value: 7, label: 'July' },
+        { value: 8, label: 'August' },
+        { value: 9, label: 'September' },
+        { value: 10, label: 'October' },
+        { value: 11, label: 'November' },
+        { value: 12, label: 'December' },
     ];
 
     const currentYear = new Date().getFullYear();
@@ -74,7 +74,7 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange, label, className
                     value={year}
                     onChange={(e) => handleChange(day, month, e.target.value)}
                 >
-                    <option value="">السنة</option>
+                    <option value="">Year</option>
                     {years.map((y) => (
                         <option key={y} value={y}>{y}</option>
                     ))}
@@ -86,7 +86,7 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange, label, className
                     value={month}
                     onChange={(e) => handleChange(day, e.target.value, year)}
                 >
-                    <option value="">الشهر</option>
+                    <option value="">Month</option>
                     {months.map((m) => (
                         <option key={m.value} value={m.value}>{m.label}</option>
                     ))}
@@ -98,7 +98,7 @@ const DateInput: React.FC<DateInputProps> = ({ value, onChange, label, className
                     value={day}
                     onChange={(e) => handleChange(e.target.value, month, year)}
                 >
-                    <option value="">اليوم</option>
+                    <option value="">Day</option>
                     {days.map((d) => (
                         <option key={d} value={d}>{d}</option>
                     ))}

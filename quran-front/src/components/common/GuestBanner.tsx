@@ -21,8 +21,8 @@ const GuestBanner: React.FC = () => {
                             <SparklesIcon className="h-5 w-5 text-gold-300" />
                         </div>
                         <div>
-                            <p className="font-bold text-sm sm:text-base">استثمر في مستقبلك اليوم!</p>
-                            <p className="text-white/80 text-xs sm:text-sm">سجل الآن كطالب وابدأ أول حصة لك مع نخبة من المعلمين المتميزين.</p>
+                            <p className="font-bold text-sm sm:text-base">Invest in your future today!</p>
+                            <p className="text-white/80 text-xs sm:text-sm">Sign up as a student now and start your first session with our top teachers.</p>
                         </div>
                     </div>
                     
@@ -32,14 +32,14 @@ const GuestBanner: React.FC = () => {
                             className="bg-white text-primary-900 px-5 py-2 rounded-full text-sm font-extrabold shadow-md hover:bg-gray-100 transition-all flex items-center gap-2 whitespace-nowrap border border-primary-100"
                         >
                             <UserPlusIcon className="h-4 w-4" />
-                            إنشاء حساب طالب
+                            Create Student Account
                         </Link>
                         <Link
                             to="/login"
                             className="bg-primary-800/40 text-white border border-white/30 px-5 py-2 rounded-full text-sm font-bold hover:bg-white/10 transition-all flex items-center gap-2 whitespace-nowrap"
                         >
                             <ArrowRightOnRectangleIcon className="h-4 w-4" />
-                            تسجيل الدخول
+                            Sign In
                         </Link>
                     </div>
                 </div>

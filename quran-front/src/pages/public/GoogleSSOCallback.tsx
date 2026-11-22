@@ -49,7 +49,7 @@ const GoogleSSOCallback: React.FC = () => {
     return (
         <>
             <Seo title={`تسجيل الدخول عبر Google`} description={`صفحة تسجيل الدخول الآمن عبر Google لمنصة ${branding.nameAr}.`} noIndex />
-            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6" dir="rtl">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6" dir="ltr">
             <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 text-center">
                 {/* Logo or Premium Icon */}
                 <div className="w-16 h-16 bg-primary-50 dark:bg-primary-900/30 rounded-full flex items-center justify-center mx-auto mb-6">

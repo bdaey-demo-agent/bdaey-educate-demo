@@ -171,7 +171,7 @@ const Teachers: React.FC = () => {
         }
 
         return (
-            <div className="flex justify-center items-center mt-12 space-x-2 space-x-reverse" dir="rtl">
+            <div className="flex justify-center items-center mt-12 space-x-2 space-x-reverse" dir="ltr">
                 <button
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}

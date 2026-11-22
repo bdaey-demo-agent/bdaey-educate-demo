@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
                 {/* Left Section: Logo & Sidebar Toggle */}
                 <div className="flex items-center gap-4">
                     <Link to={getHomeLink()} className="flex items-center gap-2 text-decoration-none">
-                        <img src={branding.logoUrl} alt={`${branding.nameAr} - للتعليم القرآني`} className="h-11 w-auto object-contain" />
+                        <img src={branding.logoUrl} alt={`${branding.nameEn} - Quran Education`} className="h-11 w-auto object-contain" />
                     </Link>
 
                     {/* Mobile Sidebar Toggle (Only if onToggleSidebar is provided) */}
@@ -46,14 +46,14 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
 
                 {/* Middle: Navigation Links */}
                 <nav className="hidden md:flex items-center gap-8">
-                    <Link to={getHomeLink()} className="text-gray-700 hover:text-primary-green font-medium transition-colors">الرئيسية</Link>
-                    <Link to="/teachers-public" className="text-gray-700 hover:text-primary-green font-medium transition-colors">المعلمون</Link>
+                    <Link to={getHomeLink()} className="text-gray-700 hover:text-primary-green font-medium transition-colors">Home</Link>
+                    <Link to="/teachers-public" className="text-gray-700 hover:text-primary-green font-medium transition-colors">Teachers</Link>
                     {isAuthenticated && (
                         <Link
                             to={user?.role === 'Teacher' ? '/teacher/dashboard' : '/student/dashboard'}
                             className="text-gray-700 hover:text-primary-green font-medium transition-colors"
                         >
-                            لوحة التحكم
+                            Dashboard
                         </Link>
                     )}
                 </nav>
@@ -71,10 +71,10 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
                             <div className="hidden md:flex items-center gap-3 border-r pr-4 dark:border-gray-700">
                                 <div className="text-right">
                                     <p className="text-sm font-bold m-0 font-heading text-primary-green dark:text-gold-400">
-                                        {user?.fullName || 'المستخدم'}
+                                        {user?.fullName || 'User'}
                                     </p>
                                     <p className="text-xs text-gray-500 m-0 text-right">
-                                        {user?.role === 'Teacher' ? 'معلم' : 'طالب'}
+                                        {user?.role === 'Teacher' ? 'Teacher' : 'Student'}
                                     </p>
                                 </div>
                                 <div className="w-10 h-10 rounded-full bg-primary-green text-white flex items-center justify-center font-bold text-lg">
@@ -84,9 +84,9 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
                         </>
                     ) : (
                         <div className="hidden md:flex items-center gap-4">
-                            <Link to="/login" className="text-gray-700 hover:text-primary-green font-medium transition-colors">تسجيل الدخول</Link>
+                            <Link to="/login" className="text-gray-700 hover:text-primary-green font-medium transition-colors">Sign In</Link>
                             <Link to="/register/student" className="btn-primary text-sm px-5 py-2">
-                                ابدأ الآن
+                                Get Started
                             </Link>
                         </div>
                     )}
@@ -111,8 +111,8 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
                 {/* Mobile Menu Overlay */}
                 {isMenuOpen && (
                     <div className="md:hidden bg-white dark:bg-gray-800 border-t dark:border-gray-700 absolute w-full left-0 top-20 shadow-lg py-4 px-6 flex flex-col gap-4 animate-fade-in z-40">
-                        <Link to={getHomeLink()} onClick={() => setIsMenuOpen(false)} className="py-2 text-gray-700 hover:text-primary-green border-b border-gray-100 dark:border-gray-700">الرئيسية</Link>
-                        <Link to="/teachers-public" onClick={() => setIsMenuOpen(false)} className="py-2 text-gray-700 hover:text-primary-green border-b border-gray-100 dark:border-gray-700">المعلمون</Link>
+                        <Link to={getHomeLink()} onClick={() => setIsMenuOpen(false)} className="py-2 text-gray-700 hover:text-primary-green border-b border-gray-100 dark:border-gray-700">Home</Link>
+                        <Link to="/teachers-public" onClick={() => setIsMenuOpen(false)} className="py-2 text-gray-700 hover:text-primary-green border-b border-gray-100 dark:border-gray-700">Teachers</Link>
 
                         <div className="pt-4 flex flex-col gap-3">
                             {isAuthenticated ? (
@@ -121,12 +121,12 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
                                     onClick={() => setIsMenuOpen(false)}
                                     className="btn-primary text-center py-3"
                                 >
-                                    لوحة التحكم
+                                    Dashboard
                                 </Link>
                             ) : (
                                 <>
-                                    <Link to="/login" onClick={() => setIsMenuOpen(false)} className="btn-outline text-center py-3 border-gray-300 text-gray-700">تسجيل الدخول</Link>
-                                    <Link to="/register/student" onClick={() => setIsMenuOpen(false)} className="btn-gold text-center py-3">ابدأ رحلتك</Link>
+                                    <Link to="/login" onClick={() => setIsMenuOpen(false)} className="btn-outline text-center py-3 border-gray-300 text-gray-700">Sign In</Link>
+                                    <Link to="/register/student" onClick={() => setIsMenuOpen(false)} className="btn-gold text-center py-3">Start Your Journey</Link>
                                 </>
                             )}
                         </div>

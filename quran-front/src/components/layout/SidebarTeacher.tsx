@@ -13,15 +13,15 @@ const SidebarTeacher: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     const { user, logout } = useAuth(); // Destructure user to get ID
 
     const navigation = [
-        { name: 'لوحة التحكم', href: '/teacher/dashboard', icon: RectangleStackIcon },
-        { name: 'الباقات', href: '/teacher/packages', icon: BriefcaseIcon }, // Consider different icon if available
-        { name: 'طلبات الحجز', href: '/teacher/bookings', icon: ClipboardDocumentListIcon },
-        { name: 'الرسائل', href: '/teacher/chat', icon: ChatBubbleLeftRightIcon },
-        { name: 'طلابي', href: '/teacher/students', icon: UserGroupIcon },
-        { name: 'الجدول', href: '/teacher/schedule', icon: CalendarIcon },
-        { name: 'الماديات', href: '/teacher/finance', icon: CurrencyDollarIcon },
-        { name: 'الملف الشخصي', href: `/teacher/${user?.userName || user?.id || 'profile'}`, icon: UserCircleIcon }, // Public Profile link
-        { name: 'الإعدادات', href: '/teacher/dashboard?tab=settings', icon: CogIcon }, // Settings link
+        { name: 'Dashboard', href: '/teacher/dashboard', icon: RectangleStackIcon },
+        { name: 'Packages', href: '/teacher/packages', icon: BriefcaseIcon }, // Consider different icon if available
+        { name: 'Booking Requests', href: '/teacher/bookings', icon: ClipboardDocumentListIcon },
+        { name: 'Messages', href: '/teacher/chat', icon: ChatBubbleLeftRightIcon },
+        { name: 'My Students', href: '/teacher/students', icon: UserGroupIcon },
+        { name: 'Schedule', href: '/teacher/schedule', icon: CalendarIcon },
+        { name: 'Finances', href: '/teacher/finance', icon: CurrencyDollarIcon },
+        { name: 'Profile', href: `/teacher/${user?.userName || user?.id || 'profile'}`, icon: UserCircleIcon }, // Public Profile link
+        { name: 'Settings', href: '/teacher/dashboard?tab=settings', icon: CogIcon }, // Settings link
     ];
 
     const isActive = (path: string) => location.pathname === path;
@@ -51,7 +51,7 @@ const SidebarTeacher: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <div className={sidebarClass}>
                 <div className="sidebar-logo p-6 border-b dark:border-gray-700 flex justify-between items-center">
                     <Link to="/" className="flex items-center gap-2 text-decoration-none">
-                        <h2 className="text-xl font-bold text-primary-green dark:text-white font-heading m-0">قائمة المعلم</h2>
+                        <h2 className="text-xl font-bold text-primary-green dark:text-white font-heading m-0">Teacher Menu</h2>
                     </Link>
                     {/* Close Button for Mobile */}
                     <button onClick={onClose} className="md:hidden text-gray-500 hover:text-red-500">
@@ -79,7 +79,7 @@ const SidebarTeacher: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                         className="menu-item w-full text-danger hover:bg-red-50 dark:hover:bg-red-900/10 justify-start"
                     >
                         <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                        <span className="font-body">تسجيل الخروج</span>
+                        <span className="font-body">Sign Out</span>
                     </button>
                 </div>
             </div>

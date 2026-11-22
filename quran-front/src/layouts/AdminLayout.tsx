@@ -49,7 +49,7 @@ const AdminLayout = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-slate-900 flex transition-colors duration-300" dir="rtl">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-900 flex transition-colors duration-300" dir="ltr">
             {/* Sidebar Mobile Overlay */}
             {isSidebarOpen && (
                 <div

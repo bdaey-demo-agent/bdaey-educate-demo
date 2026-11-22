@@ -13,12 +13,12 @@
  * no changes.
  */
 export const branding = {
-    nameAr: import.meta.env.VITE_BRAND_NAME_AR || 'بدائي',
+    nameAr: import.meta.env.VITE_BRAND_NAME_AR || 'Bdaey',
     nameEn: import.meta.env.VITE_BRAND_NAME_EN || 'Bdaey',
     logoUrl: import.meta.env.VITE_BRAND_LOGO_URL || '/logo.png',
     siteUrl: import.meta.env.VITE_BRAND_SITE_URL || 'https://bdaey.com',
     twitterHandle: import.meta.env.VITE_BRAND_TWITTER || '@bdaey',
 } as const;
 
-/** "بدائي - Bdaey" style display name used in titles and schema. */
-export const brandDisplayName = `${branding.nameAr} - ${branding.nameEn}`;
+/** Display name used in titles and schema (English branch). */
+export const brandDisplayName = branding.nameEn;

@@ -9,7 +9,7 @@ const StudentLayout: React.FC = () => {
     const { user, resendVerification } = useAuth();
 
     return (
-        <div className="min-h-screen bg-light dark:bg-gray-900 transition-colors duration-300" dir="rtl">
+        <div className="min-h-screen bg-light dark:bg-gray-900 transition-colors duration-300" dir="ltr">
             {/* Sidebar (Fixed Right) */}
             <Sidebar
                 isOpen={sidebarOpen}

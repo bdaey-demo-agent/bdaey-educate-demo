@@ -20,8 +20,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     onConfirm,
     title,
     message,
-    confirmText = 'تأكيد',
-    cancelText = 'إلغاء',
+    confirmText = 'Confirm',
+    cancelText = 'Cancel',
     isDanger = false,
     children
 }) => {

@@ -37,7 +37,7 @@ const TeacherLayout: React.FC = () => {
     if (loading) return <div className="p-10 text-center">جاري التحميل...</div>;
 
     return (
-        <div className="min-h-screen bg-light dark:bg-gray-900 transition-colors duration-300" dir="rtl">
+        <div className="min-h-screen bg-light dark:bg-gray-900 transition-colors duration-300" dir="ltr">
             {/* Sidebar (Fixed Right) */}
             <SidebarTeacher
                 isOpen={sidebarOpen}

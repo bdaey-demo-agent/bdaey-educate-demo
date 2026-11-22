@@ -147,19 +147,19 @@ const NotificationsDropdown: React.FC = () => {
             {isOpen && (
                 <div className="fixed left-4 right-4 top-20 md:absolute md:top-full md:left-0 md:right-auto md:w-80 md:translate-x-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 z-50">
                     <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                        <h3 className="font-bold text-gray-800 dark:text-white">الإشعارات</h3>
+                        <h3 className="font-bold text-gray-800 dark:text-white">Notifications</h3>
                         {unreadCount > 0 && (
                             <button
                                 onClick={handleReadAll}
                                 className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400"
                             >
-                                تحديد الكل كمقروء
+                                Mark all as read
                             </button>
                         )}
                     </div>
                     <div className="max-h-96 overflow-y-auto">
                         {notifications.length === 0 ? (
-                            <div className="p-4 text-center text-gray-500 text-sm">لا توجد إشعارات</div>
+                            <div className="p-4 text-center text-gray-500 text-sm">No notifications</div>
                         ) : (
                             notifications.map(notif => (
                                 <div
@@ -169,7 +169,7 @@ const NotificationsDropdown: React.FC = () => {
                                 >
                                     <div className="flex justify-between items-start">
                                         <h4 className={`text-sm font-semibold flex items-center gap-1 ${!notif.isRead ? 'text-blue-700 dark:text-blue-300' : 'text-gray-800 dark:text-gray-200'}`}>
-                                            {notif.message.includes('خصم') && <ExclamationTriangleIcon className="h-4 w-4 text-red-500" />}
+                                            {notif.message.includes('discount') || notif.message.includes('خصم') && <ExclamationTriangleIcon className="h-4 w-4 text-red-500" />}
                                             {notif.title}
                                         </h4>
                                         <span className="text-xs text-gray-400 dark:text-gray-500">

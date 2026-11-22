@@ -15,7 +15,7 @@ const PublicLayout: React.FC = () => {
     // const getHomeLink = () => { ... } // Unused
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100 flex flex-col font-body" dir="rtl">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans text-gray-900 dark:text-gray-100 flex flex-col font-body" dir="ltr">
             {/* Public Header */}
             {/* Public Header */}
             <Header />
@@ -31,39 +31,39 @@ const PublicLayout: React.FC = () => {
                     <div>
                         <h3 className="text-2xl font-bold text-white mb-4">{branding.nameAr}</h3>
                         <p className="text-sm leading-relaxed">
-                            منصة تعليمية رائدة لربط طلاب القرآن الكريم بأمهر المعلمين المجازين حول العالم.
+                            A leading learning platform connecting Quran students with certified, Ijazah-holding teachers around the world.
                         </p>
                     </div>
                     <div>
-                        <h4 className="font-bold text-white mb-4">روابط سريعة</h4>
+                        <h4 className="font-bold text-white mb-4">Quick Links</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link to="/about-us" className="hover:text-white">من نحن</Link></li>
-                            <li><Link to="/teachers-public" className="hover:text-white">تصفح المعلمين</Link></li>
-                            <li><Link to="/how-to-use" className="hover:text-white">كيفية استخدام المنصة</Link></li>
+                            <li><Link to="/about-us" className="hover:text-white">About Us</Link></li>
+                            <li><Link to="/teachers-public" className="hover:text-white">Browse Teachers</Link></li>
+                            <li><Link to="/how-to-use" className="hover:text-white">How to Use the Platform</Link></li>
                             {!user && (
-                                <li><Link to="/register/teacher" className="hover:text-white">انضم كمعلم</Link></li>
+                                <li><Link to="/register/teacher" className="hover:text-white">Join as a Teacher</Link></li>
                             )}
                         </ul>
                     </div>
                     <div>
-                        <h4 className="font-bold text-white mb-4">الدعم</h4>
+                        <h4 className="font-bold text-white mb-4">Support</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link to="/contact" className="hover:text-white">تواصل معنا</Link></li>
-                            <li><Link to="/privacy" className="hover:text-white">سياسة الخصوصية</Link></li>
-                            <li><Link to="/terms" className="hover:text-white">شروط الاستخدام</Link></li>
+                            <li><Link to="/contact" className="hover:text-white">Contact Us</Link></li>
+                            <li><Link to="/privacy" className="hover:text-white">Privacy Policy</Link></li>
+                            <li><Link to="/terms" className="hover:text-white">Terms of Use</Link></li>
                         </ul>
                     </div>
                     <div>
-                        <h4 className="font-bold text-white mb-4">سياسة الأموال</h4>
+                        <h4 className="font-bold text-white mb-4">Money Policies</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link to="/teacher-financial-policy" className="hover:text-white">سياسة الأموال (للمعلمين)</Link></li>
-                            <li><Link to="/student-refund-policy" className="hover:text-white">سياسة استرجاع الأموال (للطلاب)</Link></li>
+                            <li><Link to="/teacher-financial-policy" className="hover:text-white">Financial Policy (Teachers)</Link></li>
+                            <li><Link to="/student-refund-policy" className="hover:text-white">Refund Policy (Students)</Link></li>
                         </ul>
                     </div>
 
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-gray-800 text-center text-sm">
-                    © {new Date().getFullYear()} منصة {branding.nameAr}. جميع الحقوق محفوظة.
+                    © {new Date().getFullYear()} {branding.nameEn}. All rights reserved.
                 </div>
             </footer>
 

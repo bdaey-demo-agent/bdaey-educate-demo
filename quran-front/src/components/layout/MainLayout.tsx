@@ -30,7 +30,7 @@ const MainLayout: React.FC = () => {
     }, [progress]);
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300" dir="rtl">
+        <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors duration-300" dir="ltr">
             {/* 1. Progress Bar */}
             <div className="fixed top-0 left-0 w-full h-1 z-50 pointer-events-none">
                 <div
@@ -82,7 +82,7 @@ const MainLayout: React.FC = () => {
                                 <div className="hidden md:flex md:space-x-8 md:space-x-reverse items-center">
                                     <div className="relative group">
                                         <button className="text-gray-100 hover:text-gold-500 px-3 py-2 text-base font-medium transition-colors font-item flex items-center gap-1 focus:outline-none">
-                                            الرئيسية
+                                            Home
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                             </svg>
@@ -91,28 +91,28 @@ const MainLayout: React.FC = () => {
                                         {/* Dropdown Menu */}
                                         <div className="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-right">
                                             <Link to="/admin/dashboard?tab=overview" className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-200 text-sm font-medium border-b border-gray-100 dark:border-gray-700/50">
-                                                نظرة عامة
+                                                Overview
                                             </Link>
                                             <Link to="/admin/dashboard?tab=teachers" className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-200 text-sm font-medium border-b border-gray-100 dark:border-gray-700/50">
-                                                المعلمون
+                                                Teachers
                                             </Link>
                                             <Link to="/admin/dashboard?tab=students" className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-200 text-sm font-medium border-b border-gray-100 dark:border-gray-700/50">
-                                                الطلاب
+                                                Students
                                             </Link>
                                             <Link to="/admin/dashboard?tab=messages" className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-200 text-sm font-medium transition-colors">
-                                                الرسائل
+                                                Messages
                                             </Link>
                                         </div>
                                     </div>
 
                                     <Link to="/admin/financial" className="text-gray-100 hover:text-gold-500 px-3 py-2 text-base font-medium transition-colors font-item">
-                                        المعاملات المالية
+                                        Transactions
                                     </Link>
                                     <Link to="/admin/how-it-works" className="text-gray-100 hover:text-gold-500 px-3 py-2 text-base font-medium transition-colors font-item">
-                                        دليل الاستخدام
+                                        User Guide
                                     </Link>
                                     <Link to="/admin/settings" className="text-gray-100 hover:text-gold-500 px-3 py-2 text-base font-medium transition-colors font-item">
-                                        الإعدادات
+                                        Settings
                                     </Link>
                                 </div>
 
@@ -129,7 +129,7 @@ const MainLayout: React.FC = () => {
                                         <div className="flex items-center gap-4">
                                             <NotificationsDropdown />
                                             <div className="text-base font-medium text-white">
-                                                مرحباً، {user.fullName}
+                                                Hello, {user.fullName}
                                             </div>
                                             <button
                                                 onClick={() => {
@@ -138,7 +138,7 @@ const MainLayout: React.FC = () => {
                                                 }}
                                                 className="bg-red-500/10 hover:bg-red-500/20 text-red-500 hover:text-red-400 border border-red-500/50 px-3 py-1 rounded text-sm transition-colors"
                                             >
-                                                تسجيل خروج
+                                                Sign Out
                                             </button>
                                         </div>
                                     ) : (
@@ -148,13 +148,13 @@ const MainLayout: React.FC = () => {
                                                 to="/login"
                                                 className="px-5 py-2 border border-white/30 text-white rounded-md hover:bg-white/10 transition-colors text-sm font-bold"
                                             >
-                                                تسجيل الدخول
+                                                Sign In
                                             </Link>
                                             <Link
                                                 to="/register/teacher"
                                                 className="rounded-md bg-tomato-500 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-tomato-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tomato-500 transition-colors"
                                             >
-                                                انضم كمعلم
+                                                Join as Teacher
                                             </Link>
                                         </div>
                                     )}
@@ -170,10 +170,10 @@ const MainLayout: React.FC = () => {
                                 {!user && (
                                     <div className="mt-4 border-t border-white/10 pt-4 flex flex-col gap-2">
                                         <Disclosure.Button as={Link} to="/login" className="block w-full text-center rounded-md px-3 py-2 text-base font-medium border border-white/30 text-white hover:bg-white/10">
-                                            تسجيل الدخول
+                                            Sign In
                                         </Disclosure.Button>
                                         <Disclosure.Button as={Link} to="/register/student" className="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-tomato-500 text-white hover:bg-tomato-600">
-                                            حساب جديد
+                                            Sign Up
                                         </Disclosure.Button>
                                     </div>
                                 )}
@@ -191,10 +191,10 @@ const MainLayout: React.FC = () => {
                 <div className="container mx-auto px-4 text-center">
                     <h3 className="text-xl font-bold text-gold-500 mb-4">{branding.nameAr}</h3>
                     <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 max-w-md mx-auto">
-                        نمكنك من تعلم القرآن والعلوم الشرعية مع نخبة من المعلمين المعتمدين.
+                        Empowering you to learn Quran and Islamic sciences with certified teachers.
                     </p>
                     <p className="text-gray-500 dark:text-gray-500 text-sm">
-                        © {new Date().getFullYear()} منصة {branding.nameAr} التعليمية. جميع الحقوق محفوظة.
+                        © {new Date().getFullYear()} {branding.nameEn}. All rights reserved.
                     </p>
                 </div>
             </footer>

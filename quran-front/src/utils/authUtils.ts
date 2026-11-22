@@ -14,7 +14,7 @@ export const handleAuthError = (err: any, navigate: any, setError: (msg: string)
     }
 
     // Default error handling
-    const msg = err.response?.data?.message || err.response?.data || 'فشل تسجيل الدخول. يرجى التحقق من بياناتك.';
-    setError(typeof msg === 'string' ? msg : 'فشل تسجيل الدخول. يرجى التحقق من بياناتك.');
+    const msg = err.response?.data?.message || err.response?.data || 'Sign-in failed. Please check your credentials.';
+    setError(typeof msg === 'string' ? msg : 'Sign-in failed. Please check your credentials.');
     console.error(err);
 };

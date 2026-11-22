@@ -51,8 +51,8 @@ const teacherService = {
         });
 
         if (search) params.append('search', search);
-        if (category && category !== 'الكل') params.append('category', category);
-        if (gender && gender !== 'الكل') params.append('gender', gender);
+        if (category && category !== 'All') params.append('category', category);
+        if (gender && gender !== 'All') params.append('gender', gender);
         if (minPrice !== undefined) params.append('minPrice', minPrice.toString());
         if (maxPrice !== undefined) params.append('maxPrice', maxPrice.toString());
         if (isOnline) params.append('isOnline', 'true');

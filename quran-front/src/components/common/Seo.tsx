@@ -59,7 +59,7 @@ export function OrganizationSchema() {
     alternateName: branding.nameEn,
     url: SITE_URL,
     logo: `${branding.siteUrl}/logo.png`,
-    description: 'منصة رائدة لتحفيظ القرآن الكريم وتعليم التجويد والقراءات العشر أونلاين مع نخبة من المعلمين المعتمدين والمجازين.',
+    description: 'A leading online platform for Quran memorization, Tajweed, and the Ten Qira\'at with certified, Ijazah-holding teachers.',
     sameAs: [
       'https://facebook.com/bdaey',
       'https://twitter.com/bdaey',

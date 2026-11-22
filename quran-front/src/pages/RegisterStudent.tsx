@@ -156,7 +156,7 @@ const RegisterStudent: React.FC = () => {
                         </div>
                     )}
 
-                    <form className="mt-8 space-y-6" onSubmit={handleSubmit} dir="rtl">
+                    <form className="mt-8 space-y-6" onSubmit={handleSubmit} dir="ltr">
                         <div className="space-y-4">
 
                             {/* Full Name & Phone Row */}

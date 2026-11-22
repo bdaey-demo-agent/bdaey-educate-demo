@@ -80,7 +80,7 @@ const SessionEvaluationModal: React.FC<SessionEvaluationModalProps> = ({
                     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
                 </Transition.Child>
 
-                <div className="fixed inset-0 overflow-y-auto" dir="rtl">
+                <div className="fixed inset-0 overflow-y-auto" dir="ltr">
                     <div className="flex min-h-full items-center justify-center p-4 text-center">
                         <Transition.Child
                             as={Fragment}

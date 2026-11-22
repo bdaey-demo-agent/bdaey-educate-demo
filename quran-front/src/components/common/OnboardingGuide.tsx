@@ -69,7 +69,7 @@ const OnboardingGuide: React.FC<OnboardingGuideProps> = ({
                             style={{ width: `${progress}%` }}
                         ></div>
                     </div>
-                    <span className="text-xs font-bold text-primary-green">{progress}% مكتمل</span>
+                    <span className="text-xs font-bold text-primary-green">{progress}% complete</span>
                 </div>
             </div>
 
@@ -108,7 +108,7 @@ const OnboardingGuide: React.FC<OnboardingGuideProps> = ({
                                     to={step.linkTo}
                                     className="text-xs font-bold text-gold-600 hover:text-gold-700 dark:text-gold-400 inline-flex items-center gap-1 group"
                                 >
-                                    {step.linkText || 'ابدأ الآن'}
+                                    {step.linkText || 'Get Started'}
                                     <span className="group-hover:-translate-x-1 transition-transform">←</span>
                                 </Link>
                             )}

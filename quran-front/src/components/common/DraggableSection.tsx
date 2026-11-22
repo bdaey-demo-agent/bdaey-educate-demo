@@ -29,14 +29,14 @@ const DraggableSection: React.FC<DraggableSectionProps> = ({
                     <button
                         onClick={() => onMove(index, 'up')}
                         className="p-1 hover:bg-gold-50 dark:hover:bg-gold-900/30 text-gray-500 hover:text-gold-600 rounded-full transition-colors"
-                        title="تحريك للأعلى"
+                        title="Move up"
                     >
                         <ChevronUpIcon className="h-5 w-5" />
                     </button>
                     <button
                         onClick={() => onMove(index, 'down')}
                         className="p-1 hover:bg-gold-50 dark:hover:bg-gold-900/30 text-gray-500 hover:text-gold-600 rounded-full transition-colors"
-                        title="تحريك للأسفل"
+                        title="Move down"
                     >
                         <ChevronDownIcon className="h-5 w-5" />
                     </button>

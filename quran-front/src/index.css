@@ -105,7 +105,7 @@ body,
     z-index: 99999;
     background: radial-gradient(circle at top right, #0f172a 0%, #020617 100%);
     font-family: 'Cairo', 'Segoe UI', sans-serif;
-    direction: rtl;
+    direction: ltr;
     padding: 20px;
     box-sizing: border-box;
 }

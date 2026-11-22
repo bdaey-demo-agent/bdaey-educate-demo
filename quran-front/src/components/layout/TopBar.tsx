@@ -41,10 +41,10 @@ const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
                 <div className="d-flex align-center gap-3 border-r px-4 dark:border-gray-700">
                     <div className="text-left hidden md:block">
                         <p className="text-sm font-bold m-0 font-heading text-primary-green dark:text-gold-400">
-                            {user?.fullName || 'المستخدم'}
+                            {user?.fullName || 'User'}
                         </p>
                         <p className="text-xs text-gray-500 m-0 text-left">
-                            {user?.role === 'Teacher' ? 'معلم' : 'طالب'}
+                            {user?.role === 'Teacher' ? 'Teacher' : 'Student'}
                         </p>
                     </div>
                     {/* Placeholder Avatar */}
