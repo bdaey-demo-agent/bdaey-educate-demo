@@ -149,7 +149,7 @@ const AdminPromoCodes: React.FC = () => {
                                                 {code.expiryDate ? (
                                                     <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300">
                                                         <ClockIcon className="w-4 h-4" />
-                                                        {new Date(code.expiryDate).toLocaleDateString('ar-EG')}
+                                                        {new Date(code.expiryDate).toLocaleDateString('en-GB')}
                                                     </div>
                                                 ) : (
                                                     <span className="text-gray-400">Open</span>
@@ -211,7 +211,7 @@ const AdminPromoCodes: React.FC = () => {
                                                                         </div>
                                                                         <div className="text-xs text-gray-500 flex items-center gap-1">
                                                                             <ClockIcon className="w-3 h-3" />
-                                                                            {new Date(usage.usedAt).toLocaleString('ar-EG')}
+                                                                            {new Date(usage.usedAt).toLocaleString('en-GB')}
                                                                         </div>
                                                                     </div>
                                                                 ))}

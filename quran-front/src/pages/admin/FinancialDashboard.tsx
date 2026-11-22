@@ -95,7 +95,7 @@ const FinancialDashboard: React.FC = () => {
 
 
     const formatCurrency = (amount: number, currency: string = 'EGP') => {
-        return new Intl.NumberFormat('ar-EG', { style: 'currency', currency }).format(amount);
+        return new Intl.NumberFormat('en-GB', { style: 'currency', currency }).format(amount);
     };
 
     // statusColors removed in favor of utils
@@ -245,8 +245,8 @@ const FinancialDashboard: React.FC = () => {
                                 transactions.map((t) => (
                                     <tr key={t.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 dir-ltr text-right">
-                                            {new Date(t.createdAt).toLocaleDateString('ar-EG')} <br />
-                                            <span className="text-xs">{new Date(t.createdAt).toLocaleTimeString('ar-EG')}</span>
+                                            {new Date(t.createdAt).toLocaleDateString('en-GB')} <br />
+                                            <span className="text-xs">{new Date(t.createdAt).toLocaleTimeString('en-GB')}</span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm font-medium text-gray-900 dark:text-white">{t.user.fullName}</div>

@@ -262,7 +262,7 @@ const AdminTeachers: React.FC = () => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                                        {new Date(teacher.createdAt).toLocaleDateString('ar-EG')}
+                                        {new Date(teacher.createdAt).toLocaleDateString('en-GB')}
                                     </td>
                                     <td className="px-6 py-4 text-left">
                                         <Menu as="div" className="relative inline-block text-left">
@@ -519,7 +519,7 @@ const AdminTeachers: React.FC = () => {
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500 dark:text-gray-400">Date of Birth</p>
-                                        <p className="font-semibold">{editingTeacher.dateOfBirth ? new Date(editingTeacher.dateOfBirth).toLocaleDateString('ar-EG') : '-'}</p>
+                                        <p className="font-semibold">{editingTeacher.dateOfBirth ? new Date(editingTeacher.dateOfBirth).toLocaleDateString('en-GB') : '-'}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500 dark:text-gray-400">National ID Number</p>
@@ -761,7 +761,7 @@ const AdminTeachers: React.FC = () => {
                                                     <span className={`font-bold ${t.amount >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`} dir="ltr">
                                                         {t.amount} {viewingWallet.data.currency}
                                                     </span>
-                                                    <span className="text-xs text-gray-400">{new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
+                                                    <span className="text-xs text-gray-400">{new Date(t.createdAt).toLocaleDateString('en-GB')}</span>
                                                 </div>
                                                 <p className="text-sm text-gray-600 dark:text-gray-300">{t.description}</p>
                                             </div>

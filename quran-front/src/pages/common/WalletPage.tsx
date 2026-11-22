@@ -372,7 +372,7 @@ const WalletPage: React.FC = () => {
                                             <p className={`font-bold ${isFailedStatus(t.status) ? 'text-red-700 dark:text-red-400 line-through' : 'text-gray-900 dark:text-white'}`}>{getTransactionText(t.type)}</p>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">{t.description}</p>
                                             <p className="text-xs text-gray-400 mt-1">
-                                                {new Date(t.createdAt).toLocaleDateString('ar-EG')} - {new Date(t.createdAt).toLocaleTimeString('ar-EG')}
+                                                {new Date(t.createdAt).toLocaleDateString('en-GB')} - {new Date(t.createdAt).toLocaleTimeString('en-GB')}
                                             </p>
                                             {getStatusBadge(t.status, t.type)}
                                         </div>

@@ -408,7 +408,7 @@ const AdminDashboard: React.FC = () => {
                                                 {teacher.commissionRate !== null ? `${teacher.commissionRate}%` : <span className="text-gray-400">Default</span>}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
-                                                {new Date(teacher.createdAt).toLocaleDateString('ar-EG')}
+                                                {new Date(teacher.createdAt).toLocaleDateString('en-GB')}
                                             </td>
                                             <td className="px-6 py-4 text-sm">
                                                 <Menu as="div" className="relative inline-block text-left">
@@ -584,7 +584,7 @@ const AdminDashboard: React.FC = () => {
                                                 {student.phoneNumber || '-'}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
-                                                {new Date(student.createdAt).toLocaleDateString('ar-EG')}
+                                                {new Date(student.createdAt).toLocaleDateString('en-GB')}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <Menu as="div" className="relative inline-block text-left">
@@ -737,7 +737,7 @@ const AdminDashboard: React.FC = () => {
                                                     <div key={t.id} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-sm">
                                                         <div>
                                                             <p className="font-bold text-gray-800 dark:text-gray-200">{t.description}</p>
-                                                            <span className="text-xs text-gray-500">{new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
+                                                            <span className="text-xs text-gray-500">{new Date(t.createdAt).toLocaleDateString('en-GB')}</span>
                                                         </div>
                                                         <span className={`font-bold ${t.type === 'Deposit' ? 'text-green-600' : 'text-red-600'}`} dir="ltr">
                                                             {t.type === 'Deposit' ? '+' : '-'}{t.amount} {viewingWallet.data.currency}

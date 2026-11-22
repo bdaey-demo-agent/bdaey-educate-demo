@@ -887,7 +887,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ demoMode = false })
                                                 {booking.packageName}
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                {new Date(booking.createdAt).toLocaleDateString('ar-EG')}
+                                                {new Date(booking.createdAt).toLocaleDateString('en-GB')}
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <span className={`px-2 py-1 rounded-full text-xs ${getStatusColor(booking.status)}`}>

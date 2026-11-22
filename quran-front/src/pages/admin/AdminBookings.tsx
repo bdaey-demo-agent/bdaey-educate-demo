@@ -139,7 +139,7 @@ const AdminBookings = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{b.teacherName}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{b.packageName}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white font-bold">{b.totalPrice} {b.currency}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(b.createdAt).toLocaleDateString('ar-EG')}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(b.createdAt).toLocaleDateString('en-GB')}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(b.status)}`}>
                                             {translateStatus(b.status)}
@@ -213,7 +213,7 @@ const AdminBookings = () => {
                                         <div className="flex items-center gap-3">
                                             <span className="text-gray-400 text-sm">#{idx + 1}</span>
                                             <span className="font-medium text-gray-800 dark:text-gray-200" dir="ltr">
-                                                {new Date(s.scheduledAt).toLocaleString('ar-EG')}
+                                                {new Date(s.scheduledAt).toLocaleString('en-GB')}
                                             </span>
                                         </div>
                                         <span className={`text-sm px-2 py-1 rounded ${getStatusColor(s.status)}`}>

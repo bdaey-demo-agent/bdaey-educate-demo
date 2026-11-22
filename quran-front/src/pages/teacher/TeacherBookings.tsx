@@ -206,7 +206,7 @@ const TeacherBookings: React.FC = () => {
                                                         {booking.totalPrice} {booking.currency}
                                                     </span>
                                                     <span>
-                                                        {new Date(booking.createdAt).toLocaleDateString('ar-EG')}
+                                                        {new Date(booking.createdAt).toLocaleDateString('en-GB')}
                                                     </span>
                                                 </div>
                                             </div>

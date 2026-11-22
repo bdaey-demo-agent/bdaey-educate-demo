@@ -1441,14 +1441,14 @@ const TeacherProfile: React.FC = () => {
                                         {Object.entries(visibleSlots).sort().map(([date, slots]) => (
                                             <div key={date}>
                                                 <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-3 border-b pb-1 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800">
-                                                    {new Date(date).toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                                    {new Date(date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                                                 </h3>
                                                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
                                                     {slots.map(slot => {
                                                         const isSelected = proposedTimes.includes(slot);
                                                         const isDisabled = isSlotDisabled(slot);
                                                         const isPast = new Date(slot) < new Date();
-                                                        const time = new Date(slot).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+                                                        const time = new Date(slot).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
                                                         // Check if ALL occurrences are past
                                                         const d = new Date(slot);

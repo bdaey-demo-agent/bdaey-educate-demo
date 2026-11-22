@@ -242,13 +242,13 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                     <div className="flex items-start gap-4">
                                         <div className="flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg p-3 min-w-[80px]">
                                             <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
-                                                {sessionDate.toLocaleDateString('ar-EG', { month: 'short' })}
+                                                {sessionDate.toLocaleDateString('en-GB', { month: 'short' })}
                                             </span>
                                             <span className="text-2xl font-bold text-gray-900 dark:text-white">
                                                 {sessionDate.getDate()}
                                             </span>
                                             <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                {sessionDate.toLocaleDateString('ar-EG', { weekday: 'short' })}
+                                                {sessionDate.toLocaleDateString('en-GB', { weekday: 'short' })}
                                             </span>
                                         </div>
                                         <div>
@@ -260,9 +260,9 @@ const Schedule: React.FC<ScheduleProps> = ({ demoMode = false, role }) => {
                                             <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                                                 <span className="flex items-center gap-1">
                                                     <ClockIcon className="h-4 w-4" />
-                                                    {sessionDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}
+                                                    {sessionDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                                                     {' - '}
-                                                    {new Date(sessionDate.getTime() + session.durationMinutes * 60000).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}
+                                                    {new Date(sessionDate.getTime() + session.durationMinutes * 60000).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                                                 </span>
                                                 <span>({session.durationMinutes} min)</span>
                                             </div>

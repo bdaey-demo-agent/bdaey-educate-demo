@@ -112,7 +112,7 @@ const StudentProgress: React.FC = () => {
                                             <div className="flex items-center gap-3 mb-1">
                                                 <h3 className="font-bold text-lg text-gray-900 dark:text-white">Session with teacher: {ev.teacherName}</h3>
                                                 <span className="text-xs font-medium bg-white dark:bg-gray-700 px-3 py-1 rounded-full text-gray-500 border border-gray-200 dark:border-gray-600 shadow-sm">
-                                                    {new Date(ev.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                                    {new Date(ev.createdAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
                                                 </span>
                                             </div>
 

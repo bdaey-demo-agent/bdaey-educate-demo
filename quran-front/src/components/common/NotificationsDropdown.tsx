@@ -173,7 +173,7 @@ const NotificationsDropdown: React.FC = () => {
                                             {notif.title}
                                         </h4>
                                         <span className="text-xs text-gray-400 dark:text-gray-500">
-                                            {new Date(notif.createdAt).toLocaleDateString('ar-EG')}
+                                            {new Date(notif.createdAt).toLocaleDateString('en-GB')}
                                         </span>
                                     </div>
                                     <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 whitespace-pre-wrap">

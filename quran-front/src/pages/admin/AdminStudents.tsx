@@ -101,7 +101,7 @@ const AdminStudents = () => {
                                         {student.phoneNumber || '-'}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                                        {new Date(student.createdAt).toLocaleDateString('ar-EG')}
+                                        {new Date(student.createdAt).toLocaleDateString('en-GB')}
                                     </td>
                                     <td className="px-6 py-4">
                                         {student.isBlocked && <span className="px-2 py-1 bg-red-600 text-white text-xs rounded-full">Blocked</span>}
@@ -194,7 +194,7 @@ const AdminStudents = () => {
                                                 <span className={`font-bold ${t.amount >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`} dir="ltr">
                                                     {t.amount} {viewingWallet.data.currency}
                                                 </span>
-                                                <span className="text-xs text-gray-400">{new Date(t.createdAt).toLocaleDateString('ar-EG')}</span>
+                                                <span className="text-xs text-gray-400">{new Date(t.createdAt).toLocaleDateString('en-GB')}</span>
                                             </div>
                                             <p className="text-sm text-gray-600 dark:text-gray-300">{t.description}</p>
                                         </div>

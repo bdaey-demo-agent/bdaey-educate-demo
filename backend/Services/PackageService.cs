@@ -247,7 +247,7 @@ namespace BdaeyEducat.API.Services
             // VALIDATION: Ensure enough available days for the sessions per week (One Session Per Day Rule)
             if (dto.AvailableDays == null || dto.AvailableDays.Count < dto.SessionsPerWeek)
             {
-                throw new ArgumentException($"غير مسموح. يجب اختيار {dto.SessionsPerWeek} أيام على الأقل لهذه الباقة لتغطية الجلسات الأسبوعية.");
+                throw new ArgumentException($"Not allowed. You must select at least {dto.SessionsPerWeek} days for this package to cover the weekly sessions.");
             }
 
             await ValidateOverlap(teacherProfile.Id, dto.AvailableDays, startTime, endTime, dto.SessionBufferMinutes);
@@ -259,10 +259,10 @@ namespace BdaeyEducat.API.Services
             }
 
             if (dto.StartDate.Date < DateTime.UtcNow.Date) 
-                throw new ArgumentException("تاريخ البدء لا يمكن أن يكون في الماضي.");
+                throw new ArgumentException("Start date cannot be in the past.");
             
             if (dto.StartDate.Date == DateTime.UtcNow.Date && startTime < DateTime.UtcNow.TimeOfDay)
-                throw new ArgumentException("وقت البدء لا يمكن أن يكون في الماضي بالنسبة لتاريخ اليوم.");
+                throw new ArgumentException("Start time cannot be in the past for today.");
 
             // VALIDATION: StartDate must be the first available day of the week (Saturday-first cycle)
             var normalizedStartDay = ((int)dto.StartDate.DayOfWeek + 1) % 7;
@@ -271,10 +271,10 @@ namespace BdaeyEducat.API.Services
             if (normalizedStartDay != minAvailableDay)
             {
                 var firstDayName = minAvailableDay switch {
-                    0 => "السبت", 1 => "الأحد", 2 => "الاثنين", 3 => "الثلاثاء", 
-                    4 => "الأربعاء", 5 => "الخميس", 6 => "الجمعة", _ => ""
+                    0 => "Saturday", 1 => "Sunday", 2 => "Monday", 3 => "Tuesday", 
+                    4 => "Wednesday", 5 => "Thursday", 6 => "Friday", _ => ""
                 };
-                throw new ArgumentException($"تاريخ بدء الباقة غير صحيح. يجب أن تبدأ الباقة في أول يوم متاح لها في الأسبوع ({firstDayName}).");
+                throw new ArgumentException($"Invalid package start date. The package must start on its first available day of the week ({firstDayName}).");
             }
 
             int sessionsCount = CalculateSessionsCount(dto.PeriodType, dto.SessionsPerWeek);
@@ -326,7 +326,7 @@ namespace BdaeyEducat.API.Services
 
             int teacherId = (dto.TeacherProfileId.HasValue && dto.TeacherProfileId.Value > 0) ? dto.TeacherProfileId.Value : package.TeacherProfileId;
             var hasPendingBookings = await _context.Bookings.AnyAsync(b => b.PackageId == packageId && b.Status == BookingStatus.Pending);
-            if (hasPendingBookings) throw new InvalidOperationException("توجد حجوزات معلقة لهذه الباقة. يرجى معالجتها أولاً.");
+            if (hasPendingBookings) throw new InvalidOperationException("This package has pending bookings. Please handle them first.");
 
             var hasActiveBookings = await _context.Bookings.AnyAsync(b => b.PackageId == packageId && b.Status == BookingStatus.Confirmed);
 
@@ -366,7 +366,7 @@ namespace BdaeyEducat.API.Services
                     // Let's compare the UTC Date part.
                     if (dto.StartDate.UtcDateTime.Date != package.StartDate.Date)
                     {
-                         throw new ArgumentException("تاريخ البدء لا يمكن أن يكون في الماضي.");
+                         throw new ArgumentException("Start date cannot be in the past.");
                     }
                 }
                 
@@ -378,14 +378,14 @@ namespace BdaeyEducat.API.Services
                      }
                      else
                      {
-                         throw new ArgumentException("وقت البدء لا يمكن أن يكون في الماضي بالنسبة لتاريخ اليوم.");
+                         throw new ArgumentException("Start time cannot be in the past for today.");
                      }
                 }
 
                 // VALIDATION: Ensure enough available days for the sessions per week (One Session Per Day Rule)
                 if (dto.AvailableDays == null || dto.AvailableDays.Count < dto.SessionsPerWeek)
                 {
-                    throw new ArgumentException($"غير مسموح. يجب اختيار {dto.SessionsPerWeek} أيام على الأقل لهذه الباقة لتغطية الجلسات الأسبوعية.");
+                    throw new ArgumentException($"Not allowed. You must select at least {dto.SessionsPerWeek} days for this package to cover the weekly sessions.");
                 }
 
                 // VALIDATION: StartDate must be the first available day of the week (Saturday-first cycle)
@@ -395,10 +395,10 @@ namespace BdaeyEducat.API.Services
                 if (normalizedStartDay != minAvailableDay)
                 {
                     var firstDayName = minAvailableDay switch {
-                        0 => "السبت", 1 => "الأحد", 2 => "الاثنين", 3 => "الثلاثاء", 
-                        4 => "الأربعاء", 5 => "الخميس", 6 => "الجمعة", _ => ""
+                        0 => "Saturday", 1 => "Sunday", 2 => "Monday", 3 => "Tuesday", 
+                        4 => "Wednesday", 5 => "Thursday", 6 => "Friday", _ => ""
                     };
-                    throw new ArgumentException($"تاريخ بدء الباقة غير صحيح. يجب أن تبدأ الباقة في أول يوم متاح لها في الأسبوع ({firstDayName}).");
+                    throw new ArgumentException($"Invalid package start date. The package must start on its first available day of the week ({firstDayName}).");
                 }
 
                 if (!string.IsNullOrEmpty(dto.TimezoneId))
@@ -499,7 +499,7 @@ namespace BdaeyEducat.API.Services
                     booking.StudentId,
                     refundAmount,
                     TransactionType.Refund,
-                    $"استرداد تلقائي بسبب حذف الباقة: {package.Name}",
+                    $"Automatic refund due to package deletion: {package.Name}",
                     referenceId: booking.Id.ToString(),
                     provider: "System",
                     providerTransactionId: $"REFUND-{booking.Id}-{DateTime.UtcNow.Ticks}"
@@ -512,7 +512,7 @@ namespace BdaeyEducat.API.Services
                             booking.StudentId,
                             booking.TotalPrice,
                             TransactionType.Refund,
-                            $"استرداد كامل لحجز معلق بسبب حذف الباقة: {package.Name}",
+                            $"Full refund for a pending booking due to package deletion: {package.Name}",
                             referenceId: booking.Id.ToString(),
                             provider: "System",
                             providerTransactionId: $"REFUND-PENDING-{booking.Id}-{DateTime.UtcNow.Ticks}"
@@ -522,7 +522,7 @@ namespace BdaeyEducat.API.Services
                     // 4. Cancel Booking
                     booking.Status = BookingStatus.Cancelled;
                     booking.CancelledAt = DateTime.UtcNow;
-                    booking.CancellationReason = "تم حذف الباقة من قبل المعلم/المشرف (تعويض تلقائي)";
+                    booking.CancellationReason = "Package deleted by the teacher/admin (automatic compensation)";
                     
                     // Cancel pending sessions
                     foreach (var session in booking.Sessions.Where(s => s.Status == SessionStatus.Scheduled))
@@ -562,7 +562,7 @@ namespace BdaeyEducat.API.Services
                             package.TeacherProfile!.UserId,
                             -penaltyAmount, // Negative for penalty
                             TransactionType.Payment, // Penalty is a payment/deduction
-                            $"غرامة حذف باقة نشطة: {package.Name}",
+                            $"Active package deletion penalty: {package.Name}",
                             referenceId: package.Id.ToString(),
                             provider: "System",
                             providerTransactionId: $"PENALTY-{package.Id}-{DateTime.UtcNow.Ticks}"
@@ -600,13 +600,13 @@ namespace BdaeyEducat.API.Services
             if (newStartDate.HasValue)
             {
                 if (newStartDate.Value.Date < DateTime.UtcNow.Date)
-                    throw new ArgumentException("تاريخ البدء لا يمكن أن يكون في الماضي.");
+                    throw new ArgumentException("Start date cannot be in the past.");
 
                 package.StartDate = newStartDate.Value.ToUniversalTime();
             }
             else if (package.StartDate.Date < DateTime.UtcNow.Date)
             {
-                    throw new ArgumentException("تاريخ بدء الباقة انتهى، يرجى تحديد تاريخ جديد للاستعادة.");
+                    throw new ArgumentException("The package start date has passed. Please set a new date to restore it.");
             }
 
             // VALIDATION: StartDate must be the first available day of the week (Saturday-first cycle)
@@ -616,10 +616,10 @@ namespace BdaeyEducat.API.Services
             if (normalizedStartDay != minAvailableDay)
             {
                 var firstDayName = minAvailableDay switch {
-                    0 => "السبت", 1 => "الأحد", 2 => "الاثنين", 3 => "الثلاثاء", 
-                    4 => "الأربعاء", 5 => "الخميس", 6 => "الجمعة", _ => ""
+                    0 => "Saturday", 1 => "Sunday", 2 => "Monday", 3 => "Tuesday", 
+                    4 => "Wednesday", 5 => "Thursday", 6 => "Friday", _ => ""
                 };
-                throw new ArgumentException($"تاريخ بدء الباقة غير صحيح. يجب أن تبدأ الباقة في أول يوم متاح لها في الأسبوع ({firstDayName}).");
+                throw new ArgumentException($"Invalid package start date. The package must start on its first available day of the week ({firstDayName}).");
             }
 
             await ValidateOverlap(package.TeacherProfileId, package.AvailableDays, package.StartTime, package.EndTime, package.SessionBufferMinutes, package.Id);
@@ -717,7 +717,7 @@ namespace BdaeyEducat.API.Services
                             : eEnd.ToString(@"hh\:mm");
 
                         _logger.LogWarning("[DEBUG] CONFLICT DETECTED with Pkg {pkgId}", existingPkg.Id);
-                        throw new InvalidOperationException($"تعارض في الوقت مع الباقة الموجودة مسبقاً: '{existingPkg.Name}' ({startStr} حتى {endStr} شاملاً الفاصل).");
+                        throw new InvalidOperationException($"Time conflict with an existing package: '{existingPkg.Name}' ({startStr} to {endStr} including the break).");
                     }
                 }
             }

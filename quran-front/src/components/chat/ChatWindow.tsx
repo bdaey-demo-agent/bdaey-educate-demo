@@ -156,7 +156,7 @@ const ChatWindow: React.FC = () => {
                                     {u.nextSessionDate && (
                                         <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
                                             <CalendarIcon className="w-3 h-3" />
-                                            {new Date(u.nextSessionDate).toLocaleDateString('ar-EG')}
+                                            {new Date(u.nextSessionDate).toLocaleDateString('en-GB')}
                                         </p>
                                     )}
                                 </div>
@@ -232,7 +232,7 @@ const ChatWindow: React.FC = () => {
                                             } `}>
                                             <p className="text-sm break-words">{msg.content}</p>
                                             <p className={`text-[10px] mt-1 ${msg.isMe ? 'text-blue-100' : 'text-gray-400'} `}>
-                                                {new Date(msg.sentAt).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}
+                                                {new Date(msg.sentAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                                             </p>
                                         </div>
                                     </div>

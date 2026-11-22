@@ -151,7 +151,7 @@ const WithdrawalRequests: React.FC = () => {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-gray-500">
-                                            {new Date(req.requestedAt).toLocaleDateString('ar-EG')}
+                                            {new Date(req.requestedAt).toLocaleDateString('en-GB')}
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${req.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :

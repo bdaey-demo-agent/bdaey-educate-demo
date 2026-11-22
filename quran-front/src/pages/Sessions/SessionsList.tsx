@@ -182,7 +182,7 @@ const SessionsList: React.FC = () => {
                             <div className="flex items-start gap-4">
                                 <div className="hidden md:flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg w-16 h-16 text-center p-2">
                                     <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                                        {new Date(session.scheduledAt).toLocaleDateString('ar-EG', { month: 'short' })}
+                                        {new Date(session.scheduledAt).toLocaleDateString('en-GB', { month: 'short' })}
                                     </span>
                                     <span className="text-xl font-bold text-gray-900 dark:text-white">
                                         {new Date(session.scheduledAt).getDate()}
@@ -198,7 +198,7 @@ const SessionsList: React.FC = () => {
                                     <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                                         <span className="flex items-center gap-1">
                                             <CalendarIcon className="h-4 w-4" />
-                                            {new Date(session.scheduledAt).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })}
+                                            {new Date(session.scheduledAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                         <span className="flex items-center gap-1">
                                             <UserIcon className="h-4 w-4" />

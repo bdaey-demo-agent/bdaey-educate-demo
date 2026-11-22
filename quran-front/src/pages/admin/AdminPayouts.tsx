@@ -114,7 +114,7 @@ const AdminPayouts = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white font-bold">${r.amount}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{r.paymentMethod}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 dir-ltr text-right">{r.paymentDetails}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(r.requestedAt).toLocaleDateString('ar-EG')}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(r.requestedAt).toLocaleDateString('en-GB')}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(r.status)}`}>
                                             {translateStatus(r.status)}

@@ -88,7 +88,7 @@ const MessagesTab: React.FC = () => {
                                         </div>
                                         <div className="flex-shrink-0 flex items-center gap-2">
                                             <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                {new Date(message.dateSent).toLocaleDateString('ar-EG')}
+                                                {new Date(message.dateSent).toLocaleDateString('en-GB')}
                                             </p>
                                             {!message.isRead && (
                                                 <button
