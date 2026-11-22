@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { branding } from '../branding';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import DateInput from '../components/common/DateInput';
@@ -145,7 +146,7 @@ const RegisterStudent: React.FC = () => {
                             إنشاء حساب <span className="text-gold-500">طالب</span>
                         </h2>
                         <p className="text-gray-500 dark:text-gray-400">
-                            انضم إلى منصة بدائي وابدأ رحلتك التعليمية
+                            انضم إلى منصة {branding.nameAr} وابدأ رحلتك التعليمية
                         </p>
                     </div>
 

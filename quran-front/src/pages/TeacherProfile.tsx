@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { branding } from '../branding';
 import { getFileUrl } from '../utils/mediaUtils';
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { StarIcon, CheckCircleIcon, ClockIcon, CurrencyDollarIcon, ExclamationTriangleIcon, ShareIcon, PencilSquareIcon, ArrowPathIcon } from '@heroicons/react/24/solid';
@@ -157,7 +158,7 @@ const TeacherProfile: React.FC = () => {
             try {
                 await navigator.share({
                     title: teacher.name,
-                    text: `تصفح ملف المعلم ${teacher.name} على منصة بدائي!`,
+                    text: `تصفح ملف المعلم ${teacher.name} على منصة ${branding.nameAr}!`,
                     url: url
                 });
             } catch (err) {
@@ -178,7 +179,7 @@ const TeacherProfile: React.FC = () => {
             try {
                 await navigator.share({
                     title: pkg.name,
-                    text: `تصفح هذه الباقة المميزة من المعلم ${teacher.name} على منصة بدائي!`,
+                    text: `تصفح هذه الباقة المميزة من المعلم ${teacher.name} على منصة ${branding.nameAr}!`,
                     url: url
                 });
             } catch (err) {

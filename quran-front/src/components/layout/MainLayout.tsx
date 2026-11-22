@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { branding } from '../../branding';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Disclosure } from '@headlessui/react';
 import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
@@ -70,8 +71,8 @@ const MainLayout: React.FC = () => {
                                     <Link to="/" className="flex items-center gap-2">
                                         <img
                                             className="h-12 w-auto"
-                                            src="/logo.png"
-                                            alt="Bdaey Logo"
+                                            src={branding.logoUrl}
+                                            alt={`${branding.nameEn} Logo`}
                                         />
                                         {/* Text Removed per request */}
                                     </Link>
@@ -188,12 +189,12 @@ const MainLayout: React.FC = () => {
 
             <footer className="bg-white dark:bg-gray-800 border-t dark:border-gray-700 py-12 transition-colors duration-300">
                 <div className="container mx-auto px-4 text-center">
-                    <h3 className="text-xl font-bold text-gold-500 mb-4">بدائي</h3>
+                    <h3 className="text-xl font-bold text-gold-500 mb-4">{branding.nameAr}</h3>
                     <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 max-w-md mx-auto">
                         نمكنك من تعلم القرآن والعلوم الشرعية مع نخبة من المعلمين المعتمدين.
                     </p>
                     <p className="text-gray-500 dark:text-gray-500 text-sm">
-                        © {new Date().getFullYear()} منصة بدائي التعليمية. جميع الحقوق محفوظة.
+                        © {new Date().getFullYear()} منصة {branding.nameAr} التعليمية. جميع الحقوق محفوظة.
                     </p>
                 </div>
             </footer>

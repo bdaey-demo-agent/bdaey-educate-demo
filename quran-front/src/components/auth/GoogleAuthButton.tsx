@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { branding } from '../../branding';
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
@@ -121,7 +122,7 @@ const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ role = 'General' })
                     )}
                     {promptState === 'general_choice' && (
                         <>
-                            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">أهلاً بك في بدائي</h3>
+                            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">أهلاً بك في {branding.nameAr}</h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">هذا الحساب غير مسجل لدينا. يرجى اختيار نوع الحساب الذي تود البدء به:</p>
                         </>
                     )}

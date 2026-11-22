@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { branding } from '../../branding';
 import Seo from '../../components/common/Seo';
 import messageService from '../../services/messageService';
 import toast from 'react-hot-toast';
@@ -9,7 +10,7 @@ const ContactPage: React.FC = () => {
         <>
             <Seo
                 title="اتصل بنا"
-                description="تواصل مع فريق منصة بدائي. استفسارات، اقتراحات، أو دعم فني — نحن هنا لمساعدتك."
+                description={`تواصل مع فريق منصة ${branding.nameAr}. استفسارات، اقتراحات، أو دعم فني — نحن هنا لمساعدتك.`}
                 canonical="https://bdaey.com/contact"
             />
             <ContactForm />

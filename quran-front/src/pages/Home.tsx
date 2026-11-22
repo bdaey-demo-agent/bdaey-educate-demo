@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../branding';
 import { Link } from 'react-router-dom';
 import { MagnifyingGlassIcon, AcademicCapIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
@@ -55,7 +56,7 @@ const Home: React.FC = () => {
             <div className="bg-white dark:bg-gray-800 py-16 sm:py-24 transition-colors duration-300">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <div className="mx-auto max-w-2xl text-center mb-12">
-                        <h2 className="text-base font-semibold leading-7 text-gold-500">لماذا بدائي؟</h2>
+                        <h2 className="text-base font-semibold leading-7 text-gold-500">لماذا {branding.nameAr}؟</h2>
                         <motion.p
                             className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl"
                             initial={{ opacity: 0 }}

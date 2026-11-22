@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { branding } from '../../branding';
 import { GoogleLogin } from '@react-oauth/google';
 import toast from 'react-hot-toast';
 import Seo from '../../components/common/Seo';
@@ -47,7 +48,7 @@ const GoogleSSOCallback: React.FC = () => {
 
     return (
         <>
-            <Seo title="تسجيل الدخول عبر Google" description="صفحة تسجيل الدخول الآمن عبر Google لمنصة بدائي." noIndex />
+            <Seo title={`تسجيل الدخول عبر Google`} description={`صفحة تسجيل الدخول الآمن عبر Google لمنصة ${branding.nameAr}.`} noIndex />
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-6" dir="rtl">
             <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 text-center">
                 {/* Logo or Premium Icon */}

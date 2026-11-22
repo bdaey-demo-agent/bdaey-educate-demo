@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Bars3Icon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
@@ -29,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
                 {/* Left Section: Logo & Sidebar Toggle */}
                 <div className="flex items-center gap-4">
                     <Link to={getHomeLink()} className="flex items-center gap-2 text-decoration-none">
-                        <img src="/logo.png" alt="بدائي - للتعليم القرآني" className="h-11 w-auto object-contain" />
+                        <img src={branding.logoUrl} alt={`${branding.nameAr} - للتعليم القرآني`} className="h-11 w-auto object-contain" />
                     </Link>
 
                     {/* Mobile Sidebar Toggle (Only if onToggleSidebar is provided) */}

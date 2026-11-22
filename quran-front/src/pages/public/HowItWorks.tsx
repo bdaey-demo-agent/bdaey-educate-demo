@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { branding } from '../../branding';
 import Seo from '../../components/common/Seo';
 import {
     UserIcon,
@@ -18,8 +19,8 @@ const HowItWorks: React.FC = () => {
     return (
         <>
             <Seo
-                title="كيف تعمل منصة بدائي"
-                description="تعرف على كيفية عمل منصة بدائي: ابحث عن معلم، اختر باقة، احجز جلسات، وابدأ رحلتك في تعلم القرآن الكريم."
+                title={`كيف تعمل منصة ${branding.nameAr}`}
+                description={`تعرف على كيفية عمل منصة ${branding.nameAr}: ابحث عن معلم، اختر باقة، احجز جلسات، وابدأ رحلتك في تعلم القرآن الكريم.`}
                 canonical="https://bdaey.com/how-it-works"
             />
             <div className="bg-gray-50 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-white transition-colors duration-300 font-body" dir="rtl">
@@ -27,7 +28,7 @@ const HowItWorks: React.FC = () => {
             {/* Header / Hero */}
             <div className="bg-primary-green dark:bg-slate-900 text-white py-16 text-center">
                 <div className="container mx-auto px-4">
-                    <h1 className="text-4xl font-bold font-heading mb-4 text-white">كيف تعمل منصة <span className="text-gold">بدائي</span>؟</h1>
+                    <h1 className="text-4xl font-bold font-heading mb-4 text-white">كيف تعمل منصة <span className="text-gold">{branding.nameAr}</span>؟</h1>
                     <p className="text-xl max-w-2xl mx-auto opacity-90">دليلك الكامل لرحلة تعليمية ميسرة، سواء كنت طالباً تبحث عن العلم أو معلماً يسعى لنشره.</p>
                 </div>
             </div>

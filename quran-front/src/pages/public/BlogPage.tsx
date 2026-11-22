@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import Seo from '../../components/common/Seo';
 
 const BlogPage: React.FC = () => {
@@ -6,7 +7,7 @@ const BlogPage: React.FC = () => {
         <>
             <Seo
                 title="المدونة"
-                description="مدونة بدائي: مقالات ونصائح عن تحفيظ القرآن الكريم، التجويد، القراءات العشر، وأفضل ممارسات التعليم عن بُعد."
+                description={`مدونة ${branding.nameAr}: مقالات ونصائح عن تحفيظ القرآن الكريم، التجويد، القراءات العشر، وأفضل ممارسات التعليم عن بُعد.`}
                 canonical="https://bdaey.com/blog"
             />
             <BlogContent />
@@ -34,7 +35,7 @@ function BlogContent() {
         },
         {
             id: 3,
-            title: "تحديثات منصة بدائي الجديدة",
+            title: `تحديثات منصة ${branding.nameAr} الجديدة`,
             excerpt: "تعرف على أحدث المميزات التي أضفناها لتسهيل رحلتك التعليمية...",
             date: "2024-01-05",
             author: "فريق المنصة",

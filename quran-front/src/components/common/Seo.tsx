@@ -1,9 +1,10 @@
 import { Helmet } from 'react-helmet-async'
+import { branding, brandDisplayName } from '../../branding'
 
-const SITE_NAME = 'بدائي - Bdaey'
-const SITE_URL = 'https://bdaey.com'
-const DEFAULT_IMAGE = 'https://bdaey.com/og-image.png'
-const TWITTER_HANDLE = '@bdaey'
+const SITE_NAME = brandDisplayName
+const SITE_URL = branding.siteUrl
+const DEFAULT_IMAGE = `${branding.siteUrl}/og-image.png`
+const TWITTER_HANDLE = branding.twitterHandle
 
 interface SeoProps {
   title: string
@@ -54,10 +55,10 @@ export function OrganizationSchema() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'بدائي',
-    alternateName: 'Bdaey',
+    name: branding.nameAr,
+    alternateName: branding.nameEn,
     url: SITE_URL,
-    logo: 'https://bdaey.com/logo.png',
+    logo: `${branding.siteUrl}/logo.png`,
     description: 'منصة رائدة لتحفيظ القرآن الكريم وتعليم التجويد والقراءات العشر أونلاين مع نخبة من المعلمين المعتمدين والمجازين.',
     sameAs: [
       'https://facebook.com/bdaey',

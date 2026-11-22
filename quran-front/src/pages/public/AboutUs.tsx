@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import { Link } from 'react-router-dom';
 import Seo from '../../components/common/Seo';
 import {
@@ -15,8 +16,8 @@ const AboutUs: React.FC = () => {
     return (
         <>
             <Seo
-                title="عن بدائي"
-                description="منصة بدائي: منصة رائدة لتعليم القرآن الكريم أونلاين. تعرف على قصتنا، رسالتنا، وفريق المعلمين المجازين لدينا."
+                title={`عن ${branding.nameAr}`}
+                description={`منصة ${branding.nameAr}: منصة رائدة لتعليم القرآن الكريم أونلاين. تعرف على قصتنا، رسالتنا، وفريق المعلمين المجازين لدينا.`}
                 canonical="https://bdaey.com/about"
             />
             <div className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
@@ -28,7 +29,7 @@ const AboutUs: React.FC = () => {
                 
                 <div className="container mx-auto px-4 relative z-10 text-center">
                     <h1 className="text-4xl md:text-6xl font-black mb-6 font-heading leading-tight">
-                        منصة <span className="text-gold-400 font-extrabold">بدائي</span>
+                        منصة <span className="text-gold-400 font-extrabold">{branding.nameAr}</span>
                     </h1>
                     <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto leading-relaxed">
                         نحو رحلة إيمانية وتعليمية متكاملة تربطك بأمهر المعلمين المجازين في القرآن الكريم واللغة العربية.
@@ -42,7 +43,7 @@ const AboutUs: React.FC = () => {
                     <div className="lg:w-1/2 space-y-6">
                         <h2 className="text-3xl font-bold text-primary-900 dark:text-gold-400 font-heading">قصتنا</h2>
                         <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                            بدأت فكرة "بدائي" لسد الفجوة في تعليم القرآن الكريم واللغة العربية في عصر التكنولوجيا المتسارع. نحن نؤمن أن التعليم الرقمي لا يجب أن يكون مجرد نقل للمعلومة، بل تجربة إنسانية وروحانية تربط الطالب بمعلم موجه يقوده خطوة بخطوة.
+                            بدأت فكرة "{branding.nameAr}" لسد الفجوة في تعليم القرآن الكريم واللغة العربية في عصر التكنولوجيا المتسارع. نحن نؤمن أن التعليم الرقمي لا يجب أن يكون مجرد نقل للمعلومة، بل تجربة إنسانية وروحانية تربط الطالب بمعلم موجه يقوده خطوة بخطوة.
                         </p>
                         <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                             من قلب الحاجة إلى التيسير والإتقان، انطلقت منصتنا لتكون الجسر الموثوق بين راغبي العلم في كل مكان، وبين نخبة من أفضل الكوادر التعليمية المجازة والمؤهلة.

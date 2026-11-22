@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import { Link } from 'react-router-dom';
 import Seo from '../../components/common/Seo';
 
@@ -7,7 +8,7 @@ const TermsOfUse: React.FC = () => {
         <>
             <Seo
                 title="شروط الاستخدام"
-                description="شروط استخدام منصة بدائي لتحفيظ القرآن الكريم. بالاستخدام أنت توافق على جميع الشروط والأحكام المذكورة."
+                description={`شروط استخدام منصة ${branding.nameAr} لتحفيظ القرآن الكريم. بالاستخدام أنت توافق على جميع الشروط والأحكام المذكورة.`}
                 canonical="https://bdaey.com/terms"
             />
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 font-body transition-colors duration-300">
@@ -19,9 +20,9 @@ const TermsOfUse: React.FC = () => {
 
                 <div className="space-y-8 text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
                     <p>
-                        مرحباً بكم في منصة <span className="font-bold text-primary-green dark:text-gold-500">بدائي (Bdaey)</span>.
+                        مرحباً بكم في منصة <span className="font-bold text-primary-green dark:text-gold-500">{branding.nameAr} ({branding.nameEn})</span>.
                         <br />
-                        تُعد هذه الشروط عقداً ملزماً بينك (المستخدم) وبين منصة بدائي. بمجرد استخدامك للمنصة، فإنك توافق على الالتزام بهذه الشروط.
+                        تُعد هذه الشروط عقداً ملزماً بينك (المستخدم) وبين منصة {branding.nameAr}. بمجرد استخدامك للمنصة، فإنك توافق على الالتزام بهذه الشروط.
                     </p>
 
                     <section>
@@ -69,7 +70,7 @@ const TermsOfUse: React.FC = () => {
                     <section>
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 font-heading">5. الحقوق والملكية الفكرية</h2>
                         <p>
-                            جميع المحتويات الموجودة على الموقع (النصوص، التصاميم، الشعارات) هي ملك لمنصة بدائي.
+                            جميع المحتويات الموجودة على الموقع (النصوص، التصاميم، الشعارات) هي ملك لمنصة {branding.nameAr}.
                             المحتوى التعليمي المقدم من المعلم يظل ملكاً له، ولكن يمنح المنصة حق عرضه للطلاب المسجلين.
                         </p>
                     </section>

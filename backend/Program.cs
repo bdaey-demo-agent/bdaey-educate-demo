@@ -199,6 +199,10 @@ builder.Services.AddScoped<BdaeyEducat.API.Services.Video.VideoService>();
 
 // JWT Token Service
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+// White-label brand identity for outbound emails (Branding:NameAr / Branding:NameEn).
+BdaeyEducat.API.Services.EmailTemplates.BrandNameAr = builder.Configuration["Branding:NameAr"] ?? "بدائي";
+BdaeyEducat.API.Services.EmailTemplates.BrandNameEn = builder.Configuration["Branding:NameEn"] ?? "BDAEY";
 builder.Services.AddScoped<BdaeyEducat.API.Services.IRefreshTokenService, BdaeyEducat.API.Services.RefreshTokenService>();
 
 // Financial Services

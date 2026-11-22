@@ -122,7 +122,7 @@ public class AuthController : ControllerBase
 
         try
         {
-            await _emailService.SendEmailAsync(user.Email, "تفعيل حسابك في منصة بدائي", 
+            await _emailService.SendEmailAsync(user.Email, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
                 BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
             
             user.EmailConfirmationSentAt = DateTime.UtcNow;
@@ -317,7 +317,7 @@ public class AuthController : ControllerBase
 
         var resetLink = $"{origin}/reset-password?email={Uri.EscapeDataString(model.Email)}&token={Uri.EscapeDataString(token)}";
 
-        await _emailService.SendEmailAsync(model.Email, "استعادة كلمة المرور في منصة بدائي", 
+        await _emailService.SendEmailAsync(model.Email, $"استعادة كلمة المرور في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
             BdaeyEducat.API.Services.EmailTemplates.GetPasswordResetEmail(user.FullName, resetLink));
 
         // Set the cache to prevent spamming for 5 minutes
@@ -363,7 +363,7 @@ public class AuthController : ControllerBase
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         var verifyLink = GetVerificationLink(user.Id, emailToken);
 
-        await _emailService.SendEmailAsync(user.Email!, "تفعيل حسابك في منصة بدائي", 
+        await _emailService.SendEmailAsync(user.Email!, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
             BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
 
         user.EmailConfirmationSentAt = DateTime.UtcNow;
@@ -387,7 +387,7 @@ public class AuthController : ControllerBase
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         var verifyLink = GetVerificationLink(user.Id, emailToken);
 
-        await _emailService.SendEmailAsync(user.Email!, "تفعيل حسابك في منصة بدائي", 
+        await _emailService.SendEmailAsync(user.Email!, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
             BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
 
         user.EmailConfirmationSentAt = DateTime.UtcNow;
@@ -443,7 +443,7 @@ public class AuthController : ControllerBase
             var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var verifyLink = GetVerificationLink(user.Id, emailToken);
 
-            await _emailService.SendEmailAsync(user.Email!, "تفعيل حسابك في منصة بدائي", 
+            await _emailService.SendEmailAsync(user.Email!, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
                 BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
 
             user.EmailConfirmationSentAt = DateTime.UtcNow;

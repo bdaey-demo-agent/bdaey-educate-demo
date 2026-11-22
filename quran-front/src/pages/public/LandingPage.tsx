@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Seo, { OrganizationSchema } from '../../components/common/Seo';
@@ -32,8 +33,8 @@ const LandingPage: React.FC = () => {
     return (
         <>
             <Seo
-                title="بدائي - منصة تحفيظ القرآن الكريم أونلاين"
-                description="منصة بدائي: تعلم القرآن الكريم والتجويد والقراءات العشر مع نخبة من المعلمين المعتمدين والمجازين. جلسات فردية مباشرة، جدول مرن، وأسعار تنافسية."
+                title={`${branding.nameAr} - منصة تحفيظ القرآن الكريم أونلاين`}
+                description={`منصة ${branding.nameAr}: تعلم القرآن الكريم والتجويد والقراءات العشر مع نخبة من المعلمين المعتمدين والمجازين. جلسات فردية مباشرة، جدول مرن، وأسعار تنافسية.`}
                 canonical="https://bdaey.com"
             />
             <OrganizationSchema />
@@ -54,7 +55,7 @@ const LandingPage: React.FC = () => {
                         </span>
 
                         <h1 className="mt-6 text-4xl md:text-6xl font-bold leading-tight text-white">
-                            منصة <span className="text-gold">بدائي</span> لتعليم القرآن
+                            منصة <span className="text-gold">{branding.nameAr}</span> لتعليم القرآن
                         </h1>
 
                         <p className="mt-5 text-lg md:text-xl text-white/90 leading-relaxed">
@@ -235,7 +236,7 @@ const LandingPage: React.FC = () => {
                                 هل أنت معلم قرآن؟
                             </h2>
                             <p className="mt-6 text-lg leading-8 text-gray-100">
-                                انضم إلى نخبة المعلمين في منصة "بدائي". شارك علمك، وكُن جزءاً من مجتمع تعليمي عالمي يربطك بطلاب من كل مكان.
+                                انضم إلى نخبة المعلمين في منصة "{branding.nameAr}". شارك علمك، وكُن جزءاً من مجتمع تعليمي عالمي يربطك بطلاب من كل مكان.
                             </p>
                             <div className="mt-10 flex items-center justify-center lg:justify-start gap-x-6">
                                 <Link

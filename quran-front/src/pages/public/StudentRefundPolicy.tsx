@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import Seo from '../../components/common/Seo';
 import {
     CurrencyDollarIcon,
@@ -12,7 +13,7 @@ const StudentRefundPolicy: React.FC = () => {
         <>
             <Seo
                 title="سياسة الاسترجاع"
-                description="سياسة استرجاع الرسوم والاستبدال في منصة بدائي: شرح كامل لآلية استرجاع الجلسات والاشتراكات."
+                description={`سياسة استرجاع الرسوم والاستبدال في منصة ${branding.nameAr}: شرح كامل لآلية استرجاع الجلسات والاشتراكات.`}
                 canonical="https://bdaey.com/refund-policy"
             />
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">

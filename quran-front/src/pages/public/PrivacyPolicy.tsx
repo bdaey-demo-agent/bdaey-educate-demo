@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import { Link } from 'react-router-dom';
 import Seo from '../../components/common/Seo';
 
@@ -7,7 +8,7 @@ const PrivacyPolicy: React.FC = () => {
         <>
             <Seo
                 title="سياسة الخصوصية"
-                description="سياسة الخصوصية لمنصة بدائي: كيف نحمي بياناتك ومعلوماتك الشخصية عند استخدام خدمات تحفيظ القرآن الكريم."
+                description={`سياسة الخصوصية لمنصة ${branding.nameAr}: كيف نحمي بياناتك ومعلوماتك الشخصية عند استخدام خدمات تحفيظ القرآن الكريم.`}
                 canonical="https://bdaey.com/privacy"
             />
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 font-body transition-colors duration-300">
@@ -19,7 +20,7 @@ const PrivacyPolicy: React.FC = () => {
 
                 <div className="space-y-8 text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
                     <p>
-                        نحن في منصة <span className="font-bold text-primary-green dark:text-gold-500">بدائي (Bdaey)</span> نولي اهتماماً كبيراً بخصوصية بيانات مستخدمينا، سواء كانوا طلاباً أو معلمين. توضح هذه السياسة كيفية جمعنا واستخدامنا وحمايتنا لمعلوماتك الشخصية عند استخدامك لمنصتنا.
+                        نحن في منصة <span className="font-bold text-primary-green dark:text-gold-500">{branding.nameAr} ({branding.nameEn})</span> نولي اهتماماً كبيراً بخصوصية بيانات مستخدمينا، سواء كانوا طلاباً أو معلمين. توضح هذه السياسة كيفية جمعنا واستخدامنا وحمايتنا لمعلوماتك الشخصية عند استخدامك لمنصتنا.
                     </p>
 
                     <section>

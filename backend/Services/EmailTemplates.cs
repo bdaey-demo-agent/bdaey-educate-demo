@@ -4,6 +4,10 @@ namespace BdaeyEducat.API.Services
 {
     public static class EmailTemplates
     {
+        // Brand identity, injected once at startup from configuration (Branding:NameAr/NameEn).
+        public static string BrandNameAr { get; set; } = "بدائي";
+        public static string BrandNameEn { get; set; } = "BDAEY";
+
         public static string GetVerificationEmail(string name, string verificationLink)
         {
             var year = DateTime.Now.Year;
@@ -13,7 +17,7 @@ namespace BdaeyEducat.API.Services
 <head>
     <meta charset=""UTF-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-    <title>تفعيل حسابك في منصة بدائي</title>
+    <title>تفعيل حسابك في منصة {BrandNameAr}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
         
@@ -98,10 +102,10 @@ namespace BdaeyEducat.API.Services
 <body>
     <div class=""container"">
         <div class=""header"">
-            <a href=""#"" class=""logo"">بدائي <span>BDAEY</span></a>
+            <a href=""#"" class=""logo"">{BrandNameAr} <span>{BrandNameEn}</span></a>
         </div>
         <div class=""content"">
-            <h1 class=""heading"">مرحباً بك في منصة بدائي!</h1>
+            <h1 class=""heading"">مرحباً بك في منصة {BrandNameAr}!</h1>
             <p class=""text"">
                 أهلاً بك <strong>{name}</strong>،<br>
                 سعداء جداً بانضمامك إلينا. لتفعيل حسابك والبدء في رحلتك التعليمية، يرجى الضغط على الزر أدناه لتأكيد بريدك الإلكتروني.
@@ -112,11 +116,11 @@ namespace BdaeyEducat.API.Services
             </div>
             
             <p class=""text"" style=""font-size: 13px; color: #94a3b8; margin-top: 40px;"">
-                إذا لم تقم بإنشاء حساب في منصة بدائي، يمكنك تجاهل هذه الرسالة بأمان.
+                إذا لم تقم بإنشاء حساب في منصة {BrandNameAr}، يمكنك تجاهل هذه الرسالة بأمان.
             </p>
         </div>
         <div class=""footer"">
-            <p>&copy; {year} منصة بدائي. جميع الحقوق محفوظة.</p>
+            <p>&copy; {year} منصة {BrandNameAr}. جميع الحقوق محفوظة.</p>
             <p>
                 <a href=""https://bdaey.com/privacy"" class=""link"">سياسة الخصوصية</a> | 
                 <a href=""https://bdaey.com/contact"" class=""link"">الدعم الفني</a>
@@ -136,7 +140,7 @@ namespace BdaeyEducat.API.Services
 <head>
     <meta charset=""UTF-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-    <title>استعادة كلمة المرور في منصة بدائي</title>
+    <title>استعادة كلمة المرور في منصة {BrandNameAr}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
         
@@ -221,13 +225,13 @@ namespace BdaeyEducat.API.Services
 <body>
     <div class=""container"">
         <div class=""header"">
-            <a href=""#"" class=""logo"" style=""color: #EAB308 !important; text-decoration: none;"">بدائي <span style=""color: #10B981 !important;"">BDAEY</span></a>
+            <a href=""#"" class=""logo"" style=""color: #EAB308 !important; text-decoration: none;"">{BrandNameAr} <span style=""color: #10B981 !important;"">{BrandNameEn}</span></a>
         </div>
         <div class=""content"">
             <h1 class=""heading"">استعادة كلمة المرور</h1>
             <p class=""text"">
                 أهلاً بك <strong>{name}</strong>،<br>
-                لقد تلقينا طلباً لاستعادة كلمة المرور الخاصة بحسابك في منصة بدائي. يرجى الضغط على الزر أدناه لاختيار كلمة مرور جديدة.
+                لقد تلقينا طلباً لاستعادة كلمة المرور الخاصة بحسابك في منصة {BrandNameAr}. يرجى الضغط على الزر أدناه لاختيار كلمة مرور جديدة.
             </p>
             
             <div class=""btn-container"">
@@ -239,7 +243,7 @@ namespace BdaeyEducat.API.Services
             </p>
         </div>
         <div class=""footer"">
-            <p>&copy; {year} منصة بدائي. جميع الحقوق محفوظة.</p>
+            <p>&copy; {year} منصة {BrandNameAr}. جميع الحقوق محفوظة.</p>
             <p>
                 <a href=""https://bdaey.com/privacy"" class=""link"">سياسة الخصوصية</a> | 
                 <a href=""https://bdaey.com/contact"" class=""link"">الدعم الفني</a>

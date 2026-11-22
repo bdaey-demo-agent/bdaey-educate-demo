@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import Seo from '../../components/common/Seo';
 import {
     BanknotesIcon,
@@ -12,7 +13,7 @@ const TeacherFinancialPolicy: React.FC = () => {
         <>
             <Seo
                 title="السياسة المالية للمعلمين"
-                description="السياسة المالية للمعلمين في منصة بدائي: شرح كامل لنظام العمولات، المكافآت، ومواعيد السحب."
+                description={`السياسة المالية للمعلمين في منصة ${branding.nameAr}: شرح كامل لنظام العمولات، المكافآت، ومواعيد السحب.`}
                 canonical="https://bdaey.com/teacher-financial-policy"
             />
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
@@ -21,7 +22,7 @@ const TeacherFinancialPolicy: React.FC = () => {
                 <div className="text-center mb-12">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">سياسة الأموال للمعلمين</h1>
                     <p className="text-gray-600 dark:text-gray-400 text-lg">
-                        توضح هذه الصفحة كيفية عمل النظام المالي، الأرباح، والمدفوعات داخل منصة بدائي.
+                        توضح هذه الصفحة كيفية عمل النظام المالي، الأرباح، والمدفوعات داخل منصة {branding.nameAr}.
                     </p>
                 </div>
 

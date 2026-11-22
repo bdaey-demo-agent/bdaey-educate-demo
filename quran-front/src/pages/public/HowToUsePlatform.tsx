@@ -1,4 +1,5 @@
 import React from "react";
+import { branding } from '../../branding';
 import { Link } from "react-router-dom";
 import Seo from "../../components/common/Seo";
 
@@ -208,8 +209,8 @@ const HowToUsePlatform: React.FC = () => {
     return (
         <>
             <Seo
-                title="دليل استخدام منصة بدائي"
-                description="دليل شامل لاستخدام منصة بدائي: شرح وافي للطلاب والمعلمين حول كيفية تصفح المعلمين، حجز الجلسات، وإدارة الباقات."
+                title={`دليل استخدام منصة ${branding.nameAr}`}
+                description={`دليل شامل لاستخدام منصة ${branding.nameAr}: شرح وافي للطلاب والمعلمين حول كيفية تصفح المعلمين، حجز الجلسات، وإدارة الباقات.`}
                 canonical="https://bdaey.com/how-to-use"
             />
             <div className="font-body bg-gray-50 dark:bg-gray-900 transition-colors duration-300">

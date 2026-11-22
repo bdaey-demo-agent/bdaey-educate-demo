@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import OnboardingGuide, { type OnboardingStep } from '../../components/common/OnboardingGuide';
@@ -72,7 +73,7 @@ const TeacherHome: React.FC = () => {
                         أهلاً بك يا معلم، {user?.fullName} 👋
                     </h1>
                     <p className="text-xl text-blue-50 leading-relaxed mb-8">
-                        شكراً لانضمامك إلى كوكبة معلمي بدائي. هنا نقطة انطلاقك لنشر العلم وتحفيظ كتاب الله.
+                        شكراً لانضمامك إلى كوكبة معلمي {branding.nameAr}. هنا نقطة انطلاقك لنشر العلم وتحفيظ كتاب الله.
                     </p>
                     <div className="flex gap-4">
                         <Link to="/teacher/profile" className="btn-gold px-8 py-3 font-bold text-gray-900 shadow-md transform hover:-translate-y-1 transition-transform">

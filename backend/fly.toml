@@ -27,6 +27,10 @@ kill_timeout = "30s"
   Jwt__ExpireMinutes = "15"
   Jwt__RefreshTokenDays = "14"
 
+  # White-label identity (per-academy deployments override these)
+  Branding__NameAr = "بدائي"
+  Branding__NameEn = "BDAEY"
+
   Video__Provider = "daily"
   Video__EarlyJoinMinutes = "15"
   Video__LateJoinMinutes = "30"

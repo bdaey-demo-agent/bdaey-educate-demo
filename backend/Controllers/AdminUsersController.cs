@@ -214,7 +214,7 @@ public class AdminUsersController : ControllerBase
 
         var verifyLink = $"{origin}/verify-email?userId={user.Id}&token={Uri.EscapeDataString(emailToken)}";
 
-        await _emailService.SendEmailAsync(user.Email!, "تفعيل حسابك في منصة بدائي", 
+        await _emailService.SendEmailAsync(user.Email!, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
             BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
 
         user.EmailConfirmationSentAt = DateTime.UtcNow;

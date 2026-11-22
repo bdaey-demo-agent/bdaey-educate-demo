@@ -1,4 +1,5 @@
 import React from 'react';
+import { branding } from '../../branding';
 import { useAuth } from '../../context/AuthContext';
 import OnboardingGuide, { type OnboardingStep } from '../../components/common/OnboardingGuide';
 import {
@@ -73,7 +74,7 @@ const StudentHome: React.FC<StudentHomeProps> = ({ demoMode = false }) => {
                         أهلاً بك، {user?.fullName} 👋
                     </h1>
                     <p className="text-xl text-emerald-50 leading-relaxed mb-8">
-                        نحن سعداء بوجودك معنا في منصة بدائي. هذه صفحتك الرئيسية حيث يمكنك الانطلاق في رحلتك لتعلم القرآن الكريم.
+                        نحن سعداء بوجودك معنا في منصة {branding.nameAr}. هذه صفحتك الرئيسية حيث يمكنك الانطلاق في رحلتك لتعلم القرآن الكريم.
                     </p>
                     <div className="flex gap-4">
                         <Link id="btn-get-started" to="/teachers-public" className="btn-gold px-8 py-3 font-bold text-gray-900 shadow-md transform hover:-translate-y-1 transition-transform">

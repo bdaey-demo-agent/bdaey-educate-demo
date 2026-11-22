@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { branding } from '../branding';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -80,7 +81,7 @@ const Login: React.FC = () => {
                 <div className="card shadow-lg border-0 bg-white p-8">
                     <div className="text-center mb-8">
                         <h2 className="text-2xl font-bold font-heading text-primary-green mb-2">تسجيل الدخول</h2>
-                        <p className="text-gray-500">أهلاً بك مجدداً في منصة بدائي</p>
+                        <p className="text-gray-500">أهلاً بك مجدداً في {branding.nameAr}</p>
                     </div>
 
                     {error && (
