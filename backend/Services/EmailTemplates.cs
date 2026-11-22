@@ -17,7 +17,7 @@ namespace BdaeyEducat.API.Services
 <head>
     <meta charset=""UTF-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-    <title>تفعيل حسابك في منصة {BrandNameAr}</title>
+    <title>Activate your {BrandNameEn} account</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
         
@@ -105,25 +105,25 @@ namespace BdaeyEducat.API.Services
             <a href=""#"" class=""logo"">{BrandNameAr} <span>{BrandNameEn}</span></a>
         </div>
         <div class=""content"">
-            <h1 class=""heading"">مرحباً بك في منصة {BrandNameAr}!</h1>
+            <h1 class=""heading"">Welcome to {BrandNameEn}!</h1>
             <p class=""text"">
-                أهلاً بك <strong>{name}</strong>،<br>
-                سعداء جداً بانضمامك إلينا. لتفعيل حسابك والبدء في رحلتك التعليمية، يرجى الضغط على الزر أدناه لتأكيد بريدك الإلكتروني.
+                Hello <strong>{name}</strong>,<br>
+                We are glad you joined us. To activate your account and start your learning journey, click the button below to confirm your email address.
             </p>
             
             <div class=""btn-container"">
-                <a href=""{verificationLink}"" class=""btn"" style=""background-color: #EAB308; color: #111827 !important; text-decoration: none; padding: 16px 40px; border-radius: 50px; font-weight: 800;"">تفعيل الحساب الآن</a>
+                <a href=""{verificationLink}"" class=""btn"" style=""background-color: #EAB308; color: #111827 !important; text-decoration: none; padding: 16px 40px; border-radius: 50px; font-weight: 800;"">Activate My Account</a>
             </div>
             
             <p class=""text"" style=""font-size: 13px; color: #94a3b8; margin-top: 40px;"">
-                إذا لم تقم بإنشاء حساب في منصة {BrandNameAr}، يمكنك تجاهل هذه الرسالة بأمان.
+                If you did not create a {BrandNameEn} account, you can safely ignore this message.
             </p>
         </div>
         <div class=""footer"">
-            <p>&copy; {year} منصة {BrandNameAr}. جميع الحقوق محفوظة.</p>
+            <p>&copy; {year} {BrandNameEn}. All rights reserved.</p>
             <p>
-                <a href=""https://bdaey.com/privacy"" class=""link"">سياسة الخصوصية</a> | 
-                <a href=""https://bdaey.com/contact"" class=""link"">الدعم الفني</a>
+                <a href=""https://bdaey.com/privacy"" class=""link"">Privacy Policy</a> | 
+                <a href=""https://bdaey.com/contact"" class=""link"">Support</a>
             </p>
         </div>
     </div>
@@ -140,7 +140,7 @@ namespace BdaeyEducat.API.Services
 <head>
     <meta charset=""UTF-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-    <title>استعادة كلمة المرور في منصة {BrandNameAr}</title>
+    <title>Reset your {BrandNameEn} password</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
         
@@ -228,25 +228,25 @@ namespace BdaeyEducat.API.Services
             <a href=""#"" class=""logo"" style=""color: #EAB308 !important; text-decoration: none;"">{BrandNameAr} <span style=""color: #10B981 !important;"">{BrandNameEn}</span></a>
         </div>
         <div class=""content"">
-            <h1 class=""heading"">استعادة كلمة المرور</h1>
+            <h1 class=""heading"">Password Reset</h1>
             <p class=""text"">
-                أهلاً بك <strong>{name}</strong>،<br>
-                لقد تلقينا طلباً لاستعادة كلمة المرور الخاصة بحسابك في منصة {BrandNameAr}. يرجى الضغط على الزر أدناه لاختيار كلمة مرور جديدة.
+                Hello <strong>{name}</strong>,<br>
+                We received a request to reset the password for your {BrandNameEn} account. Click the button below to choose a new password.
             </p>
             
             <div class=""btn-container"">
-                <a href=""{resetLink}"" class=""btn"" style=""background-color: #EAB308; color: #111827 !important; text-decoration: none; padding: 16px 40px; border-radius: 50px; font-weight: 800;"">اختيار كلمة مرور جديدة</a>
+                <a href=""{resetLink}"" class=""btn"" style=""background-color: #EAB308; color: #111827 !important; text-decoration: none; padding: 16px 40px; border-radius: 50px; font-weight: 800;"">Choose a New Password</a>
             </div>
             
             <p class=""text"" style=""font-size: 13px; color: #94a3b8; margin-top: 40px;"">
-                إذا لم تقم بطلب استعادة كلمة المرور، يرجى تجاهل هذه الرسالة. لن يتم إجراء أي تغيير على حسابك.
+                If you did not request a password reset, please ignore this message. No changes will be made to your account.
             </p>
         </div>
         <div class=""footer"">
-            <p>&copy; {year} منصة {BrandNameAr}. جميع الحقوق محفوظة.</p>
+            <p>&copy; {year} {BrandNameEn}. All rights reserved.</p>
             <p>
-                <a href=""https://bdaey.com/privacy"" class=""link"">سياسة الخصوصية</a> | 
-                <a href=""https://bdaey.com/contact"" class=""link"">الدعم الفني</a>
+                <a href=""https://bdaey.com/privacy"" class=""link"">Privacy Policy</a> | 
+                <a href=""https://bdaey.com/contact"" class=""link"">Support</a>
             </p>
         </div>
     </div>

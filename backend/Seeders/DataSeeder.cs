@@ -60,7 +60,7 @@ public static class DataSeeder
             {
                 Key = "GlobalCommission",
                 Value = config?["Seeder:GlobalCommission"] ?? "15.0",
-                Description = "النسبة المئوية لعمولة المنصة الافتراضية"
+                Description = "Default platform commission percentage"
             });
         }
 
@@ -70,7 +70,7 @@ public static class DataSeeder
             {
                 Key = "PackageDeletionPenalty",
                 Value = config?["Seeder:PackageDeletionPenalty"] ?? "50.0",
-                Description = "قيمة الغرامة الافتراضية عند حذف باقة نشطة"
+                Description = "Default penalty for deleting an active package"
             });
         }
 
