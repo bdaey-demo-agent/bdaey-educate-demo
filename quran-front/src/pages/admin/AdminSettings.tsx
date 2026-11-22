@@ -34,9 +34,9 @@ const AdminSettings: React.FC = () => {
         try {
             setSaving(true);
             await adminService.updateGlobalCommission(globalCommission);
-            toast.success('تم تحديث عمولة المنصة بنجاح');
+            toast.success('Platform commission updated');
         } catch (error) {
-            toast.error('فشل تحديث العمولة');
+            toast.error('Failed to update commission');
         } finally {
             setSaving(false);
         }
@@ -46,9 +46,9 @@ const AdminSettings: React.FC = () => {
         try {
             setSaving(true);
             await adminService.updateGlobalDeletionPenalty(globalPenalty);
-            toast.success('تم تحديث غرامة حذف الباقات بنجاح');
+            toast.success('Package deletion penalty updated');
         } catch (error) {
-            toast.error('فشل تحديث الغرامة');
+            toast.error('Failed to update penalty');
         } finally {
             setSaving(false);
         }
@@ -66,7 +66,7 @@ const AdminSettings: React.FC = () => {
         <div className="p-6 max-w-4xl mx-auto space-y-6">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
                 <CogIcon className="h-8 w-8 text-blue-600" />
-                إعدادات المنصة
+                Platform Settings
             </h1>
 
             {/* Global Commission Section */}
@@ -76,8 +76,8 @@ const AdminSettings: React.FC = () => {
                         <CurrencyDollarIcon className="h-6 w-6" />
                     </div>
                     <div>
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">عمولة المنصة الافتراضية</h2>
-                        <p className="text-gray-500 text-sm">النسبة المئوية التي تخصم من كل حصة للمعلمين الذين ليس لديهم نسبة خاصة.</p>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Default Platform Commission</h2>
+                        <p className="text-gray-500 text-sm">The percentage deducted from each session for teachers without a custom rate.</p>
                     </div>
                 </div>
 
@@ -99,7 +99,7 @@ const AdminSettings: React.FC = () => {
                         disabled={saving}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50"
                     >
-                        {saving ? 'جاري الحفظ...' : 'حفظ التعديلات'}
+                        {saving ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
             </div>
@@ -111,8 +111,8 @@ const AdminSettings: React.FC = () => {
                         <CurrencyDollarIcon className="h-6 w-6" />
                     </div>
                     <div>
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">غرامة حذف الباقات النشطة</h2>
-                        <p className="text-gray-500 text-sm">القيمة المالية التي تخصم من المعلم عند حذف باقة تحتوي على حجوزات نشطة.</p>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Active Package Deletion Penalty</h2>
+                        <p className="text-gray-500 text-sm">The amount deducted from a teacher when they delete a package with active bookings.</p>
                     </div>
                 </div>
 
@@ -131,11 +131,11 @@ const AdminSettings: React.FC = () => {
                         disabled={saving}
                         className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors disabled:opacity-50"
                     >
-                        {saving ? 'جاري الحفظ...' : 'حفظ التعديلات'}
+                        {saving ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
                 <p className="mt-2 text-xs text-gray-500">
-                    ملاحظة: يمكن تخصيص (Override) هذه القيمة لمعلم محدد من صفحة "إدارة المعلمين".
+                    Note: this value can be overridden for a specific teacher from the Teacher Management page.
                 </p>
             </div>
         </div>

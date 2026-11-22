@@ -18,10 +18,10 @@ import type { AdminPackage, AdminPackageFilter, AdminPackageDetail } from '../..
 
 // Status mapping
 const STATUS_LABELS: Record<string, string> = {
-    'Active': 'نشط',
-    'Paused': 'متوقف مؤقتاً',
-    'Archived': 'مؤرشف',
-    'Default': 'غير محدد'
+    'Active': 'Active',
+    'Paused': 'Paused',
+    'Archived': 'Archived',
+    'Default': 'Not set'
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -84,7 +84,7 @@ const AdminPackages = () => {
             setTotalCount(result.totalCount);
         } catch (error) {
             console.error(error);
-            toast.error('فشل تحميل الباقات');
+            toast.error('Failed to load packages');
         } finally {
             setLoading(false);
         }
@@ -96,7 +96,7 @@ const AdminPackages = () => {
             setSelectedPackage(details);
             setDetailsOpen(true);
         } catch (error) {
-            toast.error('فشل تحميل التفاصيل');
+            toast.error('Failed to load details');
         }
     };
 
@@ -105,7 +105,7 @@ const AdminPackages = () => {
 
         // Validation
         if (!statusReason.trim() || statusReason.trim().length < 5) {
-            toast.error('يرجى كتابة سبب واضح (5 أحرف على الأقل).');
+            toast.error('Please provide a clear reason (at least 5 characters).');
             return;
         }
 
@@ -116,7 +116,7 @@ const AdminPackages = () => {
             // but fetching is safer. For now, we will wait for fetch, but loading state handles UX.
 
             await adminService.updatePackageStatus(statusAction.id, statusAction.status, statusReason);
-            toast.success('تم تحديث حالة الباقة بنجاح');
+            toast.success('Package status updated');
 
             setShowStatusModal(false);
             setStatusReason('');
@@ -130,7 +130,7 @@ const AdminPackages = () => {
                 handleViewDetails(statusAction.id);
             }
         } catch (error) {
-            toast.error('فشل تحديث الحالة');
+            toast.error('Failed to update status');
         } finally {
             setStatusLoading(false);
         }
@@ -138,7 +138,7 @@ const AdminPackages = () => {
 
     const confirmDelete = (pkg: AdminPackage) => {
         if (pkg.totalBookingsCount > 0) {
-            toast.error('لا يمكن حذف باقة مرتبطة بحجوزات. استخدم خيار الأرشفة.');
+            toast.error('Cannot delete a package with bookings. Use archive instead.');
             return;
         }
         setPackageToDelete({ id: pkg.id, name: pkg.name });
@@ -151,16 +151,16 @@ const AdminPackages = () => {
         setDeleteLoading(true);
         try {
             await adminService.deletePackage(packageToDelete.id);
-            toast.success('تم حذف الباقة بنجاح');
+            toast.success('Package deleted');
             fetchPackages();
             setDetailsOpen(false);
             setShowDeleteModal(false);
             setPackageToDelete(null);
         } catch (error: any) {
             if (error.response && error.response.status === 409) {
-                toast.error('لا يمكن حذف باقة مرتبطة بحجوزات. يرجى أرشفتها بدلاً من ذلك.');
+                toast.error('Cannot delete a package with bookings. Please archive it instead.');
             } else {
-                toast.error('فشل حذف الباقة');
+                toast.error('Failed to delete the package');
             }
         } finally {
             setDeleteLoading(false);
@@ -177,9 +177,9 @@ const AdminPackages = () => {
         <div className="space-y-6 animate-fade-in">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">إدارة الباقات</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Package Management</h1>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        استعراض وإدارة جميع باقات المعلمين في المنصة
+                        Browse and manage all teacher packages on the platform
                     </p>
                 </div>
             </div>
@@ -191,7 +191,7 @@ const AdminPackages = () => {
                         <MagnifyingGlassIcon className="absolute right-3 top-3 h-5 w-5 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="بحث عن باقة أو معلم..."
+                            placeholder="Search for a package or teacher..."
                             className="w-full pr-10 pl-4 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none transition-all"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -203,10 +203,10 @@ const AdminPackages = () => {
                             value={filters.status || ''}
                             onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value ? Number(e.target.value) : undefined, page: 1 }))}
                         >
-                            <option value="">الكل</option>
-                            <option value="1">نشط</option>
-                            <option value="2">محجوب/مؤقت</option>
-                            <option value="3">مؤرشف</option>
+                            <option value="">All</option>
+                            <option value="1">Active</option>
+                            <option value="2">Paused</option>
+                            <option value="3">Archived</option>
                         </select>
                     </div>
                 </div>
@@ -218,29 +218,29 @@ const AdminPackages = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
                         <thead className="bg-gray-50 dark:bg-slate-900/50">
                             <tr>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">الباقة</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">المعلم</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">السعر</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">الحجوزات</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">الحالة</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">إجراءات</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Package</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Teacher</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Price</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Bookings</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500">جاري التحميل...</td>
+                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500">Loading...</td>
                                 </tr>
                             ) : packages.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500">لا توجد باقات لعرضها</td>
+                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500">No packages to display</td>
                                 </tr>
                             ) : (
                                 packages.map((pkg) => (
                                     <tr key={pkg.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm font-medium text-gray-900 dark:text-white">{pkg.name}</div>
-                                            <div className="text-xs text-gray-500">{pkg.sessionsCount} حصة</div>
+                                            <div className="text-xs text-gray-500">{pkg.sessionsCount} sessions</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-900 dark:text-gray-200">{pkg.teacherName}</div>
@@ -278,7 +278,7 @@ const AdminPackages = () => {
                                                                         className={`${active ? 'bg-primary/10 text-primary' : 'text-gray-900 dark:text-white'} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                     >
                                                                         <EyeIcon className="mr-2 h-4 w-4 ml-2" />
-                                                                        التفاصيل
+                                                                        Details
                                                                     </button>
                                                                 )}
                                                             </Menu.Item>
@@ -290,7 +290,7 @@ const AdminPackages = () => {
                                                                             className={`${active ? 'bg-primary/10 text-primary' : 'text-gray-900 dark:text-white'} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <PencilIcon className="mr-2 h-4 w-4 ml-2 text-blue-500" />
-                                                                            تعديل الباقة
+                                                                            Edit Package
                                                                         </button>
                                                                     )}
                                                                 </Menu.Item>
@@ -302,13 +302,13 @@ const AdminPackages = () => {
                                                                     {({ active }) => (
                                                                         <button
                                                                             onClick={() => {
-                                                                                setStatusAction({ id: pkg.id, status: 1, label: 'تفعيل' });
+                                                                                setStatusAction({ id: pkg.id, status: 1, label: 'Activate' });
                                                                                 setShowStatusModal(true);
                                                                             }}
                                                                             className={`${active ? 'bg-green-100 text-green-900' : 'text-gray-900 dark:text-white'} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <PlayIcon className="mr-2 h-4 w-4 ml-2 text-green-500" />
-                                                                            تفعيل
+                                                                            Activate
                                                                         </button>
                                                                     )}
                                                                 </Menu.Item>
@@ -318,13 +318,13 @@ const AdminPackages = () => {
                                                                     {({ active }) => (
                                                                         <button
                                                                             onClick={() => {
-                                                                                setStatusAction({ id: pkg.id, status: 2, label: 'إيقاف مؤقت' });
+                                                                                setStatusAction({ id: pkg.id, status: 2, label: 'Pause' });
                                                                                 setShowStatusModal(true);
                                                                             }}
                                                                             className={`${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900 dark:text-white'} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <PauseIcon className="mr-2 h-4 w-4 ml-2 text-amber-500" />
-                                                                            إيقاف مؤقت
+                                                                            Pause
                                                                         </button>
                                                                     )}
                                                                 </Menu.Item>
@@ -334,13 +334,13 @@ const AdminPackages = () => {
                                                                     {({ active }) => (
                                                                         <button
                                                                             onClick={() => {
-                                                                                setStatusAction({ id: pkg.id, status: 3, label: 'أرشفة' });
+                                                                                setStatusAction({ id: pkg.id, status: 3, label: 'Archive' });
                                                                                 setShowStatusModal(true);
                                                                             }}
                                                                             className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-900 dark:text-white'} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <ArchiveBoxIcon className="mr-2 h-4 w-4 ml-2 text-gray-500" />
-                                                                            أرشفة
+                                                                            Archive
                                                                         </button>
                                                                     )}
                                                                 </Menu.Item>
@@ -359,7 +359,7 @@ const AdminPackages = () => {
                                                                         `}
                                                                     >
                                                                         <TrashIcon className="mr-2 h-4 w-4 ml-2" />
-                                                                        {pkg.totalBookingsCount > 0 ? 'لا يمكن الحذف (نشط)' : 'حذف نهائي'}
+                                                                        {pkg.totalBookingsCount > 0 ? 'Cannot delete (active)' : 'Delete Permanently'}
                                                                     </button>
                                                                 )}
                                                             </Menu.Item>
@@ -379,7 +379,7 @@ const AdminPackages = () => {
             {/* Pagination (Improved) */}
             <div className="flex justify-between items-center text-sm text-gray-500">
                 <div>
-                    إجمالي {totalCount} باقة
+                    {totalCount} packages total
                 </div>
                 <div className="flex gap-2">
                     <button
@@ -387,7 +387,7 @@ const AdminPackages = () => {
                         onClick={() => setFilters(prev => ({ ...prev, page: prev.page - 1 }))}
                         className="px-3 py-1 rounded border disabled:opacity-50"
                     >
-                        السابق
+                        Previous
                     </button>
                     <span>{filters.page}</span>
                     <button
@@ -395,7 +395,7 @@ const AdminPackages = () => {
                         onClick={() => setFilters(prev => ({ ...prev, page: prev.page + 1 }))}
                         className="px-3 py-1 rounded border disabled:opacity-50"
                     >
-                        التالي
+                        Next
                     </button>
                 </div>
             </div>
@@ -428,7 +428,7 @@ const AdminPackages = () => {
                             >
                                 <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 p-6 text-right align-middle shadow-xl transition-all">
                                     <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 dark:text-white flex justify-between items-center">
-                                        <span>تفاصيل الباقة</span>
+                                        <span>Package Details</span>
                                         <button onClick={() => setDetailsOpen(false)} className="text-gray-400 hover:text-gray-500">
                                             <span className="sr-only">Close</span>
                                             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -441,48 +441,48 @@ const AdminPackages = () => {
                                         <div className="mt-4 space-y-4">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div className="bg-gray-50 dark:bg-slate-700 p-3 rounded-lg">
-                                                    <span className="block text-xs text-gray-500">اسم الباقة</span>
+                                                    <span className="block text-xs text-gray-500">Package Name</span>
                                                     <span className="font-medium dark:text-white">{selectedPackage.name}</span>
                                                 </div>
                                                 <div className="bg-gray-50 dark:bg-slate-700 p-3 rounded-lg">
-                                                    <span className="block text-xs text-gray-500">المعلم</span>
+                                                    <span className="block text-xs text-gray-500">Teacher</span>
                                                     <span className="font-medium dark:text-white">{selectedPackage.teacherName}</span>
                                                 </div>
                                                 <div className="bg-gray-50 dark:bg-slate-700 p-3 rounded-lg">
-                                                    <span className="block text-xs text-gray-500">السعر</span>
+                                                    <span className="block text-xs text-gray-500">Price</span>
                                                     <span className="font-medium dark:text-white">{selectedPackage.price} {selectedPackage.currency}</span>
                                                 </div>
                                                 <div className="bg-gray-50 dark:bg-slate-700 p-3 rounded-lg">
-                                                    <span className="block text-xs text-gray-500">حالة الباقة</span>
+                                                    <span className="block text-xs text-gray-500">Package Status</span>
                                                     <StatusBadge status={selectedPackage.status} />
                                                 </div>
                                             </div>
 
                                             <div className="border-t border-gray-100 dark:border-slate-700 pt-4 mt-4">
-                                                <h4 className="font-medium mb-3 dark:text-white">إحصائيات الاستخدام (Impact)</h4>
+                                                <h4 className="font-medium mb-3 dark:text-white">Usage Stats (Impact)</h4>
                                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                                     <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                                                         <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{selectedPackage.totalBookingsCount}</div>
-                                                        <div className="text-xs text-gray-500">إجمالي الحجوزات</div>
+                                                        <div className="text-xs text-gray-500">Total Bookings</div>
                                                     </div>
                                                     <div className="text-center p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
                                                         <div className="text-xl font-bold text-amber-600 dark:text-amber-400">{selectedPackage.pendingBookingsCount}</div>
-                                                        <div className="text-xs text-gray-500">معلقة</div>
+                                                        <div className="text-xs text-gray-500">Pending</div>
                                                     </div>
                                                     <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                                                         <div className="text-xl font-bold text-green-600 dark:text-green-400">{selectedPackage.completedBookingsCount}</div>
-                                                        <div className="text-xs text-gray-500">مكتملة</div>
+                                                        <div className="text-xs text-gray-500">Completed</div>
                                                     </div>
                                                     <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
                                                         <div className="text-xl font-bold text-purple-600 dark:text-purple-400">{selectedPackage.upcomingSessionsCount}</div>
-                                                        <div className="text-xs text-gray-500">حصص قادمة</div>
+                                                        <div className="text-xs text-gray-500">Upcoming Sessions</div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {selectedPackage.adminNote && (
                                                 <div className="bg-yellow-50 dark:bg-yellow-900/10 p-3 rounded-lg border border-yellow-100 dark:border-yellow-900/30">
-                                                    <h4 className="text-xs font-bold text-yellow-800 dark:text-yellow-500 mb-1">ملاحظات المشرفين</h4>
+                                                    <h4 className="text-xs font-bold text-yellow-800 dark:text-yellow-500 mb-1">Admin Notes</h4>
                                                     <p className="text-sm text-yellow-700 dark:text-yellow-400 whitespace-pre-wrap">{selectedPackage.adminNote}</p>
                                                 </div>
                                             )}
@@ -496,18 +496,18 @@ const AdminPackages = () => {
                                                         }}
                                                         className="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-sm font-medium"
                                                     >
-                                                        حذف نهائي (آمن)
+                                                        Delete Permanently (safe)
                                                     </button>
                                                 ) : (
                                                     <span className="text-xs text-gray-400 self-center">
-                                                        لا يمكن الحذف (يوجد حجوزات)
+                                                        Cannot delete (has bookings)
                                                     </span>
                                                 )}
                                                 <button
                                                     onClick={() => setDetailsOpen(false)}
                                                     className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg text-sm font-medium"
                                                 >
-                                                    إغلاق
+                                                    Close
                                                 </button>
                                             </div>
                                         </div>
@@ -527,16 +527,16 @@ const AdminPackages = () => {
                         <div className="flex min-h-full items-center justify-center p-4 text-center">
                             <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 p-6 text-right align-middle shadow-xl transition-all">
                                 <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
-                                    تغيير حالة الباقة: {statusAction?.label}
+                                    Change Package Status: {statusAction?.label}
                                 </Dialog.Title>
                                 <div className="mt-4">
-                                    <p className="text-sm text-gray-500 mb-3">يرجى ذكر سبب هذا التغيير (للسجلات):</p>
+                                    <p className="text-sm text-gray-500 mb-3">Please provide a reason for this change (for records):</p>
                                     <textarea
                                         className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 dark:text-white"
                                         rows={3}
                                         value={statusReason}
                                         onChange={(e) => setStatusReason(e.target.value)}
-                                        placeholder="سبب التغيير (5 أحرف على الأقل)..."
+                                        placeholder="Reason for the change (at least 5 characters)..."
                                         disabled={statusLoading}
                                     />
                                 </div>
@@ -546,14 +546,14 @@ const AdminPackages = () => {
                                         className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg disabled:opacity-50"
                                         disabled={statusLoading}
                                     >
-                                        إلغاء
+                                        Cancel
                                     </button>
                                     <button
                                         onClick={handleStatusChange}
                                         className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark disabled:opacity-50"
                                         disabled={statusLoading || !statusReason.trim() || statusReason.trim().length < 5}
                                     >
-                                        {statusLoading ? 'جاري التحديث...' : 'تأكيد'}
+                                        {statusLoading ? 'Updating...' : 'Confirm'}
                                     </button>
                                 </div>
                             </Dialog.Panel>
@@ -574,18 +574,17 @@ const AdminPackages = () => {
                                         <ExclamationTriangleIcon className="h-6 w-6" />
                                     </div>
                                     <Dialog.Title as="h3" className="text-lg font-bold leading-6">
-                                        تأكيد الحذف النهائي
+                                        Confirm Permanent Deletion
                                     </Dialog.Title>
                                 </div>
 
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-500 dark:text-gray-300">
-                                        هل أنت متأكد من رغبتك في حذف الباقة
-                                        <span className="font-bold text-gray-900 dark:text-white mx-1">"{packageToDelete?.name}"</span>
-                                        نهائياً؟
+                                        Are you sure you want to permanently delete the package
+                                        <span className="font-bold text-gray-900 dark:text-white mx-1">"{packageToDelete?.name}"</span>?
                                     </p>
                                     <p className="text-xs text-red-500 mt-2 font-medium">
-                                        لا يمكن التراجع عن هذا الإجراء وسيتم فقدان جميع بيانات الباقة.
+                                        This action cannot be undone and all package data will be lost.
                                     </p>
                                 </div>
 
@@ -595,14 +594,14 @@ const AdminPackages = () => {
                                         className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg disabled:opacity-50"
                                         disabled={deleteLoading}
                                     >
-                                        إلغاء
+                                        Cancel
                                     </button>
                                     <button
                                         onClick={handleDelete}
                                         className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
                                         disabled={deleteLoading}
                                     >
-                                        {deleteLoading ? 'جاري الحذف...' : 'حذف نهائي'}
+                                        {deleteLoading ? 'Deleting...' : 'Delete Permanently'}
                                     </button>
                                 </div>
                             </Dialog.Panel>

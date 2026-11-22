@@ -62,17 +62,17 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
         e.preventDefault();
 
         if (!title.trim() || !message.trim()) {
-            toast.error('يرجى تعبئة العنوان والرسالة');
+            toast.error('Please fill in the title and message');
             return;
         }
 
         if (targetType === 'Single' && !targetId.trim()) {
-            toast.error('يرجى إدخال معرف المستخدم');
+            toast.error('Please enter a user ID');
             return;
         }
 
         if (targetType === 'Users' && selectedUsers.length === 0) {
-            toast.error('يرجى اختيار مستخدم واحد على الأقل');
+            toast.error('Please select at least one user');
             return;
         }
 
@@ -85,7 +85,7 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                 title,
                 message
             });
-            toast.success('تم إرسال الإشعار بنجاح');
+            toast.success('Notification sent');
             onClose();
             // Reset form
             setTitle('');
@@ -96,7 +96,7 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
             setSearchQuery('');
         } catch (error) {
             console.error('Failed to send notification:', error);
-            toast.error('حدث خطأ أثناء إرسال الإشعار');
+            toast.error('An error occurred while sending the notification');
         } finally {
             setIsSending(false);
         }
@@ -132,7 +132,7 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                 <div className="flex justify-between items-center mb-6">
                                     <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-gray-900 dark:text-white flex items-center gap-2">
                                         <PaperAirplaneIcon className="h-5 w-5 text-gold" />
-                                        إرسال إشعار جديد
+                                        Send New Notification
                                     </Dialog.Title>
                                     <button
                                         onClick={onClose}
@@ -146,18 +146,18 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                     {/* Target Type */}
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                            إرسال إلى
+                                            Send To
                                         </label>
                                         <select
                                             value={targetType}
                                             onChange={(e) => setTargetType(e.target.value)}
                                             className="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-green focus:border-primary-green p-2.5"
                                         >
-                                            <option value="All">جميع المستخدمين</option>
-                                            <option value="Students">الطلاب فقط</option>
-                                            <option value="Teachers">المعلمون فقط</option>
-                                            <option value="Users">مستخدمين محددين (قائمة)</option>
-                                            <option value="Single">مستخدم محدد (معرف يدوي)</option>
+                                            <option value="All">All Users</option>
+                                            <option value="Students">Students Only</option>
+                                            <option value="Teachers">Teachers Only</option>
+                                            <option value="Users">Specific Users (list)</option>
+                                            <option value="Single">Single User (manual ID)</option>
                                         </select>
                                     </div>
 
@@ -165,14 +165,14 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                     {targetType === 'Users' && (
                                         <div className="space-y-2 relative">
                                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                البحث عن المستخدمين
+                                                Search Users
                                             </label>
                                             <div className="relative">
                                                 <input
                                                     type="text"
                                                     value={searchQuery}
                                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                                    placeholder="ابحث بالاسم أو البريد الإلكتروني..."
+                                                    placeholder="Search by name or email..."
                                                     className="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-green focus:border-primary-green p-2.5 pr-10"
                                                 />
                                                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -184,7 +184,7 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                             {searchQuery.length >= 2 && (
                                                 <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 rounded-md shadow-lg border border-gray-200 dark:border-gray-600 max-h-60 overflow-auto">
                                                     {isSearching ? (
-                                                        <div className="p-4 text-center text-sm text-gray-500">جاري البحث...</div>
+                                                        <div className="p-4 text-center text-sm text-gray-500">Searching...</div>
                                                     ) : searchResults.length > 0 ? (
                                                         <ul className="py-1">
                                                             {searchResults.map((user) => (
@@ -194,7 +194,7 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                                                     className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex justify-between items-center"
                                                                 >
                                                                     <div>
-                                                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{user.fullName || 'بدون اسم'}</div>
+                                                                        <div className="text-sm font-medium text-gray-900 dark:text-white">{user.fullName || 'No name'}</div>
                                                                         <div className="text-xs text-gray-500 dark:text-gray-400">{user.email}</div>
                                                                     </div>
                                                                     <UserPlusIcon className="h-4 w-4 text-primary-green" />
@@ -202,7 +202,7 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                                             ))}
                                                         </ul>
                                                     ) : (
-                                                        <div className="p-4 text-center text-sm text-gray-500">لا توجد نتائج</div>
+                                                        <div className="p-4 text-center text-sm text-gray-500">No results</div>
                                                     )}
                                                 </div>
                                             )}
@@ -232,13 +232,13 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                     {targetType === 'Single' && (
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                معرف المستخدم (User ID)
+                                                User ID
                                             </label>
                                             <input
                                                 type="text"
                                                 value={targetId}
                                                 onChange={(e) => setTargetId(e.target.value)}
-                                                placeholder="أدخل معرف المستخدم..."
+                                                placeholder="Enter user ID..."
                                                 className="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-green focus:border-primary-green p-2.5"
                                             />
                                         </div>
@@ -247,13 +247,13 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                     {/* Title */}
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                            عنوان الإشعار
+                                            Notification Title
                                         </label>
                                         <input
                                             type="text"
                                             value={title}
                                             onChange={(e) => setTitle(e.target.value)}
-                                            placeholder="مثال: تحديث هام في المنصة"
+                                            placeholder="Example: Important platform update"
                                             className="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-green focus:border-primary-green p-2.5"
                                         />
                                     </div>
@@ -261,13 +261,13 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                     {/* Message */}
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                            نص الرسالة
+                                            Message Body
                                         </label>
                                         <textarea
                                             value={message}
                                             onChange={(e) => setMessage(e.target.value)}
                                             rows={4}
-                                            placeholder="اكتب رسالتك هنا..."
+                                            placeholder="Type your message here..."
                                             className="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-green focus:border-primary-green p-2.5"
                                         />
                                     </div>
@@ -278,7 +278,7 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                             onClick={onClose}
                                             className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                                         >
-                                            إلغاء
+                                            Cancel
                                         </button>
                                         <button
                                             type="submit"
@@ -288,12 +288,12 @@ const SendNotificationModal: React.FC<SendNotificationModalProps> = ({ isOpen, o
                                             {isSending ? (
                                                 <>
                                                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                                                    جاري الإرسال...
+                                                    Sending...
                                                 </>
                                             ) : (
                                                 <>
                                                     <PaperAirplaneIcon className="h-4 w-4 transform -rotate-45" />
-                                                    إرسال
+                                                    Send
                                                 </>
                                             )}
                                         </button>

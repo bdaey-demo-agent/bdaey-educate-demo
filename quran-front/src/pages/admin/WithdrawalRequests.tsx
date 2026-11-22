@@ -42,7 +42,7 @@ const WithdrawalRequests: React.FC = () => {
             setRequests(response.data.items || []);
         } catch (error) {
             console.error('Failed to fetch requests', error);
-            toast.error('فشل تحميل الطلبات');
+            toast.error('Failed to load requests');
         } finally {
             setLoading(false);
         }
@@ -56,7 +56,7 @@ const WithdrawalRequests: React.FC = () => {
         if (!selectedRequest || !showActionModal) return;
 
         if (showActionModal === 'Reject' && !actionNote) {
-            toast.error('يرجى كتابة سبب الرفض');
+            toast.error('Please provide a decline reason');
             return;
         }
 
@@ -67,13 +67,13 @@ const WithdrawalRequests: React.FC = () => {
 
             await api.post(`/admin/withdrawals/${selectedRequest.id}/${endpoint}`, body);
 
-            toast.success(`تم ${showActionModal === 'Approve' ? 'الموافقة على' : 'رفض'} الطلب بنجاح`);
+            toast.success(`Request ${showActionModal === 'Approve' ? 'approved' : 'declined'} successfully`);
             fetchRequests();
             setShowActionModal(null);
             setSelectedRequest(null);
             setActionNote('');
         } catch (error) {
-            toast.error('حدث خطأ أثناء تنفيذ العملية');
+            toast.error('An error occurred while processing');
         } finally {
             setIsProcessing(false);
         }
@@ -93,14 +93,14 @@ const WithdrawalRequests: React.FC = () => {
                 </div>
             );
         } catch {
-            return <span className="text-gray-500">تفاصيل غير صالحة</span>;
+            return <span className="text-gray-500">Invalid details</span>;
         }
     };
 
     return (
         <div className="p-6 space-y-6 animate-fadeIn">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">طلبات السحب</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Withdrawal Requests</h1>
 
                 <div className="flex items-center gap-2">
                     <FunnelIcon className="h-5 w-5 text-gray-500" />
@@ -109,7 +109,7 @@ const WithdrawalRequests: React.FC = () => {
                         onChange={(e) => setFilterStatus(e.target.value)}
                         className="input-field py-1 px-3 text-sm"
                     >
-                        <option value="">الكل</option>
+                        <option value="">All</option>
                         <option value="0">Pending</option>
                         <option value="1">Approved</option>
                         <option value="2">Rejected</option>
@@ -122,19 +122,19 @@ const WithdrawalRequests: React.FC = () => {
                     <table className="w-full text-right text-sm">
                         <thead className="bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
                             <tr>
-                                <th className="px-6 py-3 font-medium">المعلم</th>
-                                <th className="px-6 py-3 font-medium">المبلغ</th>
-                                <th className="px-6 py-3 font-medium">طريقة السحب</th>
-                                <th className="px-6 py-3 font-medium">التاريخ</th>
-                                <th className="px-6 py-3 font-medium">الحالة</th>
-                                <th className="px-6 py-3 font-medium">إجراءات</th>
+                                <th className="px-6 py-3 font-medium">Teacher</th>
+                                <th className="px-6 py-3 font-medium">Amount</th>
+                                <th className="px-6 py-3 font-medium">Method</th>
+                                <th className="px-6 py-3 font-medium">Date</th>
+                                <th className="px-6 py-3 font-medium">Status</th>
+                                <th className="px-6 py-3 font-medium">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                             {loading ? (
-                                <tr><td colSpan={6} className="text-center py-8">جاري التحميل...</td></tr>
+                                <tr><td colSpan={6} className="text-center py-8">Loading...</td></tr>
                             ) : requests.length === 0 ? (
-                                <tr><td colSpan={6} className="text-center py-8 text-gray-500">لا توجد طلبات سحب</td></tr>
+                                <tr><td colSpan={6} className="text-center py-8 text-gray-500">No withdrawal requests</td></tr>
                             ) : (
                                 requests.map((req) => (
                                     <tr key={req.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
@@ -167,21 +167,21 @@ const WithdrawalRequests: React.FC = () => {
                                                     <button
                                                         onClick={() => { setSelectedRequest(req); setShowActionModal('Approve'); }}
                                                         className="p-1 rounded-full bg-green-50 text-green-600 hover:bg-green-100"
-                                                        title="موافقة"
+                                                        title="Approve"
                                                     >
                                                         <CheckCircleIcon className="h-6 w-6" />
                                                     </button>
                                                     <button
                                                         onClick={() => { setSelectedRequest(req); setShowActionModal('Reject'); }}
                                                         className="p-1 rounded-full bg-red-50 text-red-600 hover:bg-red-100"
-                                                        title="رفض"
+                                                        title="Decline"
                                                     >
                                                         <XCircleIcon className="h-6 w-6" />
                                                     </button>
                                                 </div>
                                             ) : (
                                                 <span className="text-xs text-gray-400">
-                                                    تم الرد بواسطة {req.adminName || 'Admin'}
+                                                    Handled by {req.adminName || 'Admin'}
                                                 </span>
                                             )}
                                         </td>
@@ -198,35 +198,35 @@ const WithdrawalRequests: React.FC = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
                     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-lg w-full p-6 space-y-4">
                         <h3 className={`text-lg font-bold ${showActionModal === 'Approve' ? 'text-green-600' : 'text-red-600'}`}>
-                            {showActionModal === 'Approve' ? 'تأكيد الموافقة على السحب' : 'رفض طلب السحب'}
+                            {showActionModal === 'Approve' ? 'Confirm Withdrawal Approval' : 'Decline Withdrawal Request'}
                         </h3>
 
                         <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg space-y-2">
                             <div className="flex justify-between">
-                                <span className="text-gray-500">المبلغ:</span>
+                                <span className="text-gray-500">Amount:</span>
                                 <span className="font-bold">{selectedRequest.amount} EGP</span>
                             </div>
                             <div className="border-t border-gray-200 dark:border-gray-600 pt-2">
-                                <p className="text-sm font-medium mb-1">تفاصيل التحويل:</p>
+                                <p className="text-sm font-medium mb-1">Transfer details:</p>
                                 {parseDetails(selectedRequest.paymentDetailsJson)}
                             </div>
                         </div>
 
                         {showActionModal === 'Reject' && (
                             <div>
-                                <label className="block text-sm font-medium mb-1">سبب الرفض (مطلوب)</label>
+                                <label className="block text-sm font-medium mb-1">Decline Reason (required)</label>
                                 <textarea
                                     className="input-field w-full h-24"
                                     value={actionNote}
                                     onChange={(e) => setActionNote(e.target.value)}
-                                    placeholder="اكتب سبب الرفض هنا ليظهر للمعلم..."
+                                    placeholder="Type the decline reason for the teacher..."
                                 ></textarea>
                             </div>
                         )}
 
                         {showActionModal === 'Approve' && (
                             <p className="text-sm text-gray-500">
-                                عند الموافقة، سيتم خصم المبلغ نهائياً من رصيد المعلم. تأكد من أنك قمت بالتحويل الفعلي (خارج النظام) قبل أو بعد الضغط هنا حسب سياسة العمل.
+                                On approval, the amount is permanently deducted from the teacher's balance. Make sure you have made the actual transfer (outside the system) before or after confirming here, per your workflow.
                             </p>
                         )}
 
@@ -235,7 +235,7 @@ const WithdrawalRequests: React.FC = () => {
                                 onClick={() => { setShowActionModal(null); setActionNote(''); }}
                                 className="flex-1 py-2 border rounded-lg hover:bg-gray-50"
                             >
-                                إلغاء
+                                Cancel
                             </button>
                             <button
                                 onClick={handleAction}
@@ -245,7 +245,7 @@ const WithdrawalRequests: React.FC = () => {
                                     : 'bg-red-600 hover:bg-red-700'
                                     } disabled:opacity-50`}
                             >
-                                {isProcessing ? 'جاري التنفيذ...' : 'تأكيد'}
+                                {isProcessing ? 'Processing...' : 'Confirm'}
                             </button>
                         </div>
                     </div>

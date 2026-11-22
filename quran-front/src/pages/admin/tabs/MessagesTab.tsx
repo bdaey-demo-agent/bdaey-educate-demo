@@ -22,7 +22,7 @@ const MessagesTab: React.FC = () => {
             setMessages(data.sort((a: ContactMessage, b: ContactMessage) => new Date(b.dateSent).getTime() - new Date(a.dateSent).getTime()));
         } catch (error) {
             console.error(error);
-            toast.error('فشل تحميل الرسائل');
+            toast.error('Failed to load messages');
         } finally {
             setLoading(false);
         }
@@ -32,33 +32,33 @@ const MessagesTab: React.FC = () => {
         try {
             await messageService.markAsRead(id);
             setMessages(prev => prev.map(msg => msg.id === id ? { ...msg, isRead: true } : msg));
-            toast.success('تم تحديد الرسالة كمقرؤة');
+            toast.success('Message marked as read');
         } catch (error) {
-            toast.error('حدث خطأ');
+            toast.error('An error occurred');
         }
     };
 
-    if (loading) return <div className="text-center py-10">جاري التحميل...</div>;
+    if (loading) return <div className="text-center py-10">Loading...</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">رسائل التواصل</h2>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Contact Messages</h2>
                 <select
                     onChange={(e) => setFilter(e.target.value)}
                     className="border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 >
-                    <option value="All">الكل</option>
-                    <option value="General">عام</option>
-                    <option value="Suspension">تعليق حساب</option>
-                    <option value="Complaint">شكوى</option>
+                    <option value="All">All</option>
+                    <option value="General">General</option>
+                    <option value="Suspension">Account Suspension</option>
+                    <option value="Complaint">Complaint</option>
                 </select>
             </div>
 
             {filteredMessages.length === 0 ? (
                 <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow">
                     <EnvelopeIcon className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                    <p className="text-gray-500">لا توجد رسائل جديدة</p>
+                    <p className="text-gray-500">No new messages</p>
                 </div>
             ) : (
                 <div className="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
@@ -74,13 +74,13 @@ const MessagesTab: React.FC = () => {
                                                 <EnvelopeIcon className="h-5 w-5 text-gold-500" />
                                             )}
                                             {message.reason === 'Suspension' && (
-                                                <span className="px-2 py-0.5 bg-red-100 text-red-800 text-xs rounded-full">تعليق حساب</span>
+                                                <span className="px-2 py-0.5 bg-red-100 text-red-800 text-xs rounded-full">Suspension</span>
                                             )}
                                             {message.reason === 'Complaint' && (
-                                                <span className="px-2 py-0.5 bg-orange-100 text-orange-800 text-xs rounded-full">شكوى</span>
+                                                <span className="px-2 py-0.5 bg-orange-100 text-orange-800 text-xs rounded-full">Complaint</span>
                                             )}
                                             {message.reason === 'Suggestion' && (
-                                                <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">اقتراح</span>
+                                                <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">Suggestion</span>
                                             )}
                                             <p className={`text-sm font-medium ${message.isRead ? 'text-gray-600 dark:text-gray-400' : 'text-blue-600 dark:text-blue-400'}`}>
                                                 {message.subject}
@@ -94,7 +94,7 @@ const MessagesTab: React.FC = () => {
                                                 <button
                                                     onClick={() => handleMarkAsRead(message.id)}
                                                     className="ml-2 p-1 text-green-600 hover:text-green-800 rounded-full hover:bg-green-100 dark:hover:bg-green-900/20"
-                                                    title="تحديد كمقروء"
+                                                    title="Mark as read"
                                                 >
                                                     <CheckCircleIcon className="h-5 w-5" />
                                                 </button>

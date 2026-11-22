@@ -50,7 +50,7 @@ const AdminUsers = () => {
             const data = await adminService.getAllUsers(role === 'All' ? undefined : role, search);
             setUsers(data);
         } catch (error) {
-            toast.error('فشل في تحميل المستخدمين');
+            toast.error('Failed to load users');
         } finally {
             setLoading(false);
         }
@@ -65,7 +65,7 @@ const AdminUsers = () => {
         if (!selectedUser) return;
         try {
             await adminService.blockUser(selectedUser.id, !selectedUser.isBlocked, blockReason);
-            toast.success(`تم ${!selectedUser.isBlocked ? 'حظر' : 'فك حظر'} المستخدم بنجاح`);
+            toast.success(`User ${!selectedUser.isBlocked ? 'blocked' : 'unblocked'} successfully`);
             setSelectedUser(null);
             setBlockReason('');
             loadUsers();
@@ -74,7 +74,7 @@ const AdminUsers = () => {
             const msg = error.response?.data?.message || 
                         (typeof error.response?.data === 'string' ? error.response.data : null) || 
                         error.message ||
-                        'فشل في تحديث حالة المستخدم (خطأ في الاتصال)';
+                        'Failed to update user status (connection error)';
             toast.error(msg);
         }
     };
@@ -96,18 +96,18 @@ const AdminUsers = () => {
     const handleDeleteUser = async () => {
         if (!deleteUser) return;
         if (deleteEmailInput.trim().toLowerCase() !== deleteUser.email.toLowerCase()) {
-            setDeleteError('البريد الإلكتروني غير مطابق. يرجى كتابته بدقة.');
+            setDeleteError('Email does not match. Please type it exactly.');
             return;
         }
         setIsDeleting(true);
         setDeleteError('');
         try {
             await adminService.deleteUser(deleteUser.id);
-            toast.success('تم حذف الحساب نهائياً.');
+            toast.success('Account permanently deleted.');
             closeDeleteModal();
             loadUsers();
         } catch (err: any) {
-            const msg = err.response?.data?.message || 'فشل حذف الحساب. يرجى المحاولة لاحقاً.';
+            const msg = err.response?.data?.message || 'Failed to delete the account. Please try again later.';
             setDeleteError(msg);
             // If it's an active account error, stay on step 1 to show error prominently
             setDeleteStep(1);
@@ -120,10 +120,10 @@ const AdminUsers = () => {
         setResendingEmailId(user.id);
         try {
             await adminService.resendVerificationEmail(user.id);
-            toast.success('تم إرسال رسالة التفعيل بنجاح');
+            toast.success('Activation email sent');
             loadUsers();
         } catch (error) {
-            toast.error('فشل في إرسال رسالة التفعيل');
+            toast.error('Failed to send the activation email');
         } finally {
             setResendingEmailId(null);
         }
@@ -132,17 +132,17 @@ const AdminUsers = () => {
     const handleResetPassword = async () => {
         if (!resetPasswordUser || !newPassword) return;
         if (newPassword.length < 6) {
-            toast.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+            toast.error('Password must be at least 6 characters');
             return;
         }
         setIsResetting(true);
         try {
             await adminService.resetUserPassword(resetPasswordUser.id, newPassword);
-            toast.success('تم تغيير كلمة المرور بنجاح');
+            toast.success('Password changed successfully');
             setResetPasswordUser(null);
             setNewPassword('');
         } catch (error: any) {
-            const msg = error.response?.data || error.message || 'فشل في تغيير كلمة المرور';
+            const msg = error.response?.data || error.message || 'Failed to change the password';
             toast.error(msg);
         } finally {
             setIsResetting(false);
@@ -151,10 +151,10 @@ const AdminUsers = () => {
 
     const handleImpersonate = async (user: UnifiedUser) => {
         try {
-            toast.loading('جاري تسجيل الدخول...', { id: 'impersonate' });
+            toast.loading('Signing in...', { id: 'impersonate' });
             const data = await adminService.impersonateUser(user.id);
             login(data.token, data);
-            toast.success(`تم تسجيل الدخول كـ ${user.fullName}`, { id: 'impersonate' });
+            toast.success(`Signed in as ${user.fullName}`, { id: 'impersonate' });
             
             if (data.role === 'Teacher') {
                 navigate('/teacher');
@@ -164,7 +164,7 @@ const AdminUsers = () => {
                 navigate('/admin/dashboard');
             }
         } catch (error: any) {
-            const msg = error.response?.data || error.message || 'فشل في تسجيل الدخول';
+            const msg = error.response?.data || error.message || 'Sign-in failed';
             toast.error(msg, { id: 'impersonate' });
         }
     };
@@ -180,16 +180,16 @@ const AdminUsers = () => {
 
     const getRoleLabel = (role: string) => {
         switch (role) {
-            case 'Student': return 'طالب';
-            case 'Teacher': return 'معلم';
-            case 'Admin': return 'مسؤول';
+            case 'Student': return 'Student';
+            case 'Teacher': return 'Teacher';
+            case 'Admin': return 'Admin';
             default: return role;
         }
     };
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">إدارة الدليل (المستخدمين)</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">User Directory</h2>
 
             {/* Filters */}
             <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm flex flex-col md:flex-row gap-4 border border-gray-100 dark:border-slate-700">
@@ -198,21 +198,21 @@ const AdminUsers = () => {
                     onChange={(e) => setRole(e.target.value)}
                     className="border border-gray-300 dark:border-slate-600 rounded-lg p-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
-                    <option value="All">كل المستخدمين</option>
-                    <option value="Student">طلاب</option>
-                    <option value="Teacher">معلمين</option>
-                    <option value="Admin">مسؤولين</option>
+                    <option value="All">All Users</option>
+                    <option value="Student">Students</option>
+                    <option value="Teacher">Teachers</option>
+                    <option value="Admin">Admins</option>
                 </select>
                 <form onSubmit={handleSearch} className="flex-1 flex gap-2">
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="بحث بالاسم أو البريد الإلكتروني..."
+                        placeholder="Search by name or email..."
                         className="flex-1 border border-gray-300 dark:border-slate-600 rounded-lg p-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                     <button type="submit" className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors shadow-md">
-                        بحث
+                        Search
                     </button>
                 </form>
             </div>
@@ -223,20 +223,20 @@ const AdminUsers = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
                         <thead className="bg-gray-50 dark:bg-slate-900/50">
                             <tr>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">المستخدم</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الدور</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الهاتف</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">تحقق البريد</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">تاريخ الانضمام</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الحالة</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">إجراءات</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">User</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Role</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Phone</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Email Verified</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Joined</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
                             {loading ? (
-                                <tr><td colSpan={7} className="text-center py-8 text-gray-500 dark:text-gray-400">جاري التحميل...</td></tr>
+                                <tr><td colSpan={7} className="text-center py-8 text-gray-500 dark:text-gray-400">Loading...</td></tr>
                             ) : users.length === 0 ? (
-                                <tr><td colSpan={7} className="text-center py-8 text-gray-500 dark:text-gray-400">لا يوجد مستخدمين.</td></tr>
+                                <tr><td colSpan={7} className="text-center py-8 text-gray-500 dark:text-gray-400">No users found.</td></tr>
                             ) : users.map((u) => (
                                 <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
@@ -252,11 +252,11 @@ const AdminUsers = () => {
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex flex-col gap-1">
                                             <span className={`px-2 py-1 inline-flex text-[10px] leading-4 font-semibold rounded-full w-fit ${u.emailConfirmed ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'}`}>
-                                                {u.emailConfirmed ? 'مفعل' : 'غير مفعل'}
+                                                {u.emailConfirmed ? 'Verified' : 'Unverified'}
                                             </span>
                                             {u.emailConfirmationSentAt && (
                                                 <span className="text-[10px] text-gray-400 dark:text-gray-500">
-                                                    أرسل: {new Date(u.emailConfirmationSentAt).toLocaleDateString('ar-EG')}
+                                                    Sent: {new Date(u.emailConfirmationSentAt).toLocaleDateString('en-GB')}
                                                 </span>
                                             )}
                                         </div>
@@ -264,7 +264,7 @@ const AdminUsers = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(u.createdAt).toLocaleDateString('ar-EG')}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${u.isBlocked ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'}`}>
-                                            {u.isBlocked ? 'محظور' : 'نشط'}
+                                            {u.isBlocked ? 'Blocked' : 'Active'}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
@@ -291,7 +291,7 @@ const AdminUsers = () => {
                                                                     onClick={() => setSelectedUser(u)}
                                                                     className={`${active ? (u.isBlocked ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600') : (u.isBlocked ? 'text-green-600' : 'text-red-600')} group flex w-full items-center rounded-lg px-2 py-2 text-sm`}
                                                                 >
-                                                                    <NoSymbolIcon className="ml-2 h-5 w-5" /> {u.isBlocked ? 'فك الحظر' : 'حظر'}
+                                                                    <NoSymbolIcon className="ml-2 h-5 w-5" /> {u.isBlocked ? 'Unblock' : 'Block'}
                                                                 </button>
                                                             )}
                                                         </MenuItem>
@@ -303,7 +303,7 @@ const AdminUsers = () => {
                                                                         disabled={resendingEmailId === u.id}
                                                                         className={`${active ? 'bg-primary/10 text-primary' : 'text-gray-900 dark:text-gray-200'} group flex w-full items-center rounded-lg px-2 py-2 text-sm disabled:opacity-50`}
                                                                     >
-                                                                        <EnvelopeIcon className="ml-2 h-5 w-5" /> {resendingEmailId === u.id ? 'جاري...' : 'إرسال التفعيل'}
+                                                                        <EnvelopeIcon className="ml-2 h-5 w-5" /> {resendingEmailId === u.id ? 'Sending...' : 'Send Activation'}
                                                                     </button>
                                                                 )}
                                                             </MenuItem>
@@ -316,7 +316,7 @@ const AdminUsers = () => {
                                                                     onClick={() => setResetPasswordUser(u)}
                                                                     className={`${active ? 'bg-blue-50 text-blue-600' : 'text-gray-900 dark:text-gray-200'} group flex w-full items-center rounded-lg px-2 py-2 text-sm`}
                                                                 >
-                                                                    <KeyIcon className="ml-2 h-5 w-5" /> كلمة المرور
+                                                                    <KeyIcon className="ml-2 h-5 w-5" /> Password
                                                                 </button>
                                                             )}
                                                         </MenuItem>
@@ -329,7 +329,7 @@ const AdminUsers = () => {
                                                                     disabled={u.isBlocked}
                                                                     className={`${active ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30' : 'text-indigo-600 dark:text-indigo-400'} group flex w-full items-center rounded-lg px-2 py-2 text-sm disabled:opacity-50`}
                                                                 >
-                                                                    <ArrowRightEndOnRectangleIcon className="ml-2 h-5 w-5" /> دخول الحساب
+                                                                    <ArrowRightEndOnRectangleIcon className="ml-2 h-5 w-5" /> Sign In As
                                                                 </button>
                                                             )}
                                                         </MenuItem>
@@ -341,7 +341,7 @@ const AdminUsers = () => {
                                                                     onClick={() => openDeleteModal(u)}
                                                                     className={`${active ? 'bg-red-50 text-red-600' : 'text-red-600'} group flex w-full items-center rounded-lg px-2 py-2 text-sm`}
                                                                 >
-                                                                    <TrashIcon className="ml-2 h-5 w-5" /> حذف نهائي
+                                                                    <TrashIcon className="ml-2 h-5 w-5" /> Delete Permanently
                                                                 </button>
                                                             )}
                                                         </MenuItem>
@@ -362,20 +362,20 @@ const AdminUsers = () => {
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                     <div className="bg-white dark:bg-slate-800 rounded-xl max-w-md w-full p-6 border border-gray-200 dark:border-slate-700 shadow-2xl">
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                            {selectedUser.isBlocked ? 'فك حظر المستخدم' : 'حظر المستخدم'}
+                            {selectedUser.isBlocked ? 'Unblock User' : 'Block User'}
                         </h3>
                         <p className="mb-4 text-gray-600 dark:text-gray-300">
-                            هل أنت متأكد أنك تريد {selectedUser.isBlocked ? 'إزالة الحظر عن' : 'حظر'} <b>{selectedUser.fullName}</b>؟
+                            Are you sure you want to {selectedUser.isBlocked ? 'unblock' : 'block'} <b>{selectedUser.fullName}</b>?
                         </p>
 
                         <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">السبب</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Reason</label>
                             <input
                                 type="text"
                                 value={blockReason}
                                 onChange={(e) => setBlockReason(e.target.value)}
                                 className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-2.5 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
-                                placeholder={`لماذا تريد ${selectedUser.isBlocked ? 'فك حظر' : 'حظر'} هذا المستخدم؟`}
+                                placeholder={`Why are you ${selectedUser.isBlocked ? 'unblocking' : 'blocking'} this user?`}
                             />
                         </div>
 
@@ -384,13 +384,13 @@ const AdminUsers = () => {
                                 onClick={() => setSelectedUser(null)}
                                 className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
                             >
-                                إلغاء
+                                Cancel
                             </button>
                             <button
                                 onClick={handleBlockToggle}
                                 className={`px-4 py-2 text-white rounded-lg shadow-md transition-colors ${selectedUser.isBlocked ? 'bg-green-600 hover:bg-green-700' : 'bg-yellow-600 hover:bg-yellow-700'}`}
                             >
-                                تأكيد
+                                Confirm
                             </button>
                         </div>
                     </div>
@@ -410,26 +410,26 @@ const AdminUsers = () => {
                                         <span className="text-red-600 dark:text-red-400 text-xl font-bold">!</span>
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-red-700 dark:text-red-400">حذف نهائي للحساب</h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">هذا الإجراء لا يمكن التراجع عنه</p>
+                                        <h3 className="text-lg font-bold text-red-700 dark:text-red-400">Permanent Account Deletion</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">This action cannot be undone</p>
                                     </div>
                                 </div>
 
                                 <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
                                     <p className="text-sm text-red-700 dark:text-red-300 font-medium mb-2">
-                                        أنت على وشك حذف حساب: <span className="font-bold">{deleteUser.fullName}</span>
+                                        You are about to delete the account of: <span className="font-bold">{deleteUser.fullName}</span>
                                     </p>
-                                    <p className="text-sm text-red-600 dark:text-red-400">سيتم حذف جميع بياناته نهائياً بما في ذلك:</p>
+                                    <p className="text-sm text-red-600 dark:text-red-400">All their data will be permanently deleted, including:</p>
                                     <ul className="text-sm text-red-600 dark:text-red-400 mt-1 list-disc list-inside space-y-0.5">
-                                        <li>المحادثات والرسائل</li>
-                                        <li>سجل الحجوزات والجلسات المنتهية</li>
-                                        <li>بيانات المحفظة والمعاملات</li>
-                                        <li>كل البيانات الشخصية</li>
+                                        <li>Conversations and messages</li>
+                                        <li>Booking history and completed sessions</li>
+                                        <li>Wallet data and transactions</li>
+                                        <li>All personal data</li>
                                     </ul>
                                 </div>
 
                                 <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-4 text-sm text-amber-700 dark:text-amber-300">
-                                    ⚠️ لن يتم الحذف إذا كان الحساب يحتوي على رصيد أو حجوزات نشطة. في هذه الحالة يُنصح بالحظر فقط.
+                                    ⚠️ Deletion will fail if the account has a balance or active bookings. In that case, blocking is recommended instead.
                                 </div>
 
                                 {deleteError && (
@@ -443,13 +443,13 @@ const AdminUsers = () => {
                                         onClick={closeDeleteModal}
                                         className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
                                     >
-                                        إلغاء
+                                        Cancel
                                     </button>
                                     <button
                                         onClick={() => { setDeleteStep(2); setDeleteError(''); }}
                                         className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md transition-colors"
                                     >
-                                        نعم، أريد الحذف
+                                        Yes, delete it
                                     </button>
                                 </div>
                             </>
@@ -463,13 +463,13 @@ const AdminUsers = () => {
                                         <span className="text-red-600 dark:text-red-400 text-xl">🗑️</span>
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">تأكيد الحذف النهائي</h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">الخطوة الأخيرة قبل الحذف</p>
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Confirm Permanent Deletion</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Final step before deletion</p>
                                     </div>
                                 </div>
 
                                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                                    لتأكيد الحذف، اكتب بريد المستخدم الإلكتروني بالضبط:
+                                    To confirm, type the user's email exactly:
                                 </p>
                                 <p className="text-sm font-mono font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded mb-3 text-center select-all">
                                     {deleteUser.email}
@@ -478,7 +478,7 @@ const AdminUsers = () => {
                                     type="email"
                                     value={deleteEmailInput}
                                     onChange={(e) => { setDeleteEmailInput(e.target.value); setDeleteError(''); }}
-                                    placeholder="اكتب البريد الإلكتروني هنا..."
+                                    placeholder="Type the email here..."
                                     className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-2.5 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-400 focus:border-transparent mb-3"
                                     dir="ltr"
                                 />
@@ -494,14 +494,14 @@ const AdminUsers = () => {
                                         onClick={() => setDeleteStep(1)}
                                         className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
                                     >
-                                        رجوع
+                                        Back
                                     </button>
                                     <button
                                         onClick={handleDeleteUser}
                                         disabled={isDeleting || deleteEmailInput.trim().toLowerCase() !== deleteUser.email.toLowerCase()}
                                         className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-300 dark:disabled:bg-red-900/50 disabled:cursor-not-allowed text-white rounded-lg shadow-md transition-colors"
                                     >
-                                        {isDeleting ? 'جاري الحذف...' : 'حذف الحساب نهائياً'}
+                                        {isDeleting ? 'Deleting...' : 'Delete Account Permanently'}
                                     </button>
                                 </div>
                             </>
@@ -515,23 +515,23 @@ const AdminUsers = () => {
                     <div className="bg-white dark:bg-slate-800 rounded-xl max-w-sm w-full p-6 border border-gray-200 dark:border-slate-700 shadow-2xl">
                         <div className="flex items-center gap-3 mb-4 text-blue-600 dark:text-blue-400">
                             <span className="text-2xl">🔐</span>
-                            <h3 className="text-lg font-bold">تعيين كلمة مرور جديدة</h3>
+                            <h3 className="text-lg font-bold">Set a New Password</h3>
                         </div>
                         
                         <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
-                            أنت على وشك تغيير كلمة المرور للمستخدم: <br/>
+                            You are about to change the password for: <br/>
                             <span className="font-bold text-gray-900 dark:text-white">{resetPasswordUser.fullName}</span>
                         </p>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">كلمة المرور الجديدة</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New Password</label>
                                 <input
                                     type="text"
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
                                     className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-2.5 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
-                                    placeholder="6 أحرف على الأقل..."
+                                    placeholder="At least 6 characters..."
                                     autoFocus
                                 />
                             </div>
@@ -548,7 +548,7 @@ const AdminUsers = () => {
                                     disabled={isResetting || newPassword.length < 6}
                                     className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 dark:disabled:bg-blue-900/50 text-white rounded-lg shadow-md transition-colors font-medium"
                                 >
-                                    {isResetting ? 'جاري الحفظ...' : 'حفظ'}
+                                    {isResetting ? 'Saving...' : 'Save'}
                                 </button>
                             </div>
                         </div>

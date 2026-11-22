@@ -88,7 +88,7 @@ const AdminDashboard: React.FC = () => {
             setEditingTeacher({ name: userName } as any); // Hack to reuse existing modal structure or legitimate use
         } catch (error) {
             console.error(error);
-            toast.error('فشل في جلب بيانات المحفظة');
+            toast.error('Failed to fetch wallet data');
         }
     };
     const [teacherPackages, setTeacherPackages] = useState<any[]>([]);
@@ -112,7 +112,7 @@ const AdminDashboard: React.FC = () => {
             setStudents(studentsData);
         } catch (error) {
             console.error(error);
-            toast.error('فشل تحميل البيانات');
+            toast.error('Failed to load data');
         } finally {
             setLoading(false);
         }
@@ -126,11 +126,11 @@ const AdminDashboard: React.FC = () => {
             const rate = editCommissionRate === '' ? null : parseFloat(editCommissionRate);
             // @ts-ignore
             await adminService.updateTeacherCommission(editingTeacher.id, rate);
-            toast.success('تم تحديث نسبة المعلم');
+            toast.success('Teacher commission updated');
             setEditingTeacher(null);
             loadData(); // Reload list
         } catch (error) {
-            toast.error('فشل التحديث');
+            toast.error('Update failed');
         }
     };
 
@@ -139,11 +139,11 @@ const AdminDashboard: React.FC = () => {
         try {
             const amount = editPenaltyAmount === '' ? null : parseFloat(editPenaltyAmount);
             await adminService.updateTeacherDeletionPenalty(editingTeacher.id, amount);
-            toast.success('تم تحديث غرامة المعلم');
+            toast.success('Teacher penalty updated');
             setEditingTeacher(null);
             loadData();
         } catch (error) {
-            toast.error('فشل التحديث');
+            toast.error('Update failed');
         }
     };
 
@@ -153,7 +153,7 @@ const AdminDashboard: React.FC = () => {
             setTeacherPackages(packages);
             setModalMode('packages');
         } catch (error) {
-            toast.error('فشل تحميل الباقات');
+            toast.error('Failed to load packages');
         }
     };
 
@@ -177,20 +177,20 @@ const AdminDashboard: React.FC = () => {
         // Removed window.confirm. Admin actions bypass native confirms.
         try {
             await packagesService.deletePackage(packageId, false); // false = WAIVE PENALTY
-            toast.success('تم حذف الباقة (تم إعفاء المعلم من الغرامة)');
+            toast.success('Package deleted (teacher penalty waived)');
             if (editingTeacher) handleLoadPackages(editingTeacher.id);
         } catch (error) {
-            toast.error('فشل الحذف');
+            toast.error('Delete failed');
         }
     };
 
     const handleApprove = async (id: number) => {
         try {
             await adminService.approveTeacher(id);
-            toast.success('تم قبول المعلم');
+            toast.success('Teacher approved');
             loadData();
         } catch (error) {
-            toast.error('فشل العملية');
+            toast.error('Operation failed');
         }
     };
 
@@ -201,37 +201,37 @@ const AdminDashboard: React.FC = () => {
             setTeachers(teachers.map(t => t.userId === userId ? { ...t, isBlocked: !isBlocked } : t));
             setStudents(students.map(s => s.id === userId ? { ...s, isBlocked: !isBlocked } : s));
 
-            toast.success(isBlocked ? 'تم فك الحظر بنجاح' : 'تم حظر المستخدم بنجاح');
+            toast.success(isBlocked ? 'User unblocked' : 'User blocked');
         } catch (error) {
             console.error(error);
-            toast.error('حدث خطأ أثناء تغيير حالة الحظر');
+            toast.error('Error changing block status');
         }
     };
 
     const handleClearCache = async () => {
         try {
             await adminService.clearManualCache();
-            toast.success('تم مسح الذاكرة المؤقتة بنجاح (سيتم تحديث قائمة المعلمين العامة)');
+            toast.success('Cache cleared (the public teacher list will refresh)');
         } catch (error) {
-            toast.error('فشل مسح الذاكرة المؤقتة');
+            toast.error('Failed to clear cache');
         }
     };
 
-    if (loading) return <div className="p-8 text-center">جاري التحميل...</div>;
+    if (loading) return <div className="p-8 text-center">Loading...</div>;
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="flex items-center justify-between flex-wrap gap-4">
                     <div className="flex items-center gap-4">
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">لوحة تحكم المشرف</h1>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
                         <button
                             onClick={handleClearCache}
-                            title="تفريغ الذاكرة المؤقتة لتحديث قائمة المعلمين العامة فوراً"
+                            title="Clear cache to refresh the public teacher list immediately"
                             className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 rounded-lg text-sm font-medium hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
                         >
                             <SignalIcon className="h-4 w-4" />
-                            تحديث القائمة العامة
+                            Refresh Public List
                         </button>
                     </div>
                     <div className="flex gap-2">
@@ -239,49 +239,49 @@ const AdminDashboard: React.FC = () => {
                             onClick={() => setActiveTab('overview')}
                             className={`px-4 py-2 rounded-lg ${activeTab === 'overview' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
                         >
-                            نظرة عامة
+                            Overview
                         </button>
                         <button
                             onClick={() => setActiveTab('teachers')}
                             className={`px-4 py-2 rounded-lg ${activeTab === 'teachers' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
                         >
-                            المعلمون
+                            Teachers
                         </button>
                         <button
                             onClick={() => setActiveTab('students')}
                             className={`px-4 py-2 rounded-lg ${activeTab === 'students' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
                         >
-                            الطلاب
+                            Students
                         </button>
                         <button
                             onClick={() => setActiveTab('messages')}
                             className={`px-4 py-2 rounded-lg ${activeTab === 'messages' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
                         >
-                            الرسائل
+                            Messages
                         </button>
                         <button
                             onClick={() => setActiveTab('bookings')}
                             className={`px-4 py-2 rounded-lg ${activeTab === 'bookings' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
                         >
-                            الحجوزات
+                            Bookings
                         </button>
                         <button
                             onClick={() => setActiveTab('payouts')}
                             className={`px-4 py-2 rounded-lg ${activeTab === 'payouts' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
                         >
-                            المدفوعات
+                            Payments
                         </button>
                         <button
                             onClick={() => setActiveTab('users')}
                             className={`px-4 py-2 rounded-lg ${activeTab === 'users' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
                         >
-                            المستخدمين (شامل)
+                            All Users
                         </button>
                         <button
                             onClick={() => setActiveTab('promo-codes')}
                             className={`px-4 py-2 rounded-lg flex items-center gap-2 ${activeTab === 'promo-codes' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
                         >
-                            الكوبونات
+                            Promo Codes
                         </button>
                     </div>
                 </div>
@@ -295,7 +295,7 @@ const AdminDashboard: React.FC = () => {
                                     <UserGroupIcon className="h-8 w-8" />
                                 </div>
                                 <div>
-                                    <p className="text-gray-500 text-sm">إجمالي المستخدمين</p>
+                                    <p className="text-gray-500 text-sm">Total Users</p>
                                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalUsers}</h3>
                                 </div>
                             </div>
@@ -306,7 +306,7 @@ const AdminDashboard: React.FC = () => {
                                     <SignalIcon className="h-8 w-8" />
                                 </div>
                                 <div>
-                                    <p className="text-gray-500 text-sm">المستخدمون النشطون الآن</p>
+                                    <p className="text-gray-500 text-sm">Active Users Now</p>
                                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.activeUsersCount}</h3>
                                 </div>
                             </div>
@@ -317,8 +317,8 @@ const AdminDashboard: React.FC = () => {
                                     <AcademicCapIcon className="h-8 w-8" />
                                 </div>
                                 <div>
-                                    <p className="text-gray-500 text-sm">المعلمون</p>
-                                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalTeachers} ({stats.pendingTeachers} انتظار)</h3>
+                                    <p className="text-gray-500 text-sm">Teachers</p>
+                                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalTeachers} ({stats.pendingTeachers} pending)</h3>
                                 </div>
                             </div>
                         </div>
@@ -328,7 +328,7 @@ const AdminDashboard: React.FC = () => {
                                     <CurrencyDollarIcon className="h-8 w-8" />
                                 </div>
                                 <div>
-                                    <p className="text-gray-500 text-sm">الحجم الكلي للحجوزات</p>
+                                    <p className="text-gray-500 text-sm">Total Booking Volume</p>
                                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalVolume.toLocaleString()} EGP</h3>
                                 </div>
                             </div>
@@ -339,8 +339,8 @@ const AdminDashboard: React.FC = () => {
                                     <ChartPieIcon className="h-8 w-8" />
                                 </div>
                                 <div>
-                                    <p className="text-gray-500 text-sm">الحجوزات</p>
-                                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalBookings} ({stats.completedBookings} مكتمل)</h3>
+                                    <p className="text-gray-500 text-sm">Bookings</p>
+                                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalBookings} ({stats.completedBookings} completed)</h3>
                                 </div>
                             </div>
                         </div>
@@ -362,7 +362,7 @@ const AdminDashboard: React.FC = () => {
                         <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
                             <input
                                 type="text"
-                                placeholder="🔍 بحث عن معلم (الاسم، البريد، الهاتف)..."
+                                placeholder="🔍 Search teachers (name, email, phone)..."
                                 value={teacherSearch}
                                 onChange={(e) => setTeacherSearch(e.target.value)}
                                 className="w-full md:w-1/3 p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -372,11 +372,11 @@ const AdminDashboard: React.FC = () => {
                             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead className="bg-gray-50 dark:bg-gray-900">
                                     <tr>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الاسم / البريد</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الحالة</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">نسبة العمولة</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">تاريخ الانضمام</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">إجراءات</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name / Email</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commission</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Joined</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -393,19 +393,19 @@ const AdminDashboard: React.FC = () => {
                                             <td className="px-6 py-4">
                                                 <div className="flex flex-col gap-1">
                                                     {teacher.isBlocked && (
-                                                        <span className="px-2 py-1 bg-red-600 text-white text-xs rounded-full w-fit">محظور</span>
+                                                        <span className="px-2 py-1 bg-red-600 text-white text-xs rounded-full w-fit">Blocked</span>
                                                     )}
                                                     {teacher.isApproved || teacher.status === 'Approved' ? (
-                                                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full w-fit">معتمد</span>
+                                                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full w-fit">Approved</span>
                                                     ) : teacher.status === 'Rejected' ? (
-                                                        <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full w-fit">مرفوض</span>
+                                                        <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full w-fit">Rejected</span>
                                                     ) : (
-                                                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full w-fit">في الانتظار</span>
+                                                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full w-fit">Pending</span>
                                                     )}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-sm font-bold text-blue-600">
-                                                {teacher.commissionRate !== null ? `${teacher.commissionRate}%` : <span className="text-gray-400">افتراضي</span>}
+                                                {teacher.commissionRate !== null ? `${teacher.commissionRate}%` : <span className="text-gray-400">Default</span>}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
                                                 {new Date(teacher.createdAt).toLocaleDateString('ar-EG')}
@@ -439,7 +439,7 @@ const AdminDashboard: React.FC = () => {
                                                                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <EyeIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-                                                                            عرض التفاصيل
+                                                                            View Details
                                                                         </button>
                                                                     )}
                                                                 </MenuItem>
@@ -452,7 +452,7 @@ const AdminDashboard: React.FC = () => {
                                                                                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                             >
                                                                                 <CheckCircleIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-                                                                                قبول المعلم
+                                                                                Approve Teacher
                                                                             </button>
                                                                         )}
                                                                     </MenuItem>
@@ -466,7 +466,7 @@ const AdminDashboard: React.FC = () => {
                                                                             className={`${active ? 'bg-primary-green/10 text-primary-green' : 'text-gray-900 dark:text-gray-200'} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <CurrencyDollarIcon className="ml-2 h-5 w-5 text-gold-500" aria-hidden="true" />
-                                                                            عرض المحفظة
+                                                                            View Wallet
                                                                         </button>
                                                                     )}
                                                                 </MenuItem>
@@ -484,7 +484,7 @@ const AdminDashboard: React.FC = () => {
                                                                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <CurrencyDollarIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-                                                                            تعديل النسبة
+                                                                            Edit Commission
                                                                         </button>
                                                                     )}
                                                                 </MenuItem>
@@ -500,7 +500,7 @@ const AdminDashboard: React.FC = () => {
                                                                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <ExclamationTriangleIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-                                                                            تعديل الغرامة
+                                                                            Edit Penalty
                                                                         </button>
                                                                     )}
                                                                 </MenuItem>
@@ -517,7 +517,7 @@ const AdminDashboard: React.FC = () => {
                                                                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <ArchiveBoxIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-                                                                            عرض الباقات
+                                                                            View Packages
                                                                         </button>
                                                                     )}
                                                                 </MenuItem>
@@ -531,7 +531,7 @@ const AdminDashboard: React.FC = () => {
                                                                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <NoSymbolIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-                                                                            {teacher.isBlocked ? 'فك الحظر' : 'حظر المعلم'}
+                                                                            {teacher.isBlocked ? 'Unblock' : 'Block Teacher'}
                                                                         </button>
                                                                     )}
                                                                 </MenuItem>
@@ -554,7 +554,7 @@ const AdminDashboard: React.FC = () => {
                         <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
                             <input
                                 type="text"
-                                placeholder="🔍 بحث عن طالب (الاسم، البريد، الهاتف)..."
+                                placeholder="🔍 Search students (name, email, phone)..."
                                 value={studentSearch}
                                 onChange={(e) => setStudentSearch(e.target.value)}
                                 className="w-full md:w-1/3 p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -564,11 +564,11 @@ const AdminDashboard: React.FC = () => {
                             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead className="bg-gray-50 dark:bg-gray-900">
                                     <tr>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الاسم</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">البريد الإلكتروني</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">رقم الهاتف</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">تاريخ الانضمام</th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">الحالة</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Joined</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -611,7 +611,7 @@ const AdminDashboard: React.FC = () => {
                                                                             className={`${active ? 'bg-primary-green/10 text-primary-green' : 'text-gray-900 dark:text-gray-200'} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <CurrencyDollarIcon className="ml-2 h-5 w-5 text-gold-500" aria-hidden="true" />
-                                                                            عرض المحفظة
+                                                                            View Wallet
                                                                         </button>
                                                                     )}
                                                                 </MenuItem>
@@ -625,7 +625,7 @@ const AdminDashboard: React.FC = () => {
                                                                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                                         >
                                                                             <NoSymbolIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-                                                                            {student.isBlocked ? 'فك الحظر' : 'حظر الطالب'}
+                                                                            {student.isBlocked ? 'Unblock' : 'Block Student'}
                                                                         </button>
                                                                     )}
                                                                 </MenuItem>
@@ -639,7 +639,7 @@ const AdminDashboard: React.FC = () => {
                                     {students.length === 0 && (
                                         <tr>
                                             <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
-                                                لا يوجد طلاب مسجلين
+                                                No students registered
                                             </td>
                                         </tr>
                                     )}
@@ -659,14 +659,14 @@ const AdminDashboard: React.FC = () => {
                             {modalMode === 'commission' ? (
                                 // Edit Commission Mode
                                 <>
-                                    <h3 className="text-lg font-bold mb-4">تعديل نسبة العمولة: {editingTeacher.name}</h3>
+                                    <h3 className="text-lg font-bold mb-4">Edit Commission: {editingTeacher.name}</h3>
                                     <div className="mb-6">
-                                        <label className="block text-sm mb-2">النسبة الخاصة (%) - اتركها فارغة لاستخدام الافتراضي</label>
+                                        <label className="block text-sm mb-2">Custom Rate (%) - leave empty to use the default</label>
                                         <input
                                             type="number"
                                             value={editCommissionRate}
                                             onChange={(e) => setEditCommissionRate(e.target.value)}
-                                            placeholder="النسبة الافتراضية"
+                                            placeholder="Default rate"
                                             className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
                                         />
                                     </div>
@@ -675,54 +675,54 @@ const AdminDashboard: React.FC = () => {
                                             onClick={() => { setEditingTeacher(null); setModalMode(null); }}
                                             className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg dark:text-gray-300 dark:hover:bg-gray-700"
                                         >
-                                            إلغاء
+                                            Cancel
                                         </button>
                                         <button
                                             onClick={handleUpdateTeacher}
                                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                                         >
-                                            حفظ التغييرات
+                                            Save Changes
                                         </button>
                                     </div>
                                 </>
                             ) : modalMode === 'penalty' ? (
                                 // Edit Penalty Mode
                                 <>
-                                    <h3 className="text-lg font-bold mb-4">تعديل غرامة الحذف: {editingTeacher.name}</h3>
+                                    <h3 className="text-lg font-bold mb-4">Edit Deletion Penalty: {editingTeacher.name}</h3>
                                     <div className="mb-6">
-                                        <label className="block text-sm mb-2">غرامة الحذف الخاصة (وحدة) - اتركها فارغة لاستخدام الافتراضي</label>
+                                        <label className="block text-sm mb-2">Custom Deletion Penalty (units) - leave empty to use the default</label>
                                         <input
                                             type="number"
                                             value={editPenaltyAmount}
                                             onChange={(e) => setEditPenaltyAmount(e.target.value)}
-                                            placeholder="الافتراضي"
+                                            placeholder="Default"
                                             className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">القيمة التي ستخصم عند حذف باقة نشطة.</p>
+                                        <p className="text-xs text-gray-500 mt-1">The amount deducted when an active package is deleted.</p>
                                     </div>
                                     <div className="flex justify-end gap-3">
                                         <button
                                             onClick={() => { setEditingTeacher(null); setModalMode(null); }}
                                             className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg dark:text-gray-300 dark:hover:bg-gray-700"
                                         >
-                                            إلغاء
+                                            Cancel
                                         </button>
                                         <button
                                             onClick={handleUpdateTeacherPenalty}
                                             className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                                         >
-                                            حفظ الغرامة
+                                            Save Penalty
                                         </button>
                                     </div>
                                 </>
                             ) : modalMode === 'wallet' && viewingWallet ? (
                                 <>
                                     <h3 className="text-xl font-bold mb-6 text-center text-gray-900 dark:text-white">
-                                        محفظة: {viewingWallet.userName}
+                                        Wallet: {viewingWallet.userName}
                                     </h3>
 
                                     <div className="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl text-center mb-6 border border-gray-100 dark:border-gray-600">
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">الرصيد الحالي</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Current Balance</p>
                                         <div className="text-4xl font-bold text-primary-green flex items-center justify-center gap-1 font-heading">
                                             <span>{viewingWallet.data.balance.toLocaleString()}</span>
                                             <span className="text-lg">{viewingWallet.data.currency}</span>
@@ -730,7 +730,7 @@ const AdminDashboard: React.FC = () => {
                                     </div>
 
                                     <div className="space-y-4">
-                                        <h4 className="font-bold text-gray-900 dark:text-white border-b pb-2 dark:border-gray-700">آخر المعاملات</h4>
+                                        <h4 className="font-bold text-gray-900 dark:text-white border-b pb-2 dark:border-gray-700">Recent Transactions</h4>
                                         <div className="max-h-60 overflow-y-auto space-y-2 pr-1">
                                             {viewingWallet.data.transactions.length > 0 ? (
                                                 viewingWallet.data.transactions.map((t: any) => (
@@ -745,7 +745,7 @@ const AdminDashboard: React.FC = () => {
                                                     </div>
                                                 ))
                                             ) : (
-                                                <p className="text-center text-gray-500 py-4">لا توجد معاملات سابقة</p>
+                                                <p className="text-center text-gray-500 py-4">No transactions yet</p>
                                             )}
                                         </div>
                                     </div>
@@ -755,7 +755,7 @@ const AdminDashboard: React.FC = () => {
                                             onClick={() => { setModalMode(null); setViewingWallet(null); }}
                                             className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition w-full"
                                         >
-                                            إغلاق
+                                            Close
                                         </button>
                                     </div>
                                 </>
@@ -763,7 +763,7 @@ const AdminDashboard: React.FC = () => {
                                 // Packages Mode
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center mb-4">
-                                        <h3 className="text-lg font-bold">باقات المعلم: {editingTeacher.name}</h3>
+                                        <h3 className="text-lg font-bold">Teacher Packages: {editingTeacher.name}</h3>
                                         <button
                                             onClick={() => { setEditingTeacher(null); setModalMode(null); }}
                                             className="text-gray-500 hover:text-gray-700"
@@ -775,7 +775,7 @@ const AdminDashboard: React.FC = () => {
                                     </div>
 
                                     {teacherPackages.length === 0 ? (
-                                        <p className="text-center text-gray-500 py-4">لا توجد باقات لهذا المعلم.</p>
+                                        <p className="text-center text-gray-500 py-4">No packages for this teacher.</p>
                                     ) : (
                                         <div className="grid gap-4">
                                             {teacherPackages.map(pkg => (
@@ -783,12 +783,12 @@ const AdminDashboard: React.FC = () => {
                                                     <div>
                                                         <h4 className="font-bold text-gray-900 dark:text-white">{pkg.name}</h4>
                                                         <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1">
-                                                            {pkg.price} EGP - {pkg.sessionsCount} جلسات ({pkg.periodType})
+                                                            {pkg.price} EGP - {pkg.sessionsCount} sessions ({pkg.periodType})
                                                         </p>
                                                         <div className="text-xs text-gray-400 mt-1">
                                                             {pkg.hasActiveBookings ?
-                                                                <span className="text-green-600 font-medium">نشطة (بها حجوزات)</span> :
-                                                                <span>لا توجد حجوزات نشطة</span>
+                                                                <span className="text-green-600 font-medium">Active (has bookings)</span> :
+                                                                <span>No active bookings</span>
                                                             }
                                                         </div>
                                                     </div>
@@ -796,7 +796,7 @@ const AdminDashboard: React.FC = () => {
                                                         onClick={() => handleDeletePackage(pkg.id)}
                                                         className="px-3 py-1 bg-red-100 text-red-700 hover:bg-red-200 rounded text-sm font-medium transition-colors"
                                                     >
-                                                        حذف
+                                                        Delete
                                                     </button>
                                                 </div>
                                             ))}
@@ -809,7 +809,7 @@ const AdminDashboard: React.FC = () => {
                                     <div className="flex justify-between items-start border-b pb-4 dark:border-gray-700">
                                         <div>
                                             <h3 className="text-xl font-bold text-gray-900 dark:text-white">{editingTeacher.name}</h3>
-                                            <p className="text-gold-600 font-medium">{editingTeacher.title || 'العنوان الوظيفي غير محدد'}</p>
+                                            <p className="text-gold-600 font-medium">{editingTeacher.title || 'No job title set'}</p>
                                             {/* Debug Log */}
                                         </div>
                                         <div className="text-left">
@@ -824,98 +824,98 @@ const AdminDashboard: React.FC = () => {
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">معلومات الاتصال</h4>
+                                            <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Contact Information</h4>
                                             <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <p><span className="font-medium">البريد:</span> {editingTeacher.email}</p>
-                                                <p><span className="font-medium">الهاتف:</span> {editingTeacher.phoneNumber || 'غير متوفر'}</p>
-                                                <p><span className="font-medium">الروابط:</span> {editingTeacher.socialLinks || 'لا يوجد'}</p>
+                                                <p><span className="font-medium">Email:</span> {editingTeacher.email}</p>
+                                                <p><span className="font-medium">Phone:</span> {editingTeacher.phoneNumber || 'Not available'}</p>
+                                                <p><span className="font-medium">Links:</span> {editingTeacher.socialLinks || 'None'}</p>
                                             </div>
                                         </div>
 
                                         <div>
-                                            <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">المؤهلات والخبرة</h4>
+                                            <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Qualifications & Experience</h4>
                                             <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <p><span className="font-medium">المؤهل:</span> {(editingTeacher.educationDegree === 'bachelor' ? 'بكالوريوس' :
-                                                    editingTeacher.educationDegree === 'master' ? 'ماجستير' :
-                                                        editingTeacher.educationDegree === 'phd' ? 'دكتوراه' :
-                                                            editingTeacher.educationDegree) || 'غير محدد'}</p>
-                                                <p><span className="font-medium">الخبرة:</span> {editingTeacher.experienceYears || 'غير محدد'}</p>
-                                                <p><span className="font-medium">حافظ:</span> {editingTeacher.isHafiz ? 'نعم' : 'لا'}</p>
-                                                <p><span className="font-medium">إجازة:</span> {editingTeacher.hasIjaza ? `نعم (${editingTeacher.ijazaType})` : 'لا'}</p>
-                                                <p><span className="font-medium">جهة الإجازة:</span> {editingTeacher.ijazaIssuer || '-'}</p>
+                                                <p><span className="font-medium">Degree:</span> {(editingTeacher.educationDegree === 'bachelor' ? 'Bachelor\'s' :
+                                                    editingTeacher.educationDegree === 'master' ? 'Master\'s' :
+                                                        editingTeacher.educationDegree === 'phd' ? 'PhD' :
+                                                            editingTeacher.educationDegree) || 'Not set'}</p>
+                                                <p><span className="font-medium">Experience:</span> {editingTeacher.experienceYears || 'Not set'}</p>
+                                                <p><span className="font-medium">Hafiz:</span> {editingTeacher.isHafiz ? 'Yes' : 'No'}</p>
+                                                <p><span className="font-medium">Ijaza:</span> {editingTeacher.hasIjaza ? `Yes (${editingTeacher.ijazaType})` : 'No'}</p>
+                                                <p><span className="font-medium">Ijaza Issuer:</span> {editingTeacher.ijazaIssuer || '-'}</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Verification Documents Section */}
                                     <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-100 dark:border-gray-600">
-                                        <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-3 border-b border-gray-200 dark:border-gray-600 pb-2">بيانات التحقق والهوية</h4>
+                                        <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-3 border-b border-gray-200 dark:border-gray-600 pb-2">Verification & Identity</h4>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
-                                                <p className="text-sm font-medium text-gray-500 mb-1">الرقم القومي</p>
-                                                <p className="text-gray-900 dark:text-white font-mono">{editingTeacher.nationalId || 'غير متوفر'}</p>
+                                                <p className="text-sm font-medium text-gray-500 mb-1">National ID</p>
+                                                <p className="text-gray-900 dark:text-white font-mono">{editingTeacher.nationalId || 'Not available'}</p>
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-gray-500 mb-1">تاريخ الميلاد</p>
+                                                <p className="text-sm font-medium text-gray-500 mb-1">Date of Birth</p>
                                                 <p className="text-gray-900 dark:text-white">
-                                                    {editingTeacher.dateOfBirth ? new Date(editingTeacher.dateOfBirth).toLocaleDateString('ar-EG') : 'غير متوفر'}
+                                                    {editingTeacher.dateOfBirth ? new Date(editingTeacher.dateOfBirth).toLocaleDateString('en-GB') : 'Not available'}
                                                 </p>
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-gray-500 mb-2">صورة البطاقة</p>
+                                                <p className="text-sm font-medium text-gray-500 mb-2">ID Card Photo</p>
                                                 {editingTeacher.nationalIdImageUrl ? (
                                                     <div className="space-y-1">
-                                                        {renderThumbnail(getFileUrl(editingTeacher.nationalIdImageUrl), 'صورة الهوية', () => setViewingDoc({ url: getFileUrl(editingTeacher.nationalIdImageUrl), title: 'صورة الهوية' }))}
+                                                        {renderThumbnail(getFileUrl(editingTeacher.nationalIdImageUrl), 'ID Photo', () => setViewingDoc({ url: getFileUrl(editingTeacher.nationalIdImageUrl), title: 'ID Photo' }))}
                                                         <button
-                                                            onClick={() => setViewingDoc({ url: getFileUrl(editingTeacher.nationalIdImageUrl), title: 'صورة الهوية' })}
+                                                            onClick={() => setViewingDoc({ url: getFileUrl(editingTeacher.nationalIdImageUrl), title: 'ID Photo' })}
                                                             className="text-xs text-blue-500 underline break-all block text-right w-full" dir="ltr"
                                                         >
                                                             {getFileUrl(editingTeacher.nationalIdImageUrl)}
                                                         </button>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-red-500 text-sm">لم يتم الرفع</span>
+                                                    <span className="text-red-500 text-sm">Not uploaded</span>
                                                 )}
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-gray-500 mb-2">المؤهل الدراسي</p>
+                                                <p className="text-sm font-medium text-gray-500 mb-2">Degree Certificate</p>
                                                 {editingTeacher.qualificationCertificateUrl ? (
                                                     <div className="space-y-1">
-                                                        {renderThumbnail(getFileUrl(editingTeacher.qualificationCertificateUrl), 'صورة المؤهل', () => setViewingDoc({ url: getFileUrl(editingTeacher.qualificationCertificateUrl), title: 'شهادة المؤهل' }))}
+                                                        {renderThumbnail(getFileUrl(editingTeacher.qualificationCertificateUrl), 'Degree Certificate', () => setViewingDoc({ url: getFileUrl(editingTeacher.qualificationCertificateUrl), title: 'Degree Certificate' }))}
                                                         <button
-                                                            onClick={() => setViewingDoc({ url: getFileUrl(editingTeacher.qualificationCertificateUrl), title: 'شهادة المؤهل' })}
+                                                            onClick={() => setViewingDoc({ url: getFileUrl(editingTeacher.qualificationCertificateUrl), title: 'Degree Certificate' })}
                                                             className="text-xs text-blue-500 underline break-all block text-right w-full" dir="ltr"
                                                         >
                                                             {getFileUrl(editingTeacher.qualificationCertificateUrl)}
                                                         </button>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-gray-500 text-sm">غير متوفر</span>
+                                                    <span className="text-gray-500 text-sm">Not available</span>
                                                 )}
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-gray-500 mb-2">شهادة الخبرة</p>
+                                                <p className="text-sm font-medium text-gray-500 mb-2">Experience Certificate</p>
                                                 {editingTeacher.experienceCertificateUrl ? (
                                                     <div className="space-y-1">
-                                                        {renderThumbnail(getFileUrl(editingTeacher.experienceCertificateUrl), 'شهادة الخبرة', () => setViewingDoc({ url: getFileUrl(editingTeacher.experienceCertificateUrl), title: 'شهادة الخبرة' }))}
+                                                        {renderThumbnail(getFileUrl(editingTeacher.experienceCertificateUrl), 'Experience Certificate', () => setViewingDoc({ url: getFileUrl(editingTeacher.experienceCertificateUrl), title: 'Experience Certificate' }))}
                                                         <button
-                                                            onClick={() => setViewingDoc({ url: getFileUrl(editingTeacher.experienceCertificateUrl), title: 'شهادة الخبرة' })}
+                                                            onClick={() => setViewingDoc({ url: getFileUrl(editingTeacher.experienceCertificateUrl), title: 'Experience Certificate' })}
                                                             className="text-xs text-blue-500 underline break-all block text-right w-full" dir="ltr"
                                                         >
                                                             {getFileUrl(editingTeacher.experienceCertificateUrl)}
                                                         </button>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-gray-500 text-sm">غير متوفرة</span>
+                                                    <span className="text-gray-500 text-sm">Not available</span>
                                                 )}
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-gray-500 mb-2">شهادة الإجازة</p>
+                                                <p className="text-sm font-medium text-gray-500 mb-2">Ijaza Certificate</p>
                                                 {editingTeacher.ijazaCertificateUrl ? (
                                                     <div className="space-y-1">
-                                                        {renderThumbnail(getFileUrl(editingTeacher.ijazaCertificateUrl), 'شهادة الإجازة', () => setViewingDoc({ url: getFileUrl(editingTeacher.ijazaCertificateUrl), title: 'شهادة الإجازة' }))}
+                                                        {renderThumbnail(getFileUrl(editingTeacher.ijazaCertificateUrl), 'Ijaza Certificate', () => setViewingDoc({ url: getFileUrl(editingTeacher.ijazaCertificateUrl), title: 'Ijaza Certificate' }))}
                                                         <button
-                                                            onClick={() => setViewingDoc({ url: getFileUrl(editingTeacher.ijazaCertificateUrl), title: 'شهادة الإجازة' })}
+                                                            onClick={() => setViewingDoc({ url: getFileUrl(editingTeacher.ijazaCertificateUrl), title: 'Ijaza Certificate' })}
                                                             className="text-xs text-blue-500 underline break-all block text-right w-full" dir="ltr"
                                                         >
                                                             {getFileUrl(editingTeacher.ijazaCertificateUrl)}
@@ -923,17 +923,17 @@ const AdminDashboard: React.FC = () => {
                                                     </div>
                                                 ) : editingTeacher.hasIjaza ? (
                                                     <div className="h-32 w-full rounded border-2 border-dashed border-red-300 bg-red-50 flex flex-col items-center justify-center text-red-500 p-4 text-center">
-                                                        <span className="text-xs font-medium">المعلم ذكر أنه مجاز ولكن لم يرفع الصورة</span>
+                                                        <span className="text-xs font-medium">Teacher says they have an Ijaza but did not upload the photo</span>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-gray-500 text-sm">غير متوفرة</span>
+                                                    <span className="text-gray-500 text-sm">Not available</span>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">التخصصات</h4>
+                                        <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Specializations</h4>
                                         <div className="flex flex-wrap gap-2">
                                             {editingTeacher.subjects && editingTeacher.subjects.length > 0 ? (
                                                 editingTeacher.subjects.map((sub, idx) => (
@@ -942,21 +942,21 @@ const AdminDashboard: React.FC = () => {
                                                     </span>
                                                 ))
                                             ) : (
-                                                <span className="text-sm text-gray-500">لم يتم تحديد تخصصات</span>
+                                                <span className="text-sm text-gray-500">No specializations set</span>
                                             )}
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">نبذة تعريفية</h4>
+                                        <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Bio</h4>
                                         <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg min-h-[60px]">
-                                            {editingTeacher.bio || 'لا توجد نبذة تعريفية.'}
+                                            {editingTeacher.bio || 'No bio provided.'}
                                         </p>
                                     </div>
 
                                     {editingTeacher.audioSampleUrl && (
                                         <div>
-                                            <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">عينة صوتية</h4>
+                                            <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Voice Sample</h4>
                                             <CustomAudioPlayer
                                                 src={getFileUrl(editingTeacher.audioSampleUrl)}
                                                 className="w-full"
@@ -969,14 +969,14 @@ const AdminDashboard: React.FC = () => {
                                             onClick={() => { setEditingTeacher(null); setModalMode(null); }}
                                             className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
                                         >
-                                            إغلاق
+                                            Close
                                         </button>
                                         {!editingTeacher.isApproved && (
                                             <button
                                                 onClick={() => { handleApprove(editingTeacher.id); setEditingTeacher(null); }}
                                                 className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
                                             >
-                                                قبول المعلم
+                                                Approve Teacher
                                             </button>
                                         )}
                                     </div>
@@ -1016,7 +1016,7 @@ const AdminDashboard: React.FC = () => {
                                 rel="noopener noreferrer"
                                 className="text-gold-600 hover:text-gold-700 dark:text-gold-400 dark:hover:text-gold-300 font-medium flex items-center gap-2"
                             >
-                                <span>فتح في نافذة مستقلة</span>
+                                <span>Open in a new window</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                 </svg>

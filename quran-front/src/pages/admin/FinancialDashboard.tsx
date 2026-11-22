@@ -74,7 +74,7 @@ const FinancialDashboard: React.FC = () => {
 
         } catch (error) {
             console.error(error);
-            toast.error('فشل تحميل البيانات المالية');
+            toast.error('Failed to load financial data');
         } finally {
             setLoading(false);
         }
@@ -105,8 +105,8 @@ const FinancialDashboard: React.FC = () => {
             {/* Header & Actions */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">لوحة التحكم المالية</h1>
-                    <p className="text-gray-500">متابعة العمليات المالية والإيرادات</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Financial Dashboard</h1>
+                    <p className="text-gray-500">Track financial operations and revenue</p>
                 </div>
                 <div className="flex gap-2">
                     <button
@@ -114,14 +114,14 @@ const FinancialDashboard: React.FC = () => {
                         className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
                     >
                         <UserGroupIcon className="w-5 h-5" />
-                        <span>إيداع معلمين</span>
+                        <span>Teacher Deposit</span>
                     </button>
                     <button
                         onClick={() => setIsStudentBulkDepositOpen(true)}
                         className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md transition-colors"
                     >
                         <AcademicCapIcon className="w-5 h-5" />
-                        <span>إيداع طلاب</span>
+                        <span>Student Deposit</span>
                     </button>
                 </div>
             </div>
@@ -129,43 +129,43 @@ const FinancialDashboard: React.FC = () => {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                 <StatCard
-                    title="الإيداعات (خارجي)"
+                    title="Deposits (external)"
                     value={formatCurrency(summary.totalDeposits)}
                     icon={<ArrowTrendingUpIcon className="w-6 h-6 text-green-600" />}
                     bgColor="bg-green-50"
                 />
                 <StatCard
-                    title="إيداعات الكوبونات"
+                    title="Coupon Deposits"
                     value={formatCurrency(summary.totalCouponDeposits)}
                     icon={<TagIcon className="w-6 h-6 text-indigo-600" />}
                     bgColor="bg-indigo-50"
                 />
                 <StatCard
-                    title="إيداعات يدوية (مشرف)"
+                    title="Manual Deposits (admin)"
                     value={formatCurrency(summary.totalManualDeposits)}
                     icon={<PlusIcon className="w-6 h-6 text-blue-600" />}
                     bgColor="bg-blue-50"
                 />
                 <StatCard
-                    title="أرباح المنصة"
+                    title="Platform Revenue"
                     value={formatCurrency(summary.platformProfit)}
                     icon={<BanknotesIcon className="w-6 h-6 text-gold-500" />}
                     bgColor="bg-yellow-50"
                 />
                 <StatCard
-                    title="المدفوعات (استهلاك)"
+                    title="Payments (spending)"
                     value={formatCurrency(summary.totalPayments)}
                     icon={<BanknotesIcon className="w-6 h-6 text-gray-600" />}
                     bgColor="bg-gray-50"
                 />
                 <StatCard
-                    title="المستردات"
+                    title="Refunds"
                     value={formatCurrency(summary.totalRefunds)}
                     icon={<ClockIcon className="w-6 h-6 text-orange-600" />}
                     bgColor="bg-orange-50"
                 />
                 <StatCard
-                    title="صافي التدفق"
+                    title="Net Flow"
                     value={formatCurrency(summary.netFlow)}
                     icon={<ArrowTrendingDownIcon className="w-6 h-6 text-purple-600" />}
                     bgColor="bg-purple-50"
@@ -179,7 +179,7 @@ const FinancialDashboard: React.FC = () => {
                 <div className="flex-1 min-w-[200px]">
                     <input
                         type="text"
-                        placeholder="بحث باسم المستخدم أو البريد..."
+                        placeholder="Search by user name or email..."
                         className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-gold-500"
                         value={filter.searchQuery}
                         onChange={(e) => handleFilterChange('searchQuery', e.target.value)}
@@ -192,11 +192,11 @@ const FinancialDashboard: React.FC = () => {
                     value={filter.status || ''}
                     onChange={(e) => handleFilterChange('status', e.target.value)}
                 >
-                    <option value="">كل الحالات</option>
-                    <option value="Succeeded">ناجحة</option>
-                    <option value="Pending">معلقة</option>
-                    <option value="Failed">فاشلة</option>
-                    <option value="Refunded">مستردة</option>
+                    <option value="">All Statuses</option>
+                    <option value="Succeeded">Succeeded</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Failed">Failed</option>
+                    <option value="Refunded">Refunded</option>
                 </select>
 
                 {/* Date Range */}
@@ -223,23 +223,23 @@ const FinancialDashboard: React.FC = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">التاريخ</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">المستخدم</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">النوع</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">المبلغ</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">الحالة</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">مزود الخدمة</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">الرصيد (بعد)</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Provider</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Balance (after)</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-8 text-center text-gray-500">جاري التحميل...</td>
+                                    <td colSpan={7} className="px-6 py-8 text-center text-gray-500">Loading...</td>
                                 </tr>
                             ) : transactions.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-8 text-center text-gray-500">لا توجد معاملات</td>
+                                    <td colSpan={7} className="px-6 py-8 text-center text-gray-500">No transactions</td>
                                 </tr>
                             ) : (
                                 transactions.map((t) => (
@@ -287,7 +287,7 @@ const FinancialDashboard: React.FC = () => {
                     <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                         <div>
                             <p className="text-sm text-gray-700 dark:text-gray-300">
-                                عرض <span className="font-medium">{(filter.page - 1) * filter.pageSize + 1}</span> إلى <span className="font-medium">{Math.min(filter.page * filter.pageSize, totalCount)}</span> من <span className="font-medium">{totalCount}</span> نتيجة
+                                Showing <span className="font-medium">{(filter.page - 1) * filter.pageSize + 1}</span> to <span className="font-medium">{Math.min(filter.page * filter.pageSize, totalCount)}</span> of <span className="font-medium">{totalCount}</span> results
                             </p>
                         </div>
                         <div>
@@ -297,14 +297,14 @@ const FinancialDashboard: React.FC = () => {
                                     disabled={filter.page === 1}
                                     className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
                                 >
-                                    السابق
+                                    Previous
                                 </button>
                                 <button
                                     onClick={() => handlePageChange(filter.page + 1)}
                                     disabled={filter.page * filter.pageSize >= totalCount}
                                     className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
                                 >
-                                    التالي
+                                    Next
                                 </button>
                             </nav>
                         </div>
@@ -317,7 +317,7 @@ const FinancialDashboard: React.FC = () => {
                 isOpen={isBulkDepositOpen}
                 onClose={() => setIsBulkDepositOpen(false)}
                 onSuccess={() => {
-                    toast.success('تم الإيداع المجمع بنجاح');
+                    toast.success('Bulk deposit completed');
                     fetchData();
                 }}
             />
@@ -327,7 +327,7 @@ const FinancialDashboard: React.FC = () => {
                 isOpen={isStudentBulkDepositOpen}
                 onClose={() => setIsStudentBulkDepositOpen(false)}
                 onSuccess={() => {
-                    toast.success('تم الإيداع للطلاب بنجاح');
+                    toast.success('Student deposit completed');
                     fetchData();
                 }}
             />
@@ -350,11 +350,11 @@ const StatCard = ({ title, value, icon, bgColor, isNet = false }: any) => (
 
 const translateType = (type: string) => {
     const map: Record<string, string> = {
-        'Deposit': 'إيداع',
-        'Withdrawal': 'سحب',
-        'Payment': 'دفع',
-        'Refund': 'استرداد',
-        'Income': 'دخل'
+        'Deposit': 'Deposit',
+        'Withdrawal': 'Withdrawal',
+        'Payment': 'Payment',
+        'Refund': 'Refund',
+        'Income': 'Income'
     };
     return map[type] || type;
 };

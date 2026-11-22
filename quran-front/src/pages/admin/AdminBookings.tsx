@@ -38,7 +38,7 @@ const AdminBookings = () => {
             });
             setBookings(data);
         } catch (error) {
-            toast.error('فشل في تحميل الحجوزات');
+            toast.error('Failed to load bookings');
         } finally {
             setLoading(false);
         }
@@ -49,7 +49,7 @@ const AdminBookings = () => {
             const data = await adminService.getBookingDetails(id);
             setSelectedBooking(data);
         } catch (error) {
-            toast.error('فشل في تحميل التفاصيل');
+            toast.error('Failed to load details');
         }
     };
 
@@ -57,29 +57,29 @@ const AdminBookings = () => {
         if (!selectedBooking) return;
         try {
             await adminService.cancelBooking(selectedBooking.id, cancelReason, refundMode, refundAmount, adminNote);
-            toast.success('تم إلغاء الحجز بنجاح');
+            toast.success('Booking cancelled');
             setShowCancelModal(false);
             setSelectedBooking(null);
             loadBookings();
         } catch (error: any) {
-            toast.error(error.response?.data?.message || 'فشل الإلغاء');
+            toast.error(error.response?.data?.message || 'Cancellation failed');
         }
     };
 
     // Helper functions removed in favor of utils
 
-    if (loading) return <div className="text-center py-8 dark:text-white">جاري التحميل...</div>;
+    if (loading) return <div className="text-center py-8 dark:text-white">Loading...</div>;
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">إدارة الحجوزات</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Booking Management</h2>
 
             {/* Filters */}
             <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm space-y-4 md:space-y-0 md:flex md:items-center md:gap-4 border border-gray-100 dark:border-slate-700">
                 <div className="flex-1">
                     <input
                         type="text"
-                        placeholder="بحث عن طالب، معلم، باقة..."
+                        placeholder="Search student, teacher, package..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -91,11 +91,11 @@ const AdminBookings = () => {
                         onChange={(e) => setFilterStatus(e.target.value)}
                         className="border border-gray-300 dark:border-slate-600 rounded-lg p-2 w-full md:w-auto bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
-                        <option value="All">كل الحالية</option>
-                        <option value="Pending">قيد الانتظار</option>
-                        <option value="Confirmed">مؤكد</option>
-                        <option value="Completed">مكتمل</option>
-                        <option value="Cancelled">ملغي</option>
+                        <option value="All">All</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
                     </select>
                 </div>
                 <div className="flex items-center gap-2">
@@ -105,7 +105,7 @@ const AdminBookings = () => {
                         onChange={(e) => setDateFrom(e.target.value)}
                         className="border border-gray-300 dark:border-slate-600 rounded-lg p-2 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
-                    <span className="text-gray-500 dark:text-gray-400">إلى</span>
+                    <span className="text-gray-500 dark:text-gray-400">to</span>
                     <input
                         type="date"
                         value={dateTo}
@@ -121,14 +121,14 @@ const AdminBookings = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
                         <thead className="bg-gray-50 dark:bg-slate-900/50">
                             <tr>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الرقم</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الطالب</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">المعلم</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الباقة</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الإجمالي</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">التاريخ</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الحالة</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">إجراءات</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">ID</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Student</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Teacher</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Package</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
@@ -150,7 +150,7 @@ const AdminBookings = () => {
                                             onClick={() => handleViewDetails(b.id)}
                                             className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                                         >
-                                            التفاصيل
+                                            Details
                                         </button>
                                     </td>
                                 </tr>
@@ -158,7 +158,7 @@ const AdminBookings = () => {
                             {bookings.length === 0 && (
                                 <tr>
                                     <td colSpan={8} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                                        لا توجد حجوزات مطابقة للبحث.
+                                        No bookings match your search.
                                     </td>
                                 </tr>
                             )}
@@ -172,7 +172,7 @@ const AdminBookings = () => {
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                     <div className="bg-white dark:bg-slate-800 rounded-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-slate-700 shadow-xl">
                         <div className="flex justify-between items-start mb-6 border-b border-gray-100 dark:border-slate-700 pb-4">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">تفاصيل الحجز #{selectedBooking.id}</h3>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Booking Details #{selectedBooking.id}</h3>
                             <button onClick={() => setSelectedBooking(null)} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                                 <span className="text-2xl">&times;</span>
                             </button>
@@ -180,23 +180,23 @@ const AdminBookings = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                             <div className="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-lg">
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">الطالب</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Student</p>
                                 <p className="font-bold text-gray-900 dark:text-white text-lg">{selectedBooking.student?.fullName}</p>
                                 <p className="text-sm text-gray-400 dark:text-gray-500">{selectedBooking.student?.email}</p>
                             </div>
                             <div className="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-lg">
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">المعلم</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Teacher</p>
                                 <p className="font-bold text-gray-900 dark:text-white text-lg">{selectedBooking.teacher?.fullName}</p>
                                 <p className="text-sm text-gray-400 dark:text-gray-500">{selectedBooking.teacher?.email}</p>
                             </div>
                             <div className="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-lg">
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">الحالة</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Status</p>
                                 <span className={`px-3 py-1 inline-flex text-sm font-semibold rounded-full ${getStatusColor(selectedBooking.status)}`}>
                                     {translateStatus(selectedBooking.status)}
                                 </span>
                             </div>
                             <div className="bg-gray-50 dark:bg-slate-700/50 p-4 rounded-lg">
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">السعر</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Price</p>
                                 <p className="font-bold text-gray-900 dark:text-white text-lg">{selectedBooking.totalPrice} {selectedBooking.currency}</p>
                             </div>
                         </div>
@@ -204,7 +204,7 @@ const AdminBookings = () => {
                         {/* Sessions List */}
                         <div className="mb-8">
                             <h4 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <span>الجلسات</span>
+                                <span>Sessions</span>
                                 <span className="bg-gray-100 dark:bg-slate-700 text-xs px-2 py-1 rounded-full">{selectedBooking.sessions?.length || 0}</span>
                             </h4>
                             <div className="border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden">
@@ -230,14 +230,14 @@ const AdminBookings = () => {
                                 onClick={() => setSelectedBooking(null)}
                                 className="px-5 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
                             >
-                                إغلاق
+                                Close
                             </button>
                             {selectedBooking.status !== 'Cancelled' && selectedBooking.status !== 'Completed' && (
                                 <button
                                     onClick={() => setShowCancelModal(true)}
                                     className="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shadow-sm"
                                 >
-                                    إلغاء الحجز
+                                    Cancel Booking
                                 </button>
                             )}
                         </div>
@@ -249,36 +249,36 @@ const AdminBookings = () => {
             {showCancelModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
                     <div className="bg-white dark:bg-slate-800 rounded-xl max-w-md w-full p-6 border border-gray-200 dark:border-slate-700 shadow-2xl">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">إلغاء الحجز #{selectedBooking.id}</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Cancel Booking #{selectedBooking.id}</h3>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">سبب الإلغاء</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cancellation Reason</label>
                                 <textarea
                                     value={cancelReason}
                                     onChange={(e) => setCancelReason(e.target.value)}
                                     className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-3 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                                     rows={3}
-                                    placeholder="اكتب سبب الإلغاء هنا..."
+                                    placeholder="Type the cancellation reason..."
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نوع الاسترداد</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Refund Type</label>
                                 <select
                                     value={refundMode}
                                     onChange={(e) => setRefundMode(e.target.value)}
                                     className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-2.5 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                                 >
-                                    <option value="Full">استرداد كامل</option>
-                                    <option value="Partial">استرداد جزئي</option>
-                                    <option value="None">بدون استرداد</option>
+                                    <option value="Full">Full refund</option>
+                                    <option value="Partial">Partial refund</option>
+                                    <option value="None">No refund</option>
                                 </select>
                             </div>
 
                             {refundMode === 'Partial' && (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">مبلغ الاسترداد</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Refund Amount</label>
                                     <div className="relative">
                                         <input
                                             type="number"
@@ -288,18 +288,18 @@ const AdminBookings = () => {
                                         />
                                         <span className="absolute left-3 top-2.5 text-gray-400 text-sm">EGP</span>
                                     </div>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">الحد الأقصى: {selectedBooking.totalPrice}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Maximum: {selectedBooking.totalPrice}</p>
                                 </div>
                             )}
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ملاحظات إدارية (اختياري)</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Admin Notes (optional)</label>
                                 <input
                                     type="text"
                                     value={adminNote}
                                     onChange={(e) => setAdminNote(e.target.value)}
                                     className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-2.5 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
-                                    placeholder="ملاحظات داخلية للإدارة فقط"
+                                    placeholder="Internal admin notes only"
                                 />
                             </div>
                         </div>
@@ -309,13 +309,13 @@ const AdminBookings = () => {
                                 onClick={() => setShowCancelModal(false)}
                                 className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
                             >
-                                تراجع
+                                Go Back
                             </button>
                             <button
                                 onClick={handleCancel}
                                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-md"
                             >
-                                تأكيد الإلغاء
+                                Confirm Cancellation
                             </button>
                         </div>
                     </div>

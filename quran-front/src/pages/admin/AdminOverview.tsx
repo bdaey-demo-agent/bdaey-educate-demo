@@ -35,18 +35,18 @@ const AdminOverview = () => {
             setStats(data);
         } catch (error) {
             console.error(error);
-            toast.error('فشل في تحميل الإحصائيات');
+            toast.error('Failed to load statistics');
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading) return <div className="p-8 text-center dark:text-white">جاري تحميل الإحصائيات...</div>;
-    if (!stats) return <div className="p-8 text-center dark:text-white">لا توجد إحصائيات متاحة</div>;
+    if (loading) return <div className="p-8 text-center dark:text-white">Loading statistics...</div>;
+    if (!stats) return <div className="p-8 text-center dark:text-white">No statistics available</div>;
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">نظرة عامة</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Overview</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow">
@@ -55,7 +55,7 @@ const AdminOverview = () => {
                             <UserGroupIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">إجمالي المستخدمين</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Total Users</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalUsers}</h3>
                         </div>
                     </div>
@@ -66,7 +66,7 @@ const AdminOverview = () => {
                             <SignalIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">المستخدمون النشطون الآن</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Active Users Now</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.activeUsersCount}</h3>
                         </div>
                     </div>
@@ -77,7 +77,7 @@ const AdminOverview = () => {
                             <UserIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">الطلاب</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Students</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalStudents}</h3>
                         </div>
                     </div>
@@ -88,9 +88,9 @@ const AdminOverview = () => {
                             <AcademicCapIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">المعلمين</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Teachers</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                                {stats.totalTeachers} <span className="text-sm font-normal text-gray-400 dark:text-gray-500">({stats.pendingTeachers} بانتظار الموافقة)</span>
+                                {stats.totalTeachers} <span className="text-sm font-normal text-gray-400 dark:text-gray-500">({stats.pendingTeachers} pending approval)</span>
                             </h3>
                         </div>
                     </div>
@@ -101,7 +101,7 @@ const AdminOverview = () => {
                             <CurrencyDollarIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">إجمالي المعاملات</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Total Transactions</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalVolume.toLocaleString()} EGP</h3>
                         </div>
                     </div>
@@ -112,7 +112,7 @@ const AdminOverview = () => {
                             <BanknotesIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">طلبات السحب المعلقة</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Pending Withdrawals</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                                 {stats.pendingWithdrawals} <span className="text-sm font-normal text-gray-400 dark:text-gray-500">({stats.pendingWithdrawalsAmount.toLocaleString()} EGP)</span>
                             </h3>
@@ -125,7 +125,7 @@ const AdminOverview = () => {
                             <XCircleIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">الحجوزات الملغية</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Cancelled Bookings</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.cancelledBookings}</h3>
                         </div>
                     </div>
@@ -136,9 +136,9 @@ const AdminOverview = () => {
                             <ChartPieIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">الحجوزات</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Bookings</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                                {stats.totalBookings} <span className="text-sm font-normal text-gray-400 dark:text-gray-500">({stats.completedBookings} مكتملة)</span>
+                                {stats.totalBookings} <span className="text-sm font-normal text-gray-400 dark:text-gray-500">({stats.completedBookings} completed)</span>
                             </h3>
                         </div>
                     </div>
@@ -149,7 +149,7 @@ const AdminOverview = () => {
                             <PlayCircleIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">الجلسات المكتملة</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Completed Sessions</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.completedSessions}</h3>
                         </div>
                     </div>
@@ -160,7 +160,7 @@ const AdminOverview = () => {
                             <ArrowTrendingUpIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">مستخدمين جدد (7 أيام)</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">New Users (7 days)</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.newUsersLast7Days}</h3>
                         </div>
                     </div>
@@ -173,7 +173,7 @@ const AdminOverview = () => {
                             <CalendarDaysIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">إجمالي الجلسات</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Total Sessions</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalSessions}</h3>
                         </div>
                     </div>
@@ -184,7 +184,7 @@ const AdminOverview = () => {
                             <ClockIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">الجلسات القادمة</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Upcoming Sessions</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.upcomingSessions}</h3>
                         </div>
                     </div>
@@ -195,7 +195,7 @@ const AdminOverview = () => {
                             <StarIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">متوسط التقييم</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Average Rating</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.averageRating.toFixed(1)} <span className="text-sm font-normal text-gray-400">/ 5</span></h3>
                         </div>
                     </div>
@@ -206,7 +206,7 @@ const AdminOverview = () => {
                             <WalletIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">إجمالي أرصدة المحافظ</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Total Wallet Balances</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalWalletBalance.toLocaleString()} EGP</h3>
                         </div>
                     </div>
@@ -217,7 +217,7 @@ const AdminOverview = () => {
                             <Squares2X2Icon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">الباقات النشطة</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">Active Packages</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.activePackages}</h3>
                         </div>
                     </div>
@@ -228,7 +228,7 @@ const AdminOverview = () => {
                             <UserPlusIcon className="h-8 w-8" />
                         </div>
                         <div>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">مستخدمين جدد اليوم</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">New Users Today</p>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.newUsersToday}</h3>
                         </div>
                     </div>

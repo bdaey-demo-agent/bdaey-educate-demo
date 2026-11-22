@@ -26,7 +26,7 @@ const AdminPromoCodes: React.FC = () => {
             setPromoCodes(data);
         } catch (error: any) {
             console.error('Error fetching promo codes:', error);
-            toast.error('فشل في تحميل الكوبونات');
+            toast.error('Failed to load coupons');
         } finally {
             setLoading(false);
         }
@@ -35,7 +35,7 @@ const AdminPromoCodes: React.FC = () => {
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newCode || !newAmount || !newMaxUses) {
-            toast.error('يرجى تعبئة جميع الحقول المطلوبة');
+            toast.error('Please fill in all required fields');
             return;
         }
 
@@ -47,7 +47,7 @@ const AdminPromoCodes: React.FC = () => {
                 maxUses: Number(newMaxUses),
                 expiryDate: newExpiry ? new Date(newExpiry).toISOString() : undefined
             });
-            toast.success('تم إنشاء الكوبون بنجاح');
+            toast.success('Coupon created successfully');
             setShowModal(false);
             setNewCode('');
             setNewAmount('');
@@ -56,7 +56,7 @@ const AdminPromoCodes: React.FC = () => {
             fetchPromoCodes();
         } catch (error: any) {
             console.error('Error creating promo code:', error);
-            toast.error(error.response?.data?.message || 'فشل إنشاء الكوبون بناءً على البيانات المُدخلة، وقد يكون رمز الكوبون مستخدمًا من قبل.');
+            toast.error(error.response?.data?.message || 'Failed to create the coupon; the code may already be in use.');
         } finally {
             setSubmitting(false);
         }
@@ -65,20 +65,20 @@ const AdminPromoCodes: React.FC = () => {
     const handleToggle = async (id: number) => {
         try {
             await adminService.togglePromoCodeStatus(id);
-            toast.success('تم تغيير حالة الكوبون');
+            toast.success('Coupon status changed');
             fetchPromoCodes();
         } catch (error: any) {
-            toast.error('فشل تغيير حالة الكوبون');
+            toast.error('Failed to change coupon status');
         }
     };
 
     const handleDelete = async (id: number) => {
         try {
             await adminService.deletePromoCode(id);
-            toast.success('تم الحذف بنجاح');
+            toast.success('Deleted successfully');
             fetchPromoCodes();
         } catch (error: any) {
-            toast.error(error.response?.data?.message || 'فشل حذف الكوبون');
+            toast.error(error.response?.data?.message || 'Failed to delete the coupon');
         }
     };
 
@@ -88,10 +88,10 @@ const AdminPromoCodes: React.FC = () => {
                 <div>
                     <h2 className="text-2xl font-bold flex items-center gap-2">
                         <TicketIcon className="w-8 h-8 text-primary-500" />
-                        نظام الكوبونات والتسويق
+                        Coupons and Marketing
                     </h2>
                     <p className="text-gray-500 dark:text-gray-400 mt-1">
-                        إنشاء وإدارة أكواد الشحن للطلاب. الحد الأقصى للمحفظة شهرياً للطالب هو 100 جنيه.
+                        Create and manage top-up codes for students. The monthly wallet cap per student is 100 EGP.
                     </p>
                 </div>
                 <button
@@ -99,7 +99,7 @@ const AdminPromoCodes: React.FC = () => {
                     className="btn btn-primary flex items-center gap-2"
                 >
                     <PlusIcon className="w-5 h-5" />
-                    كوبون جديد
+                    New Coupon
                 </button>
             </div>
 
@@ -108,8 +108,8 @@ const AdminPromoCodes: React.FC = () => {
             ) : promoCodes.length === 0 ? (
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-12 text-center shadow-sm border border-gray-100 dark:border-gray-700">
                     <TicketIcon className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-                    <p className="text-xl font-medium text-gray-500 dark:text-gray-400">لا توجد كوبونات مسجلة حتى الآن</p>
-                    <button onClick={() => setShowModal(true)} className="mt-4 btn btn-outline">أضف كوبونك الأول</button>
+                    <p className="text-xl font-medium text-gray-500 dark:text-gray-400">No coupons yet</p>
+                    <button onClick={() => setShowModal(true)} className="mt-4 btn btn-outline">Add Your First Coupon</button>
                 </div>
             ) : (
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
@@ -117,12 +117,12 @@ const AdminPromoCodes: React.FC = () => {
                         <table className="w-full text-right text-sm">
                             <thead className="bg-gray-50 dark:bg-gray-700/50 text-gray-500 dark:text-gray-400 font-medium">
                                 <tr>
-                                    <th className="px-6 py-4">الكود</th>
-                                    <th className="px-6 py-4">القيمة (EGP)</th>
-                                    <th className="px-6 py-4">الاستخدامات</th>
-                                    <th className="px-6 py-4">تاريخ الانتهاء</th>
-                                    <th className="px-6 py-4 text-center">الحالة</th>
-                                    <th className="px-6 py-4">الإجراءات</th>
+                                    <th className="px-6 py-4">Code</th>
+                                    <th className="px-6 py-4">Value (EGP)</th>
+                                    <th className="px-6 py-4">Uses</th>
+                                    <th className="px-6 py-4">Expiry Date</th>
+                                    <th className="px-6 py-4 text-center">Status</th>
+                                    <th className="px-6 py-4">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -133,7 +133,7 @@ const AdminPromoCodes: React.FC = () => {
                                             onClick={() => setExpandedId(expandedId === code.id ? null : code.id)}
                                         >
                                             <td className="px-6 py-4 font-mono font-bold text-primary-600">{code.code}</td>
-                                            <td className="px-6 py-4 font-bold">{code.amount} ج.م</td>
+                                            <td className="px-6 py-4 font-bold">{code.amount} EGP</td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -152,7 +152,7 @@ const AdminPromoCodes: React.FC = () => {
                                                         {new Date(code.expiryDate).toLocaleDateString('ar-EG')}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-gray-400">مفتوح</span>
+                                                    <span className="text-gray-400">Open</span>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-center">
@@ -163,7 +163,7 @@ const AdminPromoCodes: React.FC = () => {
                                                         : 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400'
                                                         }`}
                                                 >
-                                                    {code.isActive ? 'نشط' : 'معطل'}
+                                                    {code.isActive ? 'Active' : 'Disabled'}
                                                 </button>
                                             </td>
                                             <td className="px-6 py-4 flex items-center gap-2">
@@ -171,14 +171,14 @@ const AdminPromoCodes: React.FC = () => {
                                                     onClick={(e) => { 
                                                         e.stopPropagation(); 
                                                         if (code.currentUses > 0) {
-                                                            toast.error("لا يمكن حذف كود تم استخدامه. يمكنك تعطيله بدلاً من ذلك.");
+                                                            toast.error("Cannot delete a used code. You can disable it instead.");
                                                             return;
                                                         }
-                                                        if (window.confirm('هل أنت متأكد من حذف هذا الكوبون؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                                                        if (window.confirm('Are you sure you want to delete this coupon? This cannot be undone.')) {
                                                             handleDelete(code.id);
                                                         }
                                                     }}
-                                                    title={code.currentUses > 0 ? "لا يمكن حذف كود تم استخدامه" : "حذف الكود"}
+                                                    title={code.currentUses > 0 ? "Cannot delete a used code" : "Delete code"}
                                                     className={`p-2 rounded-lg transition-colors ${code.currentUses > 0
                                                         ? 'text-gray-400 cursor-not-allowed'
                                                         : 'text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20'
@@ -199,7 +199,7 @@ const AdminPromoCodes: React.FC = () => {
                                                     <div className="space-y-3">
                                                         <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
                                                             <div className="w-1 h-4 bg-primary-500 rounded-full"></div>
-                                                            سجل الاستخدام ({code.currentUses})
+                                                            Usage History ({code.currentUses})
                                                         </h4>
                                                         {code.usages && code.usages.length > 0 ? (
                                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -207,7 +207,7 @@ const AdminPromoCodes: React.FC = () => {
                                                                     <div key={usage.id} className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-100 dark:border-gray-700 flex flex-col gap-1 shadow-sm">
                                                                         <div className="flex justify-between items-center">
                                                                             <span className="font-bold text-gray-900 dark:text-white">{usage.userName}</span>
-                                                                            <span className="text-primary-600 text-xs font-bold">+{usage.amountRedeemed} ج.م</span>
+                                                                            <span className="text-primary-600 text-xs font-bold">+{usage.amountRedeemed} EGP</span>
                                                                         </div>
                                                                         <div className="text-xs text-gray-500 flex items-center gap-1">
                                                                             <ClockIcon className="w-3 h-3" />
@@ -217,7 +217,7 @@ const AdminPromoCodes: React.FC = () => {
                                                                 ))}
                                                             </div>
                                                         ) : (
-                                                            <p className="text-sm text-gray-500 italic py-2">لم يتم استخدام الكوبون بعد</p>
+                                                            <p className="text-sm text-gray-500 italic py-2">Coupon not used yet</p>
                                                         )}
                                                     </div>
                                                 </td>
@@ -236,11 +236,11 @@ const AdminPromoCodes: React.FC = () => {
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
                     <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md shadow-xl overflow-hidden">
                         <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-                            <h3 className="text-xl font-bold">إنشاء كوبون جديد</h3>
+                            <h3 className="text-xl font-bold">Create New Coupon</h3>
                         </div>
                         <form onSubmit={handleCreate} className="p-6 space-y-4">
                             <div>
-                                <label className="block text-sm font-medium mb-1">رمز الكوبون (إنجليزي)</label>
+                                <label className="block text-sm font-medium mb-1">Coupon Code (Latin letters)</label>
                                 <input
                                     type="text"
                                     required
@@ -253,7 +253,7 @@ const AdminPromoCodes: React.FC = () => {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">قيمة الشحن (جنيه)</label>
+                                    <label className="block text-sm font-medium mb-1">Top-up Value (EGP)</label>
                                     <input
                                         type="number"
                                         required
@@ -265,7 +265,7 @@ const AdminPromoCodes: React.FC = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">أقصى عدد للاستخدام</label>
+                                    <label className="block text-sm font-medium mb-1">Max Uses</label>
                                     <input
                                         type="number"
                                         required
@@ -277,7 +277,7 @@ const AdminPromoCodes: React.FC = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">تاريخ الانتهاء (اختياري)</label>
+                                <label className="block text-sm font-medium mb-1">Expiry Date (optional)</label>
                                 <input
                                     type="date"
                                     value={newExpiry}
@@ -292,14 +292,14 @@ const AdminPromoCodes: React.FC = () => {
                                     disabled={submitting}
                                     className="btn btn-primary flex-1"
                                 >
-                                    {submitting ? 'جاري الإنشاء...' : 'حفظ وإنشاء'}
+                                    {submitting ? 'Creating...' : 'Save and Create'}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setShowModal(false)}
                                     className="btn btn-outline flex-1"
                                 >
-                                    إلغاء
+                                    Cancel
                                 </button>
                             </div>
                         </form>

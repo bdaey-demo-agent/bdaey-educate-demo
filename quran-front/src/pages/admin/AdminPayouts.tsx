@@ -26,7 +26,7 @@ const AdminPayouts = () => {
             const data = await adminService.getWithdrawals();
             setRequests(data);
         } catch (error) {
-            toast.error('فشل في تحميل طلبات السحب');
+            toast.error('Failed to load withdrawal requests');
         } finally {
             setLoading(false);
         }
@@ -50,11 +50,11 @@ const AdminPayouts = () => {
                 referenceCode,
                 rejectionReason
             );
-            toast.success(`تم ${processMode === 'Approve' ? 'قبول' : 'رفض'} الطلب بنجاح`);
+            toast.success(`Request ${processMode === 'Approve' ? 'approved' : 'declined'} successfully`);
             setSelectedRequest(null);
             loadRequests();
         } catch (error: any) {
-            toast.error(error.response?.data?.message || 'فشل معالجة الطلب');
+            toast.error(error.response?.data?.message || 'Failed to process the request');
         }
     };
 
@@ -62,11 +62,11 @@ const AdminPayouts = () => {
         tab === 'Pending' ? r.status === 'Pending' : r.status !== 'Pending'
     );
 
-    if (loading) return <div className="text-center py-8 dark:text-white">جاري التحميل...</div>;
+    if (loading) return <div className="text-center py-8 dark:text-white">Loading...</div>;
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">إدارة المدفوعات</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Payout Management</h2>
 
             {/* Tabs */}
             <div className="flex gap-4 border-b border-gray-200 dark:border-slate-700">
@@ -77,7 +77,7 @@ const AdminPayouts = () => {
                         : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:border-gray-300'
                         }`}
                 >
-                    طلبات معلقة
+                    Pending Requests
                 </button>
                 <button
                     onClick={() => setTab('History')}
@@ -86,7 +86,7 @@ const AdminPayouts = () => {
                         : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:border-gray-300'
                         }`}
                 >
-                    السجل
+                    History
                 </button>
             </div>
 
@@ -96,14 +96,14 @@ const AdminPayouts = () => {
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
                         <thead className="bg-gray-50 dark:bg-slate-900/50">
                             <tr>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الرقم</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">المعلم</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">المبلغ</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الطريقة</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">تفاصيل التحويل</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">تاريخ الطلب</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">الحالة</th>
-                                {tab === 'Pending' && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">إجراءات</th>}
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">ID</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Teacher</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Amount</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Method</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Transfer Details</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Request Date</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                                {tab === 'Pending' && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Actions</th>}
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
@@ -126,7 +126,7 @@ const AdminPayouts = () => {
                                                 onClick={() => handleOpenProcess(r)}
                                                 className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                                             >
-                                                معالجة
+                                                Process
                                             </button>
                                         </td>
                                     )}
@@ -135,7 +135,7 @@ const AdminPayouts = () => {
                             {filteredRequests.length === 0 && (
                                 <tr>
                                     <td colSpan={8} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                                        لا توجد طلبات في هذه القائمة.
+                                        No requests in this list.
                                     </td>
                                 </tr>
                             )}
@@ -148,7 +148,7 @@ const AdminPayouts = () => {
             {selectedRequest && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                     <div className="bg-white dark:bg-slate-800 rounded-xl max-w-md w-full p-6 border border-gray-200 dark:border-slate-700 shadow-2xl">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">معالجة طلب السحب #{selectedRequest.id}</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Process Withdrawal Request #{selectedRequest.id}</h3>
 
                         <div className="flex gap-4 mb-6">
                             <button
@@ -158,7 +158,7 @@ const AdminPayouts = () => {
                                     : 'bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
                                     }`}
                             >
-                                قبول
+                                Approve
                             </button>
                             <button
                                 onClick={() => setProcessMode('Reject')}
@@ -167,43 +167,43 @@ const AdminPayouts = () => {
                                     : 'bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
                                     }`}
                             >
-                                رفض
+                                Decline
                             </button>
                         </div>
 
                         <div className="space-y-4">
                             {processMode === 'Approve' ? (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الكود المرجعي (اختياري)</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Reference Code (optional)</label>
                                     <input
                                         type="text"
                                         value={referenceCode}
                                         onChange={(e) => setReferenceCode(e.target.value)}
                                         className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-2.5 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
-                                        placeholder="رقم العملية البنكية أو المحفظة"
+                                        placeholder="Bank or wallet transaction number"
                                     />
                                 </div>
                             ) : (
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">سبب الرفض</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Decline Reason</label>
                                     <input
                                         type="text"
                                         value={rejectionReason}
                                         onChange={(e) => setRejectionReason(e.target.value)}
                                         className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-2.5 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
-                                        placeholder="لماذا تم رفض الطلب؟"
+                                        placeholder="Why was the request declined?"
                                     />
                                 </div>
                             )}
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ملاحظات إدارية</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Admin Notes</label>
                                 <textarea
                                     value={note}
                                     onChange={(e) => setNote(e.target.value)}
                                     className="w-full border border-gray-300 dark:border-slate-600 rounded-lg p-2.5 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                                     rows={2}
-                                    placeholder="ملاحظات داخلية..."
+                                    placeholder="Internal notes..."
                                 />
                             </div>
                         </div>
@@ -213,13 +213,13 @@ const AdminPayouts = () => {
                                 onClick={() => setSelectedRequest(null)}
                                 className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
                             >
-                                إلغاء
+                                Cancel
                             </button>
                             <button
                                 onClick={handleProcess}
                                 className={`px-4 py-2 text-white rounded-lg shadow-md transition-colors ${processMode === 'Approve' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
                             >
-                                تأكيد {processMode === 'Approve' ? 'القبول' : 'الرفض'}
+                                Confirm {processMode === 'Approve' ? 'Approval' : 'Decline'}
                             </button>
                         </div>
                     </div>
