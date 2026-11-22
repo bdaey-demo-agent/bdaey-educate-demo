@@ -122,7 +122,7 @@ public class AuthController : ControllerBase
 
         try
         {
-            await _emailService.SendEmailAsync(user.Email, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
+            await _emailService.SendEmailAsync(user.Email, $"Activate your {_configuration["Branding:NameEn"] ?? "Bdaey"} account", 
                 BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
             
             user.EmailConfirmationSentAt = DateTime.UtcNow;
@@ -186,7 +186,7 @@ public class AuthController : ControllerBase
         // Enforce Email Verification ONLY for Teachers
         if (userRole == "Teacher" && !user.EmailConfirmed)
         {
-            return Unauthorized(new { code = "EmailNotVerified", message = "يرجى تفعيل بريدك الإلكتروني قبل تسجيل الدخول." });
+            return Unauthorized(new { code = "EmailNotVerified", message = "Please verify your email before signing in." });
         }
 
         if (user.IsBlocked)
@@ -219,7 +219,7 @@ public class AuthController : ControllerBase
             {
                 if (!model.CreateIfNotExists)
                 {
-                    return NotFound(new { code = "AccountNotFound", message = "هذا الحساب غير مسجل لدينا. هل تريد إنشاء حساب جديد؟" });
+                    return NotFound(new { code = "AccountNotFound", message = "This account is not registered. Would you like to create a new account?" });
                 }
 
                 // Register new user
@@ -250,8 +250,8 @@ public class AuthController : ControllerBase
                     var teacherProfile = new TeacherProfile
                     {
                         UserId = user.Id,
-                        Title = "معلم جديد",
-                        Bio = "بروفايل قيد الإنشاء",
+                        Title = "New Teacher",
+                        Bio = "Profile in progress",
                         Subjects = new List<string>(),
                         PriceStart = 0,
                         Status = TeacherStatus.Pending,
@@ -303,12 +303,12 @@ public class AuthController : ControllerBase
         var cacheKey = $"PasswordReset_{model.Email.ToLowerInvariant()}";
         if (_cache.TryGetValue(cacheKey, out _))
         {
-            return BadRequest("يرجى الانتظار 5 دقائق قبل طلب رابط جديد.");
+            return BadRequest("Please wait 5 minutes before requesting a new link.");
         }
 
         var user = await _userManager.FindByEmailAsync(model.Email);
         if (user == null)
-            return Ok("في حال كان البريد مسجلاً لدينا، سيصلك رابط استعادة كلمة المرور قريباً.");
+            return Ok("If this email is registered, a password reset link will arrive shortly.");
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         
@@ -317,13 +317,13 @@ public class AuthController : ControllerBase
 
         var resetLink = $"{origin}/reset-password?email={Uri.EscapeDataString(model.Email)}&token={Uri.EscapeDataString(token)}";
 
-        await _emailService.SendEmailAsync(model.Email, $"استعادة كلمة المرور في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
+        await _emailService.SendEmailAsync(model.Email, $"Reset your {_configuration["Branding:NameEn"] ?? "Bdaey"} password", 
             BdaeyEducat.API.Services.EmailTemplates.GetPasswordResetEmail(user.FullName, resetLink));
 
         // Set the cache to prevent spamming for 5 minutes
         _cache.Set(cacheKey, true, TimeSpan.FromMinutes(5));
 
-        return Ok("في حال كان البريد مسجلاً لدينا، سيصلك رابط استعادة كلمة المرور قريباً.");
+        return Ok("If this email is registered, a password reset link will arrive shortly.");
     }
 
     [HttpPost("reset-password")]
@@ -363,7 +363,7 @@ public class AuthController : ControllerBase
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         var verifyLink = GetVerificationLink(user.Id, emailToken);
 
-        await _emailService.SendEmailAsync(user.Email!, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
+        await _emailService.SendEmailAsync(user.Email!, $"Activate your {_configuration["Branding:NameEn"] ?? "Bdaey"} account", 
             BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
 
         user.EmailConfirmationSentAt = DateTime.UtcNow;
@@ -387,7 +387,7 @@ public class AuthController : ControllerBase
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         var verifyLink = GetVerificationLink(user.Id, emailToken);
 
-        await _emailService.SendEmailAsync(user.Email!, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
+        await _emailService.SendEmailAsync(user.Email!, $"Activate your {_configuration["Branding:NameEn"] ?? "Bdaey"} account", 
             BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
 
         user.EmailConfirmationSentAt = DateTime.UtcNow;
@@ -421,7 +421,7 @@ public class AuthController : ControllerBase
             var existingUser = await _userManager.FindByEmailAsync(model.Email);
             if (existingUser != null && existingUser.Id != user.Id)
             {
-                return BadRequest("هذا البريد الإلكتروني مستخدم بالفعل.");
+                return BadRequest("This email is already in use.");
             }
 
             user.Email = model.Email;
@@ -434,7 +434,7 @@ public class AuthController : ControllerBase
         
         if (!updateResult.Succeeded)
         {
-             return BadRequest("فشل تحديث البيانات، يرجى المحاولة لاحقاً.");
+             return BadRequest("Failed to update your details. Please try again later.");
         }
 
         // If email changed, send a new verification email
@@ -443,7 +443,7 @@ public class AuthController : ControllerBase
             var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var verifyLink = GetVerificationLink(user.Id, emailToken);
 
-            await _emailService.SendEmailAsync(user.Email!, $"تفعيل حسابك في منصة {_configuration["Branding:NameAr"] ?? "بدائي"}", 
+            await _emailService.SendEmailAsync(user.Email!, $"Activate your {_configuration["Branding:NameEn"] ?? "Bdaey"} account", 
                 BdaeyEducat.API.Services.EmailTemplates.GetVerificationEmail(user.FullName, verifyLink));
 
             user.EmailConfirmationSentAt = DateTime.UtcNow;

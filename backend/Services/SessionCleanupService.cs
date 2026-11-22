@@ -129,7 +129,7 @@ namespace BdaeyEducat.API.Services
                         // WalletService throws error if insufficient.
                         // If teacher has insufficient funds, we should probably still refund student (System Debt) or block teacher.
                         // For now, we try to deduct. If fail, maybe we log error and don't cancel?
-                        // "ويتم تحويل سعر الجلسه فقط من المعلم الي الطالب"
+                        // "Only the session price is transferred between teacher and student"
                         
                         // We will allow negative balance for teacher in this case? 
                         // WalletService validation: if (amount < 0 && (wallet.Balance + amount) < 0) throw
@@ -262,7 +262,7 @@ namespace BdaeyEducat.API.Services
                     // 2. Update Booking Status
                     booking.Status = BookingStatus.Cancelled;
                     booking.CancelledAt = DateTime.UtcNow;
-                    booking.CancellationReason = "رفض تلقائي: انتهت مهلة قبول الطلب (24 ساعة) أو فات موعد الجلسة.";
+                    booking.CancellationReason = "Auto-rejected: the 24-hour acceptance window expired or the session time passed.";
 
                     // 3. Update Sessions Status (only cancel scheduled sessions, not completed ones)
                     foreach (var session in booking.Sessions.Where(s => s.Status == SessionStatus.Scheduled))
@@ -279,8 +279,8 @@ namespace BdaeyEducat.API.Services
                     context.Notifications.Add(new Notification
                     {
                         UserId = booking.StudentId,
-                        Title = "إلغاء تلقائي للطلب",
-                        Message = $"تم إلغاء طلب الحجز #{booking.Id} لعدم رد المعلم في الوقت المحدد. تم استرداد المبلغ.",
+                        Title = "Request Auto-Cancelled",
+                        Message = $"Booking request #{booking.Id} was cancelled because the teacher did not respond in time. The amount was refunded.",
                         Type = "Booking",
                         RelatedEntityId = booking.Id.ToString()
                     });
@@ -301,8 +301,8 @@ namespace BdaeyEducat.API.Services
                              context.Notifications.Add(new Notification
                             {
                                 UserId = teacherUserId,
-                                Title = "فوات طلب حجز",
-                                Message = $"تم إلغاء طلب الحجز #{booking.Id} تلقائياً لأن موعد الجلسة قد فات.",
+                                Title = "Booking Request Expired",
+                                Message = $"Booking request #{booking.Id} was automatically cancelled because the session time has passed.",
                                 Type = "Booking",
                                 RelatedEntityId = booking.Id.ToString()
                             });
@@ -335,8 +335,8 @@ namespace BdaeyEducat.API.Services
                     package.Status = BdaeyEducat.API.Data.Enums.PackageStatus.Archived;
                     package.ArchivedAt = DateTime.UtcNow;
                     package.AdminNote = string.IsNullOrEmpty(package.AdminNote) 
-                        ? $"[{DateTime.UtcNow}] أرشفة تلقائية: انتهت مدة الباقة."
-                        : package.AdminNote + $"\n[{DateTime.UtcNow}] أرشفة تلقائية: انتهت مدة الباقة.";
+                        ? $"[{DateTime.UtcNow}] Auto-archived: package period ended."
+                        : package.AdminNote + $"\n[{DateTime.UtcNow}] Auto-archived: package period ended.";
                 }
                 await context.SaveChangesAsync();
             }
