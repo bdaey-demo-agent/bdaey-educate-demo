@@ -323,6 +323,7 @@ app.UseRateLimiter(); // Place before Authentication
 app.UseMiddleware<BdaeyEducat.API.Middleware.TenantMigrationMiddleware>();
 app.UseAuthentication();
 app.UseMiddleware<BdaeyEducat.API.Middleware.BlockedUserMiddleware>();
+app.UseMiddleware<BdaeyEducat.API.Demo.ReadOnlyDemoMiddleware>(); // DEMO-ONLY (demo-viewer branch)
 app.UseAuthorization();
 
 app.MapControllers().RequireRateLimiting("global");
