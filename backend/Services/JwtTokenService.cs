@@ -16,7 +16,10 @@ public class JwtTokenService : IJwtTokenService
         _configuration = configuration;
     }
 
-    public string GenerateJwtToken(ApplicationUser user, IList<string> roles)
+public string GenerateJwtToken(ApplicationUser user, IList<string> roles)
+    => GenerateJwtToken(user, roles, Array.Empty<Claim>(), GetAccessTokenExpiry());
+    
+    public string GenerateJwtToken(ApplicationUser user, IList<string> roles, IEnumerable<Claim> extraClaims, DateTime expiresUtc)
     {
         var jwtSettings = _configuration.GetSection("Jwt");
         var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
@@ -31,6 +34,7 @@ public class JwtTokenService : IJwtTokenService
         };
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(extraClaims);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -40,6 +44,7 @@ public class JwtTokenService : IJwtTokenService
             Audience = jwtSettings["Audience"],
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
+        tokenDescriptor.Expires = expiresUtc;
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
