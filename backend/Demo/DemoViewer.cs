@@ -47,9 +47,13 @@ public static class DemoViewerDefaults
             ""RedeemedAt"" timestamptz NULL,
             ""RevokedAt"" timestamptz NULL)");
         }
-        catch (Exception)
+        catch (Npgsql.PostgresException ex) when (ex.SqlState == "42501")
         {
-            // The app role may lack CREATE on the schema; the table is then provisioned out of band.
+            // Only insufficient privilege is tolerated: the app role may lack CREATE on the schema and the
+            // table is then provisioned out of band. Every other database error propagates (HTTP 500, fail closed).
+        }
+        catch (Exception ex) when (ex.InnerException is Npgsql.PostgresException pe && pe.SqlState == "42501")
+        {
         }
     }
 }
