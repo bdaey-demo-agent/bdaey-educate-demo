@@ -37,13 +37,20 @@ public static class DemoViewerDefaults
 
     public static async Task EnsureTableAsync(ApplicationDbContext db)
     {
-        await db.Database.ExecuteSqlRawAsync(@"CREATE TABLE IF NOT EXISTS quran.""DemoInvites"" (
+        try
+        {
+            await db.Database.ExecuteSqlRawAsync(@"CREATE TABLE IF NOT EXISTS quran.""DemoInvites"" (
             ""Id"" uuid PRIMARY KEY,
             ""TokenHash"" text NOT NULL UNIQUE,
             ""Label"" text NULL,
             ""ExpiresAt"" timestamptz NOT NULL,
             ""RedeemedAt"" timestamptz NULL,
             ""RevokedAt"" timestamptz NULL)");
+        }
+        catch (Exception)
+        {
+            // The app role may lack CREATE on the schema; the table is then provisioned out of band.
+        }
     }
 }
 
